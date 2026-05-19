@@ -2,3 +2,128 @@
 Name(s);
 Project Description;
 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍦 Ice Cream Shop Inventory</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f6f0;
+            color: #333;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid #f3e9dc;
+        }
+        h1 { color: #d4a373; text-align: center; margin-top: 0; }
+        .inventory-list { margin: 20px 0; padding: 0; list-style: none; }
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e6ccb2;
+            align-items: center;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        select, input, button {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddc3a5;
+            font-size: 16px;
+        }
+        select { flex: 2; }
+        input { flex: 1; }
+        button {
+            background-color: #cb997e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+        }
+        button:hover { background-color: #b7b7a4; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🍦 Shop Inventory</h1>
+    
+    <ul class="inventory-list" id="inventoryList"></ul>
+
+    <hr style="border: 0; border-top: 1px solid #e6ccb2; margin: 20px 0;">
+
+    <h3>Update Stock</h3>
+    <div class="controls">
+        <select id="flavorSelect">
+            <option value="Vanilla">Vanilla</option>
+            <option value="Chocolate">Chocolate</option>
+            <option value="Strawberry">Strawberry</option>
+            <option value="Mint Chip">Mint Chip</option>
+        </select>
+        <input type="number" id="stockChange" placeholder="Qty" value="1">
+        <button onclick="updateStock()">Update</button>
+    </div>
+</div>
+
+<script>
+    // 1. Set up initial inventory if the browser doesn't have it saved yet
+    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || {
+        "Vanilla": 12,
+        "Chocolate": 8,
+        "Strawberry": 6,
+        "Mint Chip": 10
+    };
+
+    // 2. Function to display the data on the screen
+    function renderInventory() {
+        const list = document.getElementById('inventoryList');
+        list.innerHTML = ''; // Clear old list
+
+        for (const [flavor, qty] of Object.entries(inventory)) {
+            const li = document.createElement('li');
+            li.className = 'inventory-item';
+            li.innerHTML = `<strong>${flavor}</strong> <span>${qty} tubs left</span>`;
+            list.appendChild(li);
+        }
+    }
+
+    // 3. Function to update the math and save it
+    function updateStock() {
+        const flavor = document.getElementById('flavorSelect').value;
+        const change = parseInt(document.getElementById('stockChange').value);
+
+        if (isNaN(change)) {
+            alert("Please enter a valid number!");
+            return;
+        }
+
+        // Adjust the stock (making sure it doesn't go below 0)
+        inventory[flavor] = Math.max(0, inventory[flavor] + change);
+
+        // Save the updated inventory back to the browser's memory
+        localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
+
+        // Refresh the screen list
+        renderInventory();
+    }
+
+    // Run this when the page first opens to load the data
+    renderInventory();
+</script>
+
+</body>
+</html>
