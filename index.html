@@ -7,135 +7,245 @@ Project Description;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍦 Ice Cream Shop Inventory</title>
+    <title>🍦 Ice Cream Shop Management Hub</title>
     <style>
+        /* --- 1. DESIGN VARIABLES (Easy to change colors/spacing later) --- */
+        :root {
+            --bg-main: #f9f6f0;
+            --bg-card: #ffffff;
+            --primary: #d4a373;
+            --accent: #cb997e;
+            --accent-hover: #b7b7a4;
+            --text-color: #333333;
+            --border-color: #e6ccb2;
+            --danger: #e63946;
+            --safe: #4a4e69;
+            --radius: 12px;
+        }
+
+        /* --- 2. BASIC RESET & LAYOUT STRUCTURE --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f6f0;
-            color: #333;
-            max-width: 600px;
-            margin: 40px auto;
+            background-color: var(--bg-main);
+            color: var(--text-color);
+            line-height: 1.6;
             padding: 20px;
         }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+
+        /* The overall page container */
+        .app-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             border: 2px solid #f3e9dc;
+            overflow: hidden;
         }
-        h1 { color: #d4a373; text-align: center; margin-top: 0; }
-        .inventory-list { margin: 20px 0; padding: 0; list-style: none; }
-        .inventory-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #e6ccb2;
-            align-items: center;
-        }
-        .inventory-item.out-of-season {
-            background-color: #f1f1f1;
-            color: #999;
-            text-decoration: line-through;
-        }
-        .status-badge {
-            font-size: 12px;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-        }
-        .status-badge.oos {
-            background-color: #e63946;
+
+        /* --- 3. SEMANTIC SITE LAYOUT (Grid) --- */
+        header {
+            background-color: var(--primary);
             color: white;
+            padding: 25px;
+            text-align: center;
         }
-        .status-badge.instock {
-            background-color: #e2eafc;
-            color: #4a4e69;
+
+        /* Creates a 2-column layout on desktop, stacks on mobile */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: 500px;
         }
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
+
+        aside {
+            background-color: #fffbf7;
+            padding: 25px;
+            border-right: 1px solid var(--border-color);
         }
-        .control-row {
-            display: flex;
-            gap: 10px;
+
+        main {
+            padding: 25px;
+            background-color: var(--bg-card);
         }
-        select, input, button {
-            padding: 10px;
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            color: #888;
+            border-top: 1px solid var(--border-color);
+            background-color: #fffbf7;
+        }
+
+        /* --- 4. COMPONENT STYLES (UI Elements) --- */
+        h2, h3 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        select, input[type="number"], button {
+            width: 100%;
+            padding: 12px;
             border-radius: 8px;
-            border: 1px solid #ddc3a5;
+            border: 1px solid var(--border-color);
             font-size: 16px;
+            margin-bottom: 10px;
         }
-        select { flex: 2; }
-        input[type="number"] { flex: 1; }
+
         button {
-            background-color: #cb997e;
+            background-color: var(--accent);
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
             transition: background 0.2s;
         }
-        button:hover { background-color: #b7b7a4; }
-        .btn-update { flex: 1; }
-        .btn-toggle { 
-            background-color: #6c757d; 
-            flex: 1;
-        }
+
+        button:hover { background-color: var(--accent-hover); }
+        
+        .btn-toggle { background-color: #6c757d; }
         .btn-toggle:hover { background-color: #5a6268; }
+
+        /* --- 5. INVENTORY LIST STYLES --- */
+        .inventory-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .inventory-item {
+            background: #fffbf7;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .inventory-item.out-of-season {
+            background-color: #f1f1f1;
+            color: #999;
+            border-color: #ddd;
+        }
+
+        .inventory-item.out-of-season strong {
+            text-decoration: line-through;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            align-self: flex-start;
+        }
+
+        .status-badge.oos { background-color: var(--danger); color: white; }
+        .status-badge.instock { background-color: #e2eafc; color: var(--safe); }
+
+        /* --- 6. RESPONSIVE DESIGN (Mobile Friendly) --- */
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            aside {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>🍦 Shop Inventory</h1>
+<div class="app-container">
     
-    <ul class="inventory-list" id="inventoryList"></ul>
+    <header>
+        <h1>🍦 Scoop Manager Dashboard</h1>
+    </header>
 
-    <hr style="border: 0; border-top: 1px solid #e6ccb2; margin: 20px 0;">
+    <div class="main-layout">
+        
+        <aside>
+            <h3>Stock Controls</h3>
+            
+            <div class="form-group">
+                <label for="flavorSelect">Select Flavor</label>
+                <select id="flavorSelect">
+                    <option value="Vanilla">Vanilla</option>
+                    <option value="Chocolate">Chocolate</option>
+                    <option value="Strawberry">Strawberry</option>
+                    <option value="Mint Chip">Mint Chip</option>
+                    <option value="Lemon Cookie">Lemon Cookie</option>
+                    <option value="Stracciatella">Stracciatella</option>
+                    <option value="Nutty Squirrel">Nutty Squirrel</option>
+                    <option value="Ferrero Rocher">Ferrero Rocher</option>
+                    <option value="Lemon Mango Dragonfruit">Lemon Mango Dragonfruit</option>
+                    <option value="Forest Berries">Forest Berries</option>
+                    <option value="Cafe Latte">Cafe Latte</option>
+                    <option value="Pistachio">Pistachio</option>
+                    <option value="Banana Nutella">Banana Nutella</option>
+                    <option value="Turkish Coffee">Turkish Coffee</option>
+                    <option value="Strawberry Dream">Strawberry Dream</option>
+                    <option value="Mango">Mango</option>
+                    <option value="Vegan Dark Chocolate">Vegan Dark Chocolate</option>
+                    <option value="Minty Dream">Minty Dream</option>
+                    <option value="Ranier Smores">Ranier Smores</option>
+                    <option value="Bunny Kisses">Bunny Kisses</option>
+                    <option value="Birthday Cake">Birthday Cake</option>
+                    <option value="Hazelnut">Hazelnut</option>
+                    <option value="Gianduia">Gianduia</option>
+                    <option value="Kinder Bueno">Kinder Bueno</option>
+                </select>
+            </div>
 
-    <h3>Manage Stock & Season</h3>
-    <div class="controls">
-        <div class="control-row">
-            <select id="flavorSelect">
-                <option value="Vanilla">Vanilla</option>
-                <option value="Chocolate">Chocolate</option>
-                <option value="Strawberry">Strawberry</option>
-                <option value="Mint Chip">Mint Chip</option>
-                <option value="Lemon Cookie">Lemon Cookie</option>
-                <option value="Stracciatella">Stracciatella</option>
-                <option value="Nutty Squirrel">Nutty Squirrel</option>
-                <option value="Ferrero Rocher">Ferrero Rocher</option>
-                <option value="Lemon Mango Dragonfruit">Lemon Mango Dragonfruit</option>
-                <option value="Forest Berries">Forest Berries</option>
-                <option value="Cafe Latte">Cafe Latte</option>
-                <option value="Pistachio">Pistachio</option>
-                <option value="Banana Nutella">Banana Nutella</option>
-                <option value="Turkish Coffee">Turkish Coffee</option>
-                <option value="Strawberry Dream">Strawberry Dream</option>
-                <option value="Mango">Mango</option>
-                <option value="Vegan Dark Chocolate">Vegan Dark Chocolate</option>
-                <option value="Minty Dream">Minty Dream</option>
-                <option value="Ranier Smores">Ranier Smores</option>
-                <option value="Bunny Kisses">Bunny Kisses</option>
-                <option value="Birthday Cake">Birthday Cake</option>
-                <option value="Hazelnut">Hazelnut</option>
-                <option value="Gianduia">Gianduia</option>
-                <option value="Kinder Bueno">Kinder Bueno</option>
-            </select>
-        </div>
-        <div class="control-row">
-            <input type="number" id="stockChange" placeholder="Qty" value="1">
-            <button class="btn-update" onclick="updateStock()">Update Qty</button>
+            <div class="form-group">
+                <label for="stockChange">Adjustment Amount</label>
+                <input type="number" id="stockChange" placeholder="Qty" value="1">
+            </div>
+
+            <button onclick="updateStock()">Update Quantity</button>
             <button class="btn-toggle" onclick="toggleSeason()">Toggle Season</button>
-        </div>
+            
+            </aside>
+
+        <main>
+            <h2>Current Inventory Status</h2>
+            <ul class="inventory-list" id="inventoryList"></ul>
+        </main>
+
     </div>
+
+    <footer>
+        <p>&copy; 2026 Ice Cream Shop POS System. All Rights Reserved.</p>
+    </footer>
+
 </div>
 
 <script>
-    // 1. Initialized default setup using objects to hold quantity AND season status
+    // System Data Initialization Object
     const defaultInventory = {
         "Vanilla": { qty: 12, outOfSeason: false },
         "Chocolate": { qty: 8, outOfSeason: false },
@@ -163,41 +273,13 @@ Project Description;
         "Kinder Bueno": { qty: 9, outOfSeason: false }
     };
 
-    // Load from localStorage, or migrate older simple numeric inventory if it exists
-    let savedData = localStorage.getItem('iceCreamInventory');
-    let inventory = defaultInventory;
-
-    if (savedData) {
-        try {
-            let parsed = JSON.parse(savedData);
-            // Verify if data format is old style (just a number) or new style (an object)
-            if (parsed["Vanilla"] && typeof parsed["Vanilla"] === 'number') {
-                // If old format, update format on the fly
-                for (const key in parsed) {
-                    if (inventory[key]) inventory[key].qty = parsed[key];
-                }
-            } else {
-                inventory = parsed;
-                // Double check to ensure any completely missing new flavors are merged in
-                for (const key in defaultInventory) {
-                    if (!inventory[key]) {
-                        inventory[key] = defaultInventory[key];
-                    }
-                }
-            }
-        } catch(e) {
-            inventory = defaultInventory;
-        }
-    }
-
-    // Save initial merge state
-    saveToStorage();
+    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || defaultInventory;
 
     function saveToStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
 
-    // 2. Display the data dynamically
+    // Displays the internal structure onto the main page canvas 
     function renderInventory() {
         const list = document.getElementById('inventoryList');
         list.innerHTML = ''; 
@@ -215,7 +297,6 @@ Project Description;
         }
     }
 
-    // 3. Update quantity logic
     function updateStock() {
         const flavor = document.getElementById('flavorSelect').value;
         const change = parseInt(document.getElementById('stockChange').value);
@@ -225,25 +306,19 @@ Project Description;
             return;
         }
 
-        // Adjust quantity (prevent negative numbers)
         inventory[flavor].qty = Math.max(0, inventory[flavor].qty + change);
-
         saveToStorage();
         renderInventory();
     }
 
-    // 4. Toggle season logic
     function toggleSeason() {
         const flavor = document.getElementById('flavorSelect').value;
-        
-        // Flip the true/false boolean
         inventory[flavor].outOfSeason = !inventory[flavor].outOfSeason;
-
         saveToStorage();
         renderInventory();
     }
 
-    // Initialize application visual display
+    // Initial page load layout generation
     renderInventory();
 </script>
 
