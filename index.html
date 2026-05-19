@@ -2,11 +2,6 @@
 Name(s);
 Project Description;
 -->
-Here is the updated code with all the ice cream default quantities set to zero.
-
-Because your script saves the list to your browser's memory, I also added a line (`localStorage.removeItem(...)`) that forces the browser to wipe out any older, stored inventory numbers you might have tested earlier. This ensures that when you run this code, the dashboard starts perfectly clean at zero for every single flavor.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +15,6 @@ Because your script saves the list to your browser's memory, I also added a line
             --bg-card: #ffffff;
             --primary: #d4a373;
             --accent: #cb997e;
-            --accent-hover: #b7b7a4;
             --text-color: #333333;
             --border-color: #e6ccb2;
             --danger: #e63946;
@@ -114,18 +108,16 @@ Because your script saves the list to your browser's memory, I also added a line
         }
 
         button {
-            background-color: var(--accent);
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
-            transition: background 0.2s;
+            transition: background 0.2s, color 0.2s;
+            text-shadow: 0px 1px 2px rgba(0,0,0,0.2);
         }
-
-        button:hover { background-color: var(--accent-hover); }
         
         .btn-toggle { background-color: #6c757d; }
-        .btn-toggle:hover { background-color: #5a6268; }
+        .btn-toggle:hover { opacity: 0.9; }
 
         /* --- 5. INVENTORY LIST STYLES --- */
         .inventory-list {
@@ -144,6 +136,7 @@ Because your script saves the list to your browser's memory, I also added a line
             flex-direction: column;
             justify-content: space-between;
             gap: 10px;
+            transition: border-color 0.2s;
         }
 
         .inventory-item.out-of-season {
@@ -168,6 +161,22 @@ Because your script saves the list to your browser's memory, I also added a line
 
         .status-badge.oos { background-color: var(--danger); color: white; }
         .status-badge.instock { background-color: #e2eafc; color: var(--safe); }
+
+        .display-case-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 14px;
+        }
+
+        .display-case-control input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
 
         /* --- 6. RESPONSIVE DESIGN --- */
         @media (max-width: 768px) {
@@ -196,7 +205,7 @@ Because your script saves the list to your browser's memory, I also added a line
             
             <div class="form-group">
                 <label for="flavorSelect">Select Flavor</label>
-                <select id="flavorSelect">
+                <select id="flavorSelect" onchange="applyButtonColor()">
                     <option value="Vanilla">Vanilla</option>
                     <option value="Chocolate">Chocolate</option>
                     <option value="Mint Chip">Mint Chip</option>
@@ -228,7 +237,7 @@ Because your script saves the list to your browser's memory, I also added a line
                 <input type="number" id="stockChange" placeholder="Qty" value="1">
             </div>
 
-            <button onclick="updateStock()">Update Quantity</button>
+            <button id="updateButton" onclick="updateStock()">Update Quantity</button>
             <button class="btn-toggle" onclick="toggleSeason()">Toggle Season</button>
         </aside>
 
@@ -246,41 +255,91 @@ Because your script saves the list to your browser's memory, I also added a line
 </div>
 
 <script>
-    // All default values are explicitly updated to 0
-    const defaultInventory = {
-        "Vanilla": { qty: 0, outOfSeason: false },
-        "Chocolate": { qty: 0, outOfSeason: false },
-        "Mint Chip": { qty: 0, outOfSeason: false },
-        "Lemon Cookie": { qty: 0, outOfSeason: false },
-        "Stracciatella": { qty: 0, outOfSeason: false },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false },
-        "Forest Berries": { qty: 0, outOfSeason: false },
-        "Cafe Latte": { qty: 0, outOfSeason: false },
-        "Pistachio": { qty: 0, outOfSeason: false },
-        "Banana Nutella": { qty: 0, outOfSeason: false },
-        "Turkish Coffee": { qty: 0, outOfSeason: false },
-        "Strawberry Dream": { qty: 0, outOfSeason: false },
-        "Mango": { qty: 0, outOfSeason: false },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false },
-        "Minty Dream": { qty: 0, outOfSeason: false },
-        "Ranier Smores": { qty: 0, outOfSeason: false },
-        "Bunny Kisses": { qty: 0, outOfSeason: false },
-        "Birthday Cake": { qty: 0, outOfSeason: false },
-        "Hazelnut": { qty: 0, outOfSeason: false },
-        "Gianduia": { qty: 0, outOfSeason: false },
-        "Kinder Bueno": { qty: 0, outOfSeason: false }
+    // Flavor coordinated pastel mapping scheme
+    const flavorColors = {
+        "Vanilla": "#f3e5ab",
+        "Chocolate": "#7b3f00",
+        "Mint Chip": "#98ff98",
+        "Lemon Cookie": "#fff44f",
+        "Stracciatella": "#eae0d5",
+        "Nutty Squirrel": "#cd7f32",
+        "Ferrero Rocher": "#b8860b",
+        "Lemon Mango Dragonfruit": "#ff8c00",
+        "Forest Berries": "#6a0dad",
+        "Cafe Latte": "#c8ad7f",
+        "Pistachio": "#93c572",
+        "Banana Nutella": "#e3c16f",
+        "Turkish Coffee": "#4b3621",
+        "Strawberry Dream": "#ffb7c5",
+        "Mango": "#ffc04d",
+        "Vegan Dark Chocolate": "#3d2314",
+        "Minty Dream": "#aaf0d1",
+        "Ranier Smores": "#d2b48c",
+        "Bunny Kisses": "#fbcce7",
+        "Birthday Cake": "#ffc0cb",
+        "Hazelnut": "#ae8c68",
+        "Gianduia": "#a0522d",
+        "Kinder Bueno": "#e8d8c8"
     };
 
-    // Forces browser memory to clear old tests so the 0-baseline runs immediately
-    localStorage.removeItem('iceCreamInventory');
+    // Default configuration objects adjusted with the new tracking property 'inDisplayCase'
+    const defaultInventory = {
+        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false },
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false }
+    };
 
-    let inventory = defaultInventory;
-    localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
+    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
+    
+    // Ensure accurate structure setup and schema compliance
+    if (!inventory || inventory.hasOwnProperty("Strawberry") || !inventory["Vanilla"].hasOwnProperty("inDisplayCase")) {
+        inventory = defaultInventory;
+        localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
+    }
 
     function saveToStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
+    }
+
+    // Handles changing button color to match flavor selection
+    function applyButtonColor() {
+        const selectedFlavor = document.getElementById('flavorSelect').value;
+        const btn = document.getElementById('updateButton');
+        const color = flavorColors[selectedFlavor] || 'var(--accent)';
+        btn.style.backgroundColor = color;
+        
+        // Dynamic accessible text color choice based on light/dark pastel profiles
+        if (["Chocolate", "Forest Berries", "Turkish Coffee", "Vegan Dark Chocolate"].includes(selectedFlavor)) {
+            btn.style.color = "white";
+        } else {
+            btn.style.color = "#333333";
+        }
+    }
+
+    // Directly toggles display case property updates from layout cards
+    function toggleDisplayCase(flavor, isChecked) {
+        inventory[flavor].inDisplayCase = isChecked;
+        saveToStorage();
     }
 
     function renderInventory() {
@@ -295,7 +354,19 @@ Because your script saves the list to your browser's memory, I also added a line
                 ? '<span class="status-badge oos">Out of Season</span>' 
                 : `<span class="status-badge instock">${data.qty} canisters left</span>`;
 
-            li.innerHTML = `<strong>${flavor}</strong> ${statusLabel}`;
+            // Card body template tracking canister location checkboxes
+            li.innerHTML = `
+                <div>
+                    <strong>${flavor}</strong>
+                    <div style="margin-top: 5px;">${statusLabel}</div>
+                </div>
+                <label class="display-case-control">
+                    <input type="checkbox" 
+                           ${data.inDisplayCase ? 'checked' : ''} 
+                           onchange="toggleDisplayCase('${flavor}', this.checked)">
+                    Canister in Display Case
+                </label>
+            `;
             list.appendChild(li);
         }
     }
@@ -321,10 +392,10 @@ Because your script saves the list to your browser's memory, I also added a line
         renderInventory();
     }
 
+    // Render baseline setup layouts on window initialization
     renderInventory();
+    applyButtonColor();
 </script>
 
 </body>
 </html>
-
-```
