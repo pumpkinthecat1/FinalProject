@@ -33,10 +33,34 @@ Project Description;
             border-bottom: 1px solid #e6ccb2;
             align-items: center;
         }
+        .inventory-item.out-of-season {
+            background-color: #f1f1f1;
+            color: #999;
+            text-decoration: line-through;
+        }
+        .status-badge {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        .status-badge.oos {
+            background-color: #e63946;
+            color: white;
+        }
+        .status-badge.instock {
+            background-color: #e2eafc;
+            color: #4a4e69;
+        }
         .controls {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 20px;
+        }
+        .control-row {
+            display: flex;
+            gap: 10px;
         }
         select, input, button {
             padding: 10px;
@@ -45,16 +69,22 @@ Project Description;
             font-size: 16px;
         }
         select { flex: 2; }
-        input { flex: 1; }
+        input[type="number"] { flex: 1; }
         button {
             background-color: #cb997e;
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
-            flex: 1;
+            transition: background 0.2s;
         }
         button:hover { background-color: #b7b7a4; }
+        .btn-update { flex: 1; }
+        .btn-toggle { 
+            background-color: #6c757d; 
+            flex: 1;
+        }
+        .btn-toggle:hover { background-color: #5a6268; }
     </style>
 </head>
 <body>
@@ -66,42 +96,126 @@ Project Description;
 
     <hr style="border: 0; border-top: 1px solid #e6ccb2; margin: 20px 0;">
 
-    <h3>Update Stock</h3>
+    <h3>Manage Stock & Season</h3>
     <div class="controls">
-        <select id="flavorSelect">
-            <option value="Vanilla">Vanilla</option>
-            <option value="Chocolate">Chocolate</option>
-            <option value="Strawberry">Strawberry</option>
-            <option value="Mint Chip">Mint Chip</option>
-        </select>
-        <input type="number" id="stockChange" placeholder="Qty" value="1">
-        <button onclick="updateStock()">Update</button>
+        <div class="control-row">
+            <select id="flavorSelect">
+                <option value="Vanilla">Vanilla</option>
+                <option value="Chocolate">Chocolate</option>
+                <option value="Strawberry">Strawberry</option>
+                <option value="Mint Chip">Mint Chip</option>
+                <option value="Lemon Cookie">Lemon Cookie</option>
+                <option value="Stracciatella">Stracciatella</option>
+                <option value="Nutty Squirrel">Nutty Squirrel</option>
+                <option value="Ferrero Rocher">Ferrero Rocher</option>
+                <option value="Lemon Mango Dragonfruit">Lemon Mango Dragonfruit</option>
+                <option value="Forest Berries">Forest Berries</option>
+                <option value="Cafe Latte">Cafe Latte</option>
+                <option value="Pistachio">Pistachio</option>
+                <option value="Banana Nutella">Banana Nutella</option>
+                <option value="Turkish Coffee">Turkish Coffee</option>
+                <option value="Strawberry Dream">Strawberry Dream</option>
+                <option value="Mango">Mango</option>
+                <option value="Vegan Dark Chocolate">Vegan Dark Chocolate</option>
+                <option value="Minty Dream">Minty Dream</option>
+                <option value="Ranier Smores">Ranier Smores</option>
+                <option value="Bunny Kisses">Bunny Kisses</option>
+                <option value="Birthday Cake">Birthday Cake</option>
+                <option value="Hazelnut">Hazelnut</option>
+                <option value="Gianduia">Gianduia</option>
+                <option value="Kinder Bueno">Kinder Bueno</option>
+            </select>
+        </div>
+        <div class="control-row">
+            <input type="number" id="stockChange" placeholder="Qty" value="1">
+            <button class="btn-update" onclick="updateStock()">Update Qty</button>
+            <button class="btn-toggle" onclick="toggleSeason()">Toggle Season</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // 1. Set up initial inventory if the browser doesn't have it saved yet
-    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || {
-        "Vanilla": 12,
-        "Chocolate": 8,
-        "Strawberry": 6,
-        "Mint Chip": 10
+    // 1. Initialized default setup using objects to hold quantity AND season status
+    const defaultInventory = {
+        "Vanilla": { qty: 12, outOfSeason: false },
+        "Chocolate": { qty: 8, outOfSeason: false },
+        "Strawberry": { qty: 6, outOfSeason: false },
+        "Mint Chip": { qty: 10, outOfSeason: false },
+        "Lemon Cookie": { qty: 5, outOfSeason: false },
+        "Stracciatella": { qty: 7, outOfSeason: false },
+        "Nutty Squirrel": { qty: 4, outOfSeason: false },
+        "Ferrero Rocher": { qty: 9, outOfSeason: false },
+        "Lemon Mango Dragonfruit": { qty: 6, outOfSeason: false },
+        "Forest Berries": { qty: 8, outOfSeason: false },
+        "Cafe Latte": { qty: 5, outOfSeason: false },
+        "Pistachio": { qty: 11, outOfSeason: false },
+        "Banana Nutella": { qty: 7, outOfSeason: false },
+        "Turkish Coffee": { qty: 4, outOfSeason: false },
+        "Strawberry Dream": { qty: 8, outOfSeason: false },
+        "Mango": { qty: 10, outOfSeason: false },
+        "Vegan Dark Chocolate": { qty: 6, outOfSeason: false },
+        "Minty Dream": { qty: 5, outOfSeason: false },
+        "Ranier Smores": { qty: 3, outOfSeason: false },
+        "Bunny Kisses": { qty: 4, outOfSeason: false },
+        "Birthday Cake": { qty: 12, outOfSeason: false },
+        "Hazelnut": { qty: 7, outOfSeason: false },
+        "Gianduia": { qty: 6, outOfSeason: false },
+        "Kinder Bueno": { qty: 9, outOfSeason: false }
     };
 
-    // 2. Function to display the data on the screen
+    // Load from localStorage, or migrate older simple numeric inventory if it exists
+    let savedData = localStorage.getItem('iceCreamInventory');
+    let inventory = defaultInventory;
+
+    if (savedData) {
+        try {
+            let parsed = JSON.parse(savedData);
+            // Verify if data format is old style (just a number) or new style (an object)
+            if (parsed["Vanilla"] && typeof parsed["Vanilla"] === 'number') {
+                // If old format, update format on the fly
+                for (const key in parsed) {
+                    if (inventory[key]) inventory[key].qty = parsed[key];
+                }
+            } else {
+                inventory = parsed;
+                // Double check to ensure any completely missing new flavors are merged in
+                for (const key in defaultInventory) {
+                    if (!inventory[key]) {
+                        inventory[key] = defaultInventory[key];
+                    }
+                }
+            }
+        } catch(e) {
+            inventory = defaultInventory;
+        }
+    }
+
+    // Save initial merge state
+    saveToStorage();
+
+    function saveToStorage() {
+        localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
+    }
+
+    // 2. Display the data dynamically
     function renderInventory() {
         const list = document.getElementById('inventoryList');
-        list.innerHTML = ''; // Clear old list
+        list.innerHTML = ''; 
 
-        for (const [flavor, qty] of Object.entries(inventory)) {
+        for (const [flavor, data] of Object.entries(inventory)) {
             const li = document.createElement('li');
-            li.className = 'inventory-item';
-            li.innerHTML = `<strong>${flavor}</strong> <span>${qty} tubs left</span>`;
+            li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
+            
+            const statusLabel = data.outOfSeason 
+                ? '<span class="status-badge oos">Out of Season</span>' 
+                : `<span class="status-badge instock">${data.qty} tubs left</span>`;
+
+            li.innerHTML = `<strong>${flavor}</strong> ${statusLabel}`;
             list.appendChild(li);
         }
     }
 
-    // 3. Function to update the math and save it
+    // 3. Update quantity logic
     function updateStock() {
         const flavor = document.getElementById('flavorSelect').value;
         const change = parseInt(document.getElementById('stockChange').value);
@@ -111,17 +225,25 @@ Project Description;
             return;
         }
 
-        // Adjust the stock (making sure it doesn't go below 0)
-        inventory[flavor] = Math.max(0, inventory[flavor] + change);
+        // Adjust quantity (prevent negative numbers)
+        inventory[flavor].qty = Math.max(0, inventory[flavor].qty + change);
 
-        // Save the updated inventory back to the browser's memory
-        localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
-
-        // Refresh the screen list
+        saveToStorage();
         renderInventory();
     }
 
-    // Run this when the page first opens to load the data
+    // 4. Toggle season logic
+    function toggleSeason() {
+        const flavor = document.getElementById('flavorSelect').value;
+        
+        // Flip the true/false boolean
+        inventory[flavor].outOfSeason = !inventory[flavor].outOfSeason;
+
+        saveToStorage();
+        renderInventory();
+    }
+
+    // Initialize application visual display
     renderInventory();
 </script>
 
