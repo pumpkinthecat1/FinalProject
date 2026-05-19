@@ -2,6 +2,11 @@
 Name(s);
 Project Description;
 -->
+Here is the updated code with all the ice cream default quantities set to zero.
+
+Because your script saves the list to your browser's memory, I also added a line (`localStorage.removeItem(...)`) that forces the browser to wipe out any older, stored inventory numbers you might have tested earlier. This ensures that when you run this code, the dashboard starts perfectly clean at zero for every single flavor.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -241,7 +246,7 @@ Project Description;
 </div>
 
 <script>
-    // Initialized default setup with Strawberry removed and all quantities at 0
+    // All default values are explicitly updated to 0
     const defaultInventory = {
         "Vanilla": { qty: 0, outOfSeason: false },
         "Chocolate": { qty: 0, outOfSeason: false },
@@ -268,14 +273,11 @@ Project Description;
         "Kinder Bueno": { qty: 0, outOfSeason: false }
     };
 
-    // If you previously opened this in your browser, clear the older layout key
-    // so the fresh 0-count baseline loads correctly.
-    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
-    
-    if (!inventory || inventory.hasOwnProperty("Strawberry")) {
-        inventory = defaultInventory;
-        localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
-    }
+    // Forces browser memory to clear old tests so the 0-baseline runs immediately
+    localStorage.removeItem('iceCreamInventory');
+
+    let inventory = defaultInventory;
+    localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
 
     function saveToStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
@@ -289,7 +291,6 @@ Project Description;
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
             
-            // Text updated from "tubs" to "canisters"
             const statusLabel = data.outOfSeason 
                 ? '<span class="status-badge oos">Out of Season</span>' 
                 : `<span class="status-badge instock">${data.qty} canisters left</span>`;
@@ -325,3 +326,5 @@ Project Description;
 
 </body>
 </html>
+
+```
