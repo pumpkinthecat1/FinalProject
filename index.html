@@ -7,7 +7,7 @@ Project Description;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍦 Gelato Shop Management Hub</title>
+    <title>Nutty Squirrel Gelato Inventory Tracker</title>
     <style>
         /* --- 1. DESIGN VARIABLES --- */
         :root {
@@ -53,6 +53,12 @@ Project Description;
             color: white;
             padding: 25px;
             text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .nav-tabs {
@@ -130,7 +136,7 @@ Project Description;
             top: -12px;
         }
 
-        /* --- 4. NEW FLAVOR CREATION BAR --- */
+        /* --- 4. FLAVOR CREATION BAR --- */
         .creation-bar {
             background: #fffbf7;
             border: 1px solid var(--border-color);
@@ -140,7 +146,7 @@ Project Description;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         .creation-bar h3 {
@@ -168,6 +174,23 @@ Project Description;
             gap: 6px;
             font-size: 14px;
             font-weight: bold;
+        }
+
+        .creation-vegan-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            color: var(--vegan-color);
+        }
+
+        .creation-vegan-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
         }
 
         input[type="color"] {
@@ -417,7 +440,7 @@ Project Description;
 <div class="app-container">
     
     <header>
-        <h1>🍦 Gelato Shop Management Hub</h1>
+        <h1>Nutty Squirrel Gelato Inventory Tracker</h1>
     </header>
 
     <nav class="nav-tabs">
@@ -437,6 +460,9 @@ Project Description;
                     <label for="newFlavorColor">Card Tint:</label>
                     <input type="color" id="newFlavorColor" value="#ffffff">
                 </div>
+                <label class="creation-vegan-label">
+                    <input type="checkbox" id="newFlavorVegan"> Mark Vegan
+                </label>
                 <button class="btn-add" onclick="addNewFlavor()">Add to Registry</button>
             </div>
 
@@ -478,15 +504,6 @@ Project Description;
 </div>
 
 <script>
-    // List of flavors initialized as Vegan
-    const veganFlavors = [
-        "Forest Berries",
-        "Lemon Mango Dragonfruit",
-        "Mango",
-        "Vegan Dark Chocolate",
-        "Prickly pear"
-    ];
-
     function convertHexToRgba(hex, opacity) {
         hex = hex.replace('#', '');
         if (hex.length === 3) {
@@ -499,38 +516,39 @@ Project Description;
     }
 
     const defaultInventory = {
-        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", allergens: {} },
-        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", allergens: {} },
-        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", allergens: {} },
-        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", allergens: {} },
-        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", allergens: {} },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", allergens: {} },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", allergens: {} },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", allergens: {} },
-        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", allergens: {} },
-        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", allergens: {} },
-        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", allergens: {} },
-        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", allergens: {} },
-        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", allergens: {} },
-        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", allergens: {} },
-        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", allergens: {} },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", allergens: {} },
-        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", allergens: {} },
-        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", allergens: {} },
-        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", allergens: {} },
-        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", allergens: {} },
-        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", allergens: {} },
-        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", allergens: {} },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", allergens: {} },
-        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", allergens: {} },
-        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", allergens: {} },
-        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", allergens: {} },
-        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", allergens: {} },
-        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", allergens: {} },
-        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", allergens: {} },
-        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", allergens: {} }
+        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {} },
+        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {} },
+        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", isVegan: false, allergens: {} },
+        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", isVegan: false, allergens: {} },
+        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {} },
+        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {} },
+        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {} },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", isVegan: true, allergens: {} },
+        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {} },
+        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {} },
+        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {} },
+        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", isVegan: false, allergens: {} },
+        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", isVegan: false, allergens: {} },
+        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: false, allergens: {} },
+        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", isVegan: true, allergens: {} },
+        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", isVegan: true, allergens: {} },
+        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", isVegan: false, allergens: {} },
+        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", isVegan: false, allergens: {} },
+        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", isVegan: false, allergens: {} },
+        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", isVegan: false, allergens: {} },
+        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", isVegan: false, allergens: {} },
+        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", isVegan: false, allergens: {} },
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", isVegan: false, allergens: {} },
+        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", isVegan: false, allergens: {} },
+        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", isVegan: false, allergens: {} },
+        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", isVegan: false, allergens: {} },
+        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", isVegan: false, allergens: {} },
+        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", isVegan: false, allergens: {} },
+        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", isVegan: false, allergens: {} },
+        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", isVegan: true, allergens: {} }
     };
 
+    // Load setup data structures securely from LocalStorage
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
     let activeEditFlavor = null;
     
@@ -543,7 +561,6 @@ Project Description;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
 
-    // Tab Switching Controller Logic
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
@@ -562,6 +579,7 @@ Project Description;
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
         const colorInput = document.getElementById('newFlavorColor');
+        const veganInput = document.getElementById('newFlavorVegan');
         const rawName = nameInput.value.trim();
 
         if (!rawName) {
@@ -579,11 +597,14 @@ Project Description;
             inDisplayCase: false,
             inTransferCase: false,
             color: colorInput.value,
+            isVegan: veganInput.checked,
             allergens: {}
         };
 
         nameInput.value = '';
         colorInput.value = '#ffffff';
+        veganInput.checked = false;
+        
         saveToStorage();
         renderInventory();
     }
@@ -626,6 +647,7 @@ Project Description;
     function saveFlavorEdits(oldKey) {
         const newNameInput = document.getElementById(`editName-${oldKey.replace(/\s+/g, '_')}`);
         const newColorInput = document.getElementById(`editColor-${oldKey.replace(/\s+/g, '_')}`);
+        const newVeganInput = document.getElementById(`editVegan-${oldKey.replace(/\s+/g, '_')}`);
         const updatedName = newNameInput.value.trim();
 
         if (!updatedName) {
@@ -635,6 +657,7 @@ Project Description;
 
         const dataRef = inventory[oldKey];
         dataRef.color = newColorInput.value;
+        dataRef.isVegan = newVeganInput.checked;
 
         if (updatedName !== oldKey) {
             if (inventory.hasOwnProperty(updatedName)) {
@@ -659,7 +682,6 @@ Project Description;
         }
     }
 
-    // Allergen Matrix Checklist Input Tracker
     function toggleAllergen(flavor, allergenKey, isChecked) {
         if (!inventory[flavor].allergens) {
             inventory[flavor].allergens = {};
@@ -683,6 +705,9 @@ Project Description;
                         <label style="font-size:12px; font-weight:bold;">Color:</label>
                         <input type="color" id="editColor-${safeId}" value="${data.color}">
                     </div>
+                    <label class="creation-vegan-label" style="margin-bottom: 5px;">
+                        <input type="checkbox" id="editVegan-${safeId}" ${data.isVegan ? 'checked' : ''}> Mark Vegan
+                    </label>
                     <div class="edit-actions">
                         <button class="btn-mini btn-save" onclick="saveFlavorEdits('${flavor}')">Save</button>
                         <button class="btn-mini btn-del" onclick="deleteFlavor('${flavor}')">Delete</button>
@@ -694,9 +719,7 @@ Project Description;
                 ? '<span class="status-badge oos">Out of Season</span>' 
                 : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
 
-            // Checks dynamic or user-assigned naming variations to apply the green text disclaimer
-            const isVegan = veganFlavors.some(v => v.toLowerCase() === flavor.toLowerCase()) || flavor.toLowerCase().includes('vegan');
-            const veganTag = isVegan ? `<div class="vegan-disclaimer">🌱 Vegan</div>` : '';
+            const veganTag = data.isVegan ? `<div class="vegan-disclaimer">🌱 Vegan</div>` : '';
 
             html += `
                 <div>
@@ -747,7 +770,6 @@ Project Description;
             li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", isDarkProfile ? 0.25 : 0.35);
             li.innerHTML = createCardHtml(flavor, data);
 
-            // Separate layouts based on state variables
             if (data.outOfSeason) {
                 archivedList.appendChild(li);
                 archivedCount++;
@@ -756,11 +778,9 @@ Project Description;
             }
         }
 
-        // Hide archive row rules if completely unneeded
         archiveDivider.style.display = archivedCount > 0 ? 'block' : 'none';
     }
 
-    // Renders spreadsheet array layout metrics for allergens
     function renderAllergenChart() {
         const tbody = document.getElementById('allergenTableBody');
         tbody.innerHTML = '';
@@ -788,7 +808,6 @@ Project Description;
         }
     }
 
-    // Running initial page setup layouts
     renderInventory();
 </script>
 
