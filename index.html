@@ -239,7 +239,15 @@ Project Description;
         "Birthday Cake": "rgba(255, 192, 203, 0.45)",
         "Hazelnut": "rgba(174, 140, 104, 0.35)",
         "Gianduia": "rgba(160, 82, 45, 0.2)",
-        "Kinder Bueno": "rgba(232, 216, 200, 0.45)"
+        "Kinder Bueno": "rgba(232, 216, 200, 0.45)",
+        // Coordinated colors for new additions:
+        "Sea Salt Caramel": "rgba(198, 150, 106, 0.35)",
+        "Cookies and Dream": "rgba(140, 140, 140, 0.25)",
+        "Mon Cherry": "rgba(222, 49, 99, 0.2)",
+        "Banana Split": "rgba(255, 233, 133, 0.45)",
+        "Strawberry Shortcake": "rgba(255, 153, 153, 0.35)",
+        "Fior De Latte": "rgba(248, 249, 250, 0.8)",
+        "Prickly pear": "rgba(255, 111, 145, 0.35)"
     };
 
     const defaultInventory = {
@@ -265,13 +273,21 @@ Project Description;
         "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
         "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
         "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false }
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        // New flavors appended into the tracking framework:
+        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false }
     };
 
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
     
-    // Safety check initialization
-    if (!inventory || !inventory["Vanilla"] || !inventory["Vanilla"].hasOwnProperty("inTransferCase")) {
+    // Check if the local storage contains an old registry framework missing the new keys
+    if (!inventory || !inventory["Sea Salt Caramel"]) {
         inventory = defaultInventory;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
@@ -280,14 +296,12 @@ Project Description;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
 
-    // Direct up/down button stock adjuster logic
     function adjustQty(flavor, amount) {
         inventory[flavor].qty = Math.max(0, inventory[flavor].qty + amount);
         saveToStorage();
         renderInventory();
     }
 
-    // Checkbox rules: checking a box pulls 1 canister out of stock. Unchecking puts it back.
     function handleCaseToggle(flavor, caseKey, isChecked) {
         if (isChecked) {
             if (inventory[flavor].qty > 0) {
@@ -321,7 +335,6 @@ Project Description;
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
             
-            // Assigns coordinated flavor color to the tab panel itself
             li.style.backgroundColor = flavorColors[flavor] || "#fffbf7";
             
             const statusLabel = data.outOfSeason 
@@ -332,7 +345,6 @@ Project Description;
                 <div>
                     <div class="card-header-row">
                         <strong>${flavor}</strong>
-                        
                         <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
                             <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
                             <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
