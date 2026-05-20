@@ -18,6 +18,7 @@ Project Description;
             --border-color: #e6ccb2;
             --danger: #e63946;
             --safe: #4a4e69;
+            --vegan-color: #2a9d8f;
             --radius: 12px;
         }
 
@@ -46,7 +47,7 @@ Project Description;
             overflow: hidden;
         }
 
-        /* --- 3. SEMANTIC SITE LAYOUT --- */
+        /* --- 3. SEMANTIC SITE LAYOUT & NAVIGATION --- */
         header {
             background-color: var(--primary);
             color: white;
@@ -54,9 +55,47 @@ Project Description;
             text-align: center;
         }
 
+        .nav-tabs {
+            display: flex;
+            background: #fffbf7;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: rgba(0,0,0,0.02);
+            color: var(--text-color);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
         .main-layout {
             padding: 25px;
             background-color: var(--bg-card);
+        }
+
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.active {
+            display: block;
         }
 
         footer {
@@ -72,6 +111,23 @@ Project Description;
             margin-bottom: 20px;
             color: var(--text-color);
             text-align: center;
+        }
+
+        .section-divider {
+            margin: 40px 0 20px;
+            border: none;
+            border-top: 2px dashed var(--border-color);
+            text-align: center;
+        }
+
+        .section-divider span {
+            background: var(--bg-card);
+            padding: 0 15px;
+            color: #888;
+            font-weight: bold;
+            font-size: 14px;
+            position: relative;
+            top: -12px;
         }
 
         /* --- 4. NEW FLAVOR CREATION BAR --- */
@@ -98,11 +154,6 @@ Project Description;
             gap: 8px;
         }
 
-        .input-group label {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
         .creation-bar input[type="text"] {
             padding: 8px 12px;
             border: 1px solid var(--border-color);
@@ -115,9 +166,10 @@ Project Description;
             display: flex;
             align-items: center;
             gap: 6px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
-        /* Hiding native layout, styling standard circular color wheel clickable triggers */
         input[type="color"] {
             -webkit-appearance: none;
             border: none;
@@ -139,7 +191,6 @@ Project Description;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
         }
         .btn-add:hover { opacity: 0.9; }
 
@@ -161,12 +212,6 @@ Project Description;
             gap: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .inventory-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .inventory-item.out-of-season {
@@ -175,7 +220,8 @@ Project Description;
             border-color: #ccc;
         }
 
-        .inventory-item.out-of-season strong {
+        .inventory-item.out-of-season strong,
+        .inventory-item.out-of-season .flavor-title {
             text-decoration: line-through;
         }
 
@@ -183,7 +229,7 @@ Project Description;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 25px; /* Leave space for the action icon */
+            gap: 25px;
         }
 
         .flavor-title {
@@ -192,7 +238,6 @@ Project Description;
             word-break: break-word;
         }
 
-        /* Edit Controls Component */
         .edit-trigger {
             position: absolute;
             top: 15px;
@@ -200,7 +245,6 @@ Project Description;
             cursor: pointer;
             font-size: 14px;
             opacity: 0.6;
-            transition: opacity 0.2s;
             background: none;
             border: none;
         }
@@ -225,7 +269,6 @@ Project Description;
         .edit-actions {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             gap: 5px;
         }
         .btn-mini {
@@ -236,10 +279,10 @@ Project Description;
             cursor: pointer;
             font-weight: bold;
         }
-        .btn-save { background-color: #2a9d8f; color: white; }
+        .btn-save { background-color: var(--vegan-color); color: white; }
         .btn-del { background-color: var(--danger); color: white; }
 
-        /* --- 6. COUNTER COMPONENT (UP / DOWN BOX) --- */
+        /* --- 6. COUNTER COMPONENT --- */
         .counter-box {
             display: flex;
             align-items: center;
@@ -262,9 +305,7 @@ Project Description;
             justify-content: center;
             color: var(--text-color);
             font-weight: bold;
-            transition: background 0.2s;
         }
-
         .counter-btn:hover { background: rgba(0, 0, 0, 0.08); }
         .counter-btn:first-child { border-right: 1px solid rgba(0,0,0,0.15); }
 
@@ -273,12 +314,22 @@ Project Description;
             padding: 4px 10px;
             border-radius: 20px;
             font-weight: bold;
-            text-align: center;
             display: inline-block;
         }
-
         .status-badge.oos { background-color: var(--danger); color: white; }
         .status-badge.instock { background-color: rgba(255,255,255,0.8); color: #222; border: 1px solid rgba(0,0,0,0.05); }
+
+        .vegan-disclaimer {
+            font-size: 12px;
+            color: var(--vegan-color);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
 
         /* --- 7. CHECKBOX UTILITIES --- */
         .case-controls-group {
@@ -295,14 +346,8 @@ Project Description;
             gap: 10px;
             font-size: 14px;
             cursor: pointer;
-            user-select: none;
         }
-
-        .case-checkbox-label input {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
+        .case-checkbox-label input { width: 16px; height: 16px; }
 
         .season-toggle-link {
             font-size: 12px;
@@ -311,6 +356,59 @@ Project Description;
             cursor: pointer;
             align-self: flex-start;
             margin-top: 5px;
+        }
+
+        /* --- 8. EXCEL ALLERGEN SPREADSHEET STYLES --- */
+        .spreadsheet-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #c0c0c0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .excel-table th {
+            background: #e6e6e6;
+            color: #333;
+            font-weight: bold;
+            padding: 10px;
+            border: 1px solid #c0c0c0;
+            user-select: none;
+        }
+
+        .excel-table td {
+            padding: 8px 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .excel-table tr:nth-child(even) {
+            background: #fdfdfd;
+        }
+
+        .excel-table tr:hover {
+            background: #f2f7fa;
+        }
+
+        .excel-flavor-cell {
+            font-weight: 600;
+            background: #fcfcfc;
+            border-right: 2px solid #c0c0c0 !important;
+            width: 250px;
+        }
+
+        .allergen-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -322,22 +420,55 @@ Project Description;
         <h1>🍦 Gelato Shop Management Hub</h1>
     </header>
 
+    <nav class="nav-tabs">
+        <button class="tab-btn active" id="btnDashboard" onclick="switchTab('dashboard')">📋 Stock Dashboard</button>
+        <button class="tab-btn" id="btnAllergens" onclick="switchTab('allergens')">📊 Allergen Chart Spreadsheet</button>
+    </nav>
+
     <div class="main-layout">
         
-        <div class="creation-bar">
-            <h3>Add New Flavor Profile:</h3>
-            <div class="input-group">
-                <input type="text" id="newFlavorName" placeholder="Flavor Name (e.g., Blood Orange)">
+        <div id="panelDashboard" class="view-panel active">
+            <div class="creation-bar">
+                <h3>Add New Flavor Profile:</h3>
+                <div class="input-group">
+                    <input type="text" id="newFlavorName" placeholder="Flavor Name (e.g., Blood Orange)">
+                </div>
+                <div class="color-picker-wrapper">
+                    <label for="newFlavorColor">Card Tint:</label>
+                    <input type="color" id="newFlavorColor" value="#ffffff">
+                </div>
+                <button class="btn-add" onclick="addNewFlavor()">Add to Registry</button>
             </div>
-            <div class="color-picker-wrapper">
-                <label for="newFlavorColor">Card Tint:</label>
-                <input type="color" id="newFlavorColor" value="#ffffff">
+
+            <h2>In-Season Gelato Selection</h2>
+            <ul class="inventory-list" id="activeList"></ul>
+
+            <div class="section-divider" id="archiveDivider">
+                <span>Out of Season Rotation</span>
             </div>
-            <button class="btn-add" onclick="addNewFlavor()">Add to Registry</button>
+            <ul class="inventory-list" id="archivedList"></ul>
         </div>
 
-        <h2>Current Gelato Canister Inventory</h2>
-        <ul class="inventory-list" id="inventoryList"></ul>
+        <div id="panelAllergens" class="view-panel">
+            <h2>Allergen Reference Chart</h2>
+            <div class="spreadsheet-container">
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th class="excel-flavor-cell">Gelato Flavor</th>
+                            <th style="text-align: center;">Tree Nuts</th>
+                            <th style="text-align: center;">Gluten</th>
+                            <th style="text-align: center;">Dairy</th>
+                            <th style="text-align: center;">Egg</th>
+                            <th style="text-align: center;">Soy</th>
+                            <th style="text-align: center;">Sesame</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allergenTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <footer>
@@ -347,7 +478,15 @@ Project Description;
 </div>
 
 <script>
-    // System utility to scale opacity down for standard hex variables into legible pastel configurations
+    // List of flavors initialized as Vegan
+    const veganFlavors = [
+        "Forest Berries",
+        "Lemon Mango Dragonfruit",
+        "Mango",
+        "Vegan Dark Chocolate",
+        "Prickly pear"
+    ];
+
     function convertHexToRgba(hex, opacity) {
         hex = hex.replace('#', '');
         if (hex.length === 3) {
@@ -360,40 +499,40 @@ Project Description;
     }
 
     const defaultInventory = {
-        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab" },
-        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00" },
-        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98" },
-        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f" },
-        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5" },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32" },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b" },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00" },
-        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad" },
-        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f" },
-        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572" },
-        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f" },
-        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621" },
-        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5" },
-        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d" },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314" },
-        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1" },
-        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c" },
-        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7" },
-        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb" },
-        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68" },
-        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d" },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8" },
-        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a" },
-        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c" },
-        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163" },
-        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985" },
-        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999" },
-        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff" },
-        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91" }
+        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", allergens: {} },
+        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", allergens: {} },
+        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", allergens: {} },
+        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", allergens: {} },
+        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", allergens: {} },
+        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", allergens: {} },
+        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", allergens: {} },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", allergens: {} },
+        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", allergens: {} },
+        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", allergens: {} },
+        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", allergens: {} },
+        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", allergens: {} },
+        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", allergens: {} },
+        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", allergens: {} },
+        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", allergens: {} },
+        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", allergens: {} },
+        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", allergens: {} },
+        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", allergens: {} },
+        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", allergens: {} },
+        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", allergens: {} },
+        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", allergens: {} },
+        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", allergens: {} },
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", allergens: {} },
+        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", allergens: {} },
+        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", allergens: {} },
+        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", allergens: {} },
+        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", allergens: {} },
+        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", allergens: {} },
+        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", allergens: {} },
+        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", allergens: {} }
     };
 
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
-    let activeEditFlavor = null; // Tracks which card is currently in editing mode
+    let activeEditFlavor = null;
     
     if (!inventory || !inventory["Vanilla"]) {
         inventory = defaultInventory;
@@ -404,7 +543,22 @@ Project Description;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
 
-    // Append custom flavor data structures from user actions
+    // Tab Switching Controller Logic
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+
+        if (tabId === 'dashboard') {
+            document.getElementById('btnDashboard').classList.add('active');
+            document.getElementById('panelDashboard').classList.add('active');
+            renderInventory();
+        } else if (tabId === 'allergens') {
+            document.getElementById('btnAllergens').classList.add('active');
+            document.getElementById('panelAllergens').classList.add('active');
+            renderAllergenChart();
+        }
+    }
+
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
         const colorInput = document.getElementById('newFlavorColor');
@@ -414,24 +568,22 @@ Project Description;
             alert("Please enter a valid name for your new flavor profile!");
             return;
         }
-
         if (inventory.hasOwnProperty(rawName)) {
-            alert("This flavor name already exists in your inventory system dashboard.");
+            alert("This flavor name already exists.");
             return;
         }
 
-        // Initialize object data fields cleanly
         inventory[rawName] = {
             qty: 0,
             outOfSeason: false,
             inDisplayCase: false,
             inTransferCase: false,
-            color: colorInput.value
+            color: colorInput.value,
+            allergens: {}
         };
 
         nameInput.value = '';
         colorInput.value = '#ffffff';
-        
         saveToStorage();
         renderInventory();
     }
@@ -456,7 +608,6 @@ Project Description;
             inventory[flavor].qty += 1;
             inventory[flavor][caseKey] = false;
         }
-        
         saveToStorage();
         renderInventory();
     }
@@ -467,7 +618,6 @@ Project Description;
         renderInventory();
     }
 
-    // Sets state flag to render custom interactive input overlays on targeted indexes
     function enterEditMode(flavor) {
         activeEditFlavor = (activeEditFlavor === flavor) ? null : flavor;
         renderInventory();
@@ -479,7 +629,7 @@ Project Description;
         const updatedName = newNameInput.value.trim();
 
         if (!updatedName) {
-            alert("Flavor name cannot be left completely blank.");
+            alert("Flavor name cannot be blank.");
             return;
         }
 
@@ -488,10 +638,9 @@ Project Description;
 
         if (updatedName !== oldKey) {
             if (inventory.hasOwnProperty(updatedName)) {
-                alert("Another existing flavor profile is already using that title structure.");
+                alert("Another flavor profile already uses that title structure.");
                 return;
             }
-            // Transition object reference key states cleanly
             inventory[updatedName] = dataRef;
             delete inventory[oldKey];
         }
@@ -502,7 +651,7 @@ Project Description;
     }
 
     function deleteFlavor(flavor) {
-        if (confirm(`Are you sure you want to permanently erase ${flavor} from your system records?`)) {
+        if (confirm(`Are you sure you want to permanently erase ${flavor}?`)) {
             delete inventory[flavor];
             activeEditFlavor = null;
             saveToStorage();
@@ -510,88 +659,136 @@ Project Description;
         }
     }
 
+    // Allergen Matrix Checklist Input Tracker
+    function toggleAllergen(flavor, allergenKey, isChecked) {
+        if (!inventory[flavor].allergens) {
+            inventory[flavor].allergens = {};
+        }
+        inventory[flavor].allergens[allergenKey] = isChecked;
+        saveToStorage();
+    }
+
+    function createCardHtml(flavor, data) {
+        const isEditing = (activeEditFlavor === flavor);
+        const safeId = flavor.replace(/\s+/g, '_');
+        
+        let html = `<button class="edit-trigger" onclick="enterEditMode('${flavor}')" title="Edit Properties">✏️</button>`;
+
+        if (isEditing) {
+            html += `
+                <div class="edit-mode-panel">
+                    <label style="font-size:12px; font-weight:bold;">Edit Name:</label>
+                    <input type="text" id="editName-${safeId}" value="${flavor}">
+                    <div class="color-picker-wrapper" style="margin:5px 0;">
+                        <label style="font-size:12px; font-weight:bold;">Color:</label>
+                        <input type="color" id="editColor-${safeId}" value="${data.color}">
+                    </div>
+                    <div class="edit-actions">
+                        <button class="btn-mini btn-save" onclick="saveFlavorEdits('${flavor}')">Save</button>
+                        <button class="btn-mini btn-del" onclick="deleteFlavor('${flavor}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            const statusLabel = data.outOfSeason 
+                ? '<span class="status-badge oos">Out of Season</span>' 
+                : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
+
+            // Checks dynamic or user-assigned naming variations to apply the green text disclaimer
+            const isVegan = veganFlavors.some(v => v.toLowerCase() === flavor.toLowerCase()) || flavor.toLowerCase().includes('vegan');
+            const veganTag = isVegan ? `<div class="vegan-disclaimer">🌱 Vegan</div>` : '';
+
+            html += `
+                <div>
+                    <div class="card-header-row">
+                        <span class="flavor-title">${flavor}</span>
+                        <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
+                            <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
+                            <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 8px;">${statusLabel}</div>
+                    ${veganTag}
+                    <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">
+                        ${data.outOfSeason ? 'Mark In Season' : 'Mark Out of Season'}
+                    </div>
+                </div>
+                
+                <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
+                    <label class="case-checkbox-label">
+                        <input type="checkbox" ${data.inDisplayCase ? 'checked' : ''} onchange="handleCaseToggle('${flavor}', 'inDisplayCase', this.checked)">
+                        Canister in Display Case
+                    </label>
+                    <label class="case-checkbox-label">
+                        <input type="checkbox" ${data.inTransferCase ? 'checked' : ''} onchange="handleCaseToggle('${flavor}', 'inTransferCase', this.checked)">
+                        Canister in Transfer Case
+                    </label>
+                </div>
+            `;
+        }
+        return html;
+    }
+
     function renderInventory() {
-        const list = document.getElementById('inventoryList');
-        list.innerHTML = ''; 
+        const activeList = document.getElementById('activeList');
+        const archivedList = document.getElementById('archivedList');
+        const archiveDivider = document.getElementById('archiveDivider');
+
+        activeList.innerHTML = ''; 
+        archivedList.innerHTML = ''; 
+
+        let archivedCount = 0;
 
         for (const [flavor, data] of Object.entries(inventory)) {
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
             
-            // Map translucent variables dynamically for legibility
             const isDarkProfile = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
-            const opacitySetting = isDarkProfile ? 0.25 : 0.35;
-            li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", opacitySetting);
-            
-            const isEditing = (activeEditFlavor === flavor);
-            const safeId = flavor.replace(/\s+/g, '_');
+            li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", isDarkProfile ? 0.25 : 0.35);
+            li.innerHTML = createCardHtml(flavor, data);
 
-            // Header template definition
-            let cardContentHtml = `
-                <button class="edit-trigger" onclick="enterEditMode('${flavor}')" title="Edit Properties">✏️</button>
-            `;
-
-            if (isEditing) {
-                // Renders configuration form fields if edit mode flag is active
-                cardContentHtml += `
-                    <div class="edit-mode-panel">
-                        <label style="font-size:12px; font-weight:bold;">Edit Name:</label>
-                        <input type="text" id="editName-${safeId}" value="${flavor}">
-                        
-                        <div class="color-picker-wrapper" style="margin:5px 0;">
-                            <label style="font-size:12px; font-weight:bold;">Color:</label>
-                            <input type="color" id="editColor-${safeId}" value="${data.color}">
-                        </div>
-                        
-                        <div class="edit-actions">
-                            <button class="btn-mini btn-save" onclick="saveFlavorEdits('${flavor}')">Save</button>
-                            <button class="btn-mini btn-del" onclick="deleteFlavor('${flavor}')">Delete</button>
-                        </div>
-                    </div>
-                `;
+            // Separate layouts based on state variables
+            if (data.outOfSeason) {
+                archivedList.appendChild(li);
+                archivedCount++;
             } else {
-                // Renders traditional inventory view layout templates
-                const statusLabel = data.outOfSeason 
-                    ? '<span class="status-badge oos">Out of Season</span>' 
-                    : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
-
-                cardContentHtml += `
-                    <div>
-                        <div class="card-header-row">
-                            <span class="flavor-title">${flavor}</span>
-                            <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
-                                <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
-                                <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
-                            </div>
-                        </div>
-                        <div style="margin-top: 8px;">${statusLabel}</div>
-                        <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">
-                            ${data.outOfSeason ? 'Mark In Season' : 'Mark Out of Season'}
-                        </div>
-                    </div>
-                    
-                    <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
-                        <label class="case-checkbox-label">
-                            <input type="checkbox" 
-                                   ${data.inDisplayCase ? 'checked' : ''} 
-                                   onchange="handleCaseToggle('${flavor}', 'inDisplayCase', this.checked)">
-                            Canister in Display Case
-                        </label>
-                        <label class="case-checkbox-label">
-                            <input type="checkbox" 
-                                   ${data.inTransferCase ? 'checked' : ''} 
-                                   onchange="handleCaseToggle('${flavor}', 'inTransferCase', this.checked)">
-                            Canister in Transfer Case
-                        </label>
-                    </div>
-                `;
+                activeList.appendChild(li);
             }
+        }
 
-            li.innerHTML = cardContentHtml;
-            list.appendChild(li);
+        // Hide archive row rules if completely unneeded
+        archiveDivider.style.display = archivedCount > 0 ? 'block' : 'none';
+    }
+
+    // Renders spreadsheet array layout metrics for allergens
+    function renderAllergenChart() {
+        const tbody = document.getElementById('allergenTableBody');
+        tbody.innerHTML = '';
+
+        const keys = ['treeNuts', 'gluten', 'dairy', 'egg', 'soy', 'sesame'];
+
+        for (const [flavor, data] of Object.entries(inventory)) {
+            const tr = document.createElement('tr');
+            const targetAllergens = data.allergens || {};
+
+            let rowHtml = `<td class="excel-flavor-cell">${flavor}</td>`;
+            
+            keys.forEach(k => {
+                const checkedStr = targetAllergens[k] ? 'checked' : '';
+                rowHtml += `
+                    <td style="text-align: center;">
+                        <input type="checkbox" class="allergen-checkbox" ${checkedStr} 
+                               onchange="toggleAllergen('${flavor}', '${k}', this.checked)">
+                    </td>
+                `;
+            });
+
+            tr.innerHTML = rowHtml;
+            tbody.appendChild(tr);
         }
     }
 
+    // Running initial page setup layouts
     renderInventory();
 </script>
 
