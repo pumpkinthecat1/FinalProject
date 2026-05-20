@@ -69,12 +69,81 @@ Project Description;
         }
 
         h2 {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: var(--text-color);
             text-align: center;
         }
 
-        /* --- 4. GELATO CARD GRID STYLES --- */
+        /* --- 4. NEW FLAVOR CREATION BAR --- */
+        .creation-bar {
+            background: #fffbf7;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .creation-bar h3 {
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .creation-bar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Hiding native layout, styling standard circular color wheel clickable triggers */
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+
+        .btn-add {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-add:hover { opacity: 0.9; }
+
+        /* --- 5. GELATO CARD GRID STYLES --- */
         .inventory-list {
             list-style: none;
             display: grid;
@@ -91,6 +160,7 @@ Project Description;
             justify-content: space-between;
             gap: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            position: relative;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
@@ -113,10 +183,63 @@ Project Description;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 10px;
+            gap: 25px; /* Leave space for the action icon */
         }
 
-        /* --- 5. COUNTER COMPONENT (UP / DOWN BOX) --- */
+        .flavor-title {
+            font-weight: bold;
+            font-size: 16px;
+            word-break: break-word;
+        }
+
+        /* Edit Controls Component */
+        .edit-trigger {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            background: none;
+            border: none;
+        }
+        .edit-trigger:hover { opacity: 1; }
+
+        .edit-mode-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .edit-mode-panel input[type="text"] {
+            padding: 6px;
+            font-size: 13px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .edit-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-mini {
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-save { background-color: #2a9d8f; color: white; }
+        .btn-del { background-color: var(--danger); color: white; }
+
+        /* --- 6. COUNTER COMPONENT (UP / DOWN BOX) --- */
         .counter-box {
             display: flex;
             align-items: center;
@@ -124,6 +247,7 @@ Project Description;
             border: 1px solid rgba(0,0,0,0.15);
             border-radius: 6px;
             overflow: hidden;
+            margin-left: auto;
         }
 
         .counter-btn {
@@ -141,13 +265,8 @@ Project Description;
             transition: background 0.2s;
         }
 
-        .counter-btn:hover {
-            background: rgba(0, 0, 0, 0.08);
-        }
-
-        .counter-btn:first-child {
-            border-right: 1px solid rgba(0,0,0,0.15);
-        }
+        .counter-btn:hover { background: rgba(0, 0, 0, 0.08); }
+        .counter-btn:first-child { border-right: 1px solid rgba(0,0,0,0.15); }
 
         .status-badge {
             font-size: 13px;
@@ -161,7 +280,7 @@ Project Description;
         .status-badge.oos { background-color: var(--danger); color: white; }
         .status-badge.instock { background-color: rgba(255,255,255,0.8); color: #222; border: 1px solid rgba(0,0,0,0.05); }
 
-        /* --- 6. CHECKBOX UTILITIES --- */
+        /* --- 7. CHECKBOX UTILITIES --- */
         .case-controls-group {
             display: flex;
             flex-direction: column;
@@ -204,6 +323,19 @@ Project Description;
     </header>
 
     <div class="main-layout">
+        
+        <div class="creation-bar">
+            <h3>Add New Flavor Profile:</h3>
+            <div class="input-group">
+                <input type="text" id="newFlavorName" placeholder="Flavor Name (e.g., Blood Orange)">
+            </div>
+            <div class="color-picker-wrapper">
+                <label for="newFlavorColor">Card Tint:</label>
+                <input type="color" id="newFlavorColor" value="#ffffff">
+            </div>
+            <button class="btn-add" onclick="addNewFlavor()">Add to Registry</button>
+        </div>
+
         <h2>Current Gelato Canister Inventory</h2>
         <ul class="inventory-list" id="inventoryList"></ul>
     </div>
@@ -215,85 +347,93 @@ Project Description;
 </div>
 
 <script>
-    // Flavor color matching profile using legible, pastel styles
-    const flavorColors = {
-        "Vanilla": "rgba(243, 229, 171, 0.4)",
-        "Chocolate": "rgba(123, 63, 0, 0.2)",
-        "Mint Chip": "rgba(152, 255, 152, 0.4)",
-        "Lemon Cookie": "rgba(255, 244, 79, 0.3)",
-        "Stracciatella": "rgba(234, 224, 213, 0.5)",
-        "Nutty Squirrel": "rgba(205, 127, 50, 0.25)",
-        "Ferrero Rocher": "rgba(184, 134, 11, 0.25)",
-        "Lemon Mango Dragonfruit": "rgba(255, 140, 0, 0.25)",
-        "Forest Berries": "rgba(106, 13, 173, 0.15)",
-        "Cafe Latte": "rgba(200, 173, 127, 0.35)",
-        "Pistachio": "rgba(147, 197, 114, 0.35)",
-        "Banana Nutella": "rgba(227, 193, 111, 0.35)",
-        "Turkish Coffee": "rgba(75, 54, 33, 0.18)",
-        "Strawberry Dream": "rgba(255, 183, 197, 0.45)",
-        "Mango": "rgba(255, 192, 77, 0.35)",
-        "Vegan Dark Chocolate": "rgba(61, 35, 20, 0.15)",
-        "Minty Dream": "rgba(170, 240, 209, 0.45)",
-        "Ranier Smores": "rgba(210, 180, 140, 0.4)",
-        "Bunny Kisses": "rgba(251, 204, 231, 0.45)",
-        "Birthday Cake": "rgba(255, 192, 203, 0.45)",
-        "Hazelnut": "rgba(174, 140, 104, 0.35)",
-        "Gianduia": "rgba(160, 82, 45, 0.2)",
-        "Kinder Bueno": "rgba(232, 216, 200, 0.45)",
-        // Coordinated colors for new additions:
-        "Sea Salt Caramel": "rgba(198, 150, 106, 0.35)",
-        "Cookies and Dream": "rgba(140, 140, 140, 0.25)",
-        "Mon Cherry": "rgba(222, 49, 99, 0.2)",
-        "Banana Split": "rgba(255, 233, 133, 0.45)",
-        "Strawberry Shortcake": "rgba(255, 153, 153, 0.35)",
-        "Fior De Latte": "rgba(248, 249, 250, 0.8)",
-        "Prickly pear": "rgba(255, 111, 145, 0.35)"
-    };
+    // System utility to scale opacity down for standard hex variables into legible pastel configurations
+    function convertHexToRgba(hex, opacity) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) {
+            hex = hex.split('').map(char => char + char).join('');
+        }
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
 
     const defaultInventory = {
-        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        // New flavors appended into the tracking framework:
-        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
-        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false }
+        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab" },
+        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00" },
+        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98" },
+        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f" },
+        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5" },
+        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32" },
+        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b" },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00" },
+        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad" },
+        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f" },
+        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572" },
+        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f" },
+        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621" },
+        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5" },
+        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d" },
+        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314" },
+        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1" },
+        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c" },
+        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7" },
+        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb" },
+        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68" },
+        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d" },
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8" },
+        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a" },
+        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c" },
+        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163" },
+        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985" },
+        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999" },
+        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff" },
+        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91" }
     };
 
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
+    let activeEditFlavor = null; // Tracks which card is currently in editing mode
     
-    // Check if the local storage contains an old registry framework missing the new keys
-    if (!inventory || !inventory["Sea Salt Caramel"]) {
+    if (!inventory || !inventory["Vanilla"]) {
         inventory = defaultInventory;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
 
     function saveToStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
+    }
+
+    // Append custom flavor data structures from user actions
+    function addNewFlavor() {
+        const nameInput = document.getElementById('newFlavorName');
+        const colorInput = document.getElementById('newFlavorColor');
+        const rawName = nameInput.value.trim();
+
+        if (!rawName) {
+            alert("Please enter a valid name for your new flavor profile!");
+            return;
+        }
+
+        if (inventory.hasOwnProperty(rawName)) {
+            alert("This flavor name already exists in your inventory system dashboard.");
+            return;
+        }
+
+        // Initialize object data fields cleanly
+        inventory[rawName] = {
+            qty: 0,
+            outOfSeason: false,
+            inDisplayCase: false,
+            inTransferCase: false,
+            color: colorInput.value
+        };
+
+        nameInput.value = '';
+        colorInput.value = '#ffffff';
+        
+        saveToStorage();
+        renderInventory();
     }
 
     function adjustQty(flavor, amount) {
@@ -327,6 +467,49 @@ Project Description;
         renderInventory();
     }
 
+    // Sets state flag to render custom interactive input overlays on targeted indexes
+    function enterEditMode(flavor) {
+        activeEditFlavor = (activeEditFlavor === flavor) ? null : flavor;
+        renderInventory();
+    }
+
+    function saveFlavorEdits(oldKey) {
+        const newNameInput = document.getElementById(`editName-${oldKey.replace(/\s+/g, '_')}`);
+        const newColorInput = document.getElementById(`editColor-${oldKey.replace(/\s+/g, '_')}`);
+        const updatedName = newNameInput.value.trim();
+
+        if (!updatedName) {
+            alert("Flavor name cannot be left completely blank.");
+            return;
+        }
+
+        const dataRef = inventory[oldKey];
+        dataRef.color = newColorInput.value;
+
+        if (updatedName !== oldKey) {
+            if (inventory.hasOwnProperty(updatedName)) {
+                alert("Another existing flavor profile is already using that title structure.");
+                return;
+            }
+            // Transition object reference key states cleanly
+            inventory[updatedName] = dataRef;
+            delete inventory[oldKey];
+        }
+
+        activeEditFlavor = null;
+        saveToStorage();
+        renderInventory();
+    }
+
+    function deleteFlavor(flavor) {
+        if (confirm(`Are you sure you want to permanently erase ${flavor} from your system records?`)) {
+            delete inventory[flavor];
+            activeEditFlavor = null;
+            saveToStorage();
+            renderInventory();
+        }
+    }
+
     function renderInventory() {
         const list = document.getElementById('inventoryList');
         list.innerHTML = ''; 
@@ -335,42 +518,76 @@ Project Description;
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
             
-            li.style.backgroundColor = flavorColors[flavor] || "#fffbf7";
+            // Map translucent variables dynamically for legibility
+            const isDarkProfile = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
+            const opacitySetting = isDarkProfile ? 0.25 : 0.35;
+            li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", opacitySetting);
             
-            const statusLabel = data.outOfSeason 
-                ? '<span class="status-badge oos">Out of Season</span>' 
-                : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
+            const isEditing = (activeEditFlavor === flavor);
+            const safeId = flavor.replace(/\s+/g, '_');
 
-            li.innerHTML = `
-                <div>
-                    <div class="card-header-row">
-                        <strong>${flavor}</strong>
-                        <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
-                            <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
-                            <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
+            // Header template definition
+            let cardContentHtml = `
+                <button class="edit-trigger" onclick="enterEditMode('${flavor}')" title="Edit Properties">✏️</button>
+            `;
+
+            if (isEditing) {
+                // Renders configuration form fields if edit mode flag is active
+                cardContentHtml += `
+                    <div class="edit-mode-panel">
+                        <label style="font-size:12px; font-weight:bold;">Edit Name:</label>
+                        <input type="text" id="editName-${safeId}" value="${flavor}">
+                        
+                        <div class="color-picker-wrapper" style="margin:5px 0;">
+                            <label style="font-size:12px; font-weight:bold;">Color:</label>
+                            <input type="color" id="editColor-${safeId}" value="${data.color}">
+                        </div>
+                        
+                        <div class="edit-actions">
+                            <button class="btn-mini btn-save" onclick="saveFlavorEdits('${flavor}')">Save</button>
+                            <button class="btn-mini btn-del" onclick="deleteFlavor('${flavor}')">Delete</button>
                         </div>
                     </div>
-                    <div style="margin-top: 8px;">${statusLabel}</div>
-                    <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">
-                        ${data.outOfSeason ? 'Mark In Season' : 'Mark Out of Season'}
+                `;
+            } else {
+                // Renders traditional inventory view layout templates
+                const statusLabel = data.outOfSeason 
+                    ? '<span class="status-badge oos">Out of Season</span>' 
+                    : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
+
+                cardContentHtml += `
+                    <div>
+                        <div class="card-header-row">
+                            <span class="flavor-title">${flavor}</span>
+                            <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
+                                <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
+                                <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px;">${statusLabel}</div>
+                        <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">
+                            ${data.outOfSeason ? 'Mark In Season' : 'Mark Out of Season'}
+                        </div>
                     </div>
-                </div>
-                
-                <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
-                    <label class="case-checkbox-label">
-                        <input type="checkbox" 
-                               ${data.inDisplayCase ? 'checked' : ''} 
-                               onchange="handleCaseToggle('${flavor}', 'inDisplayCase', this.checked)">
-                        Canister in Display Case
-                    </label>
-                    <label class="case-checkbox-label">
-                        <input type="checkbox" 
-                               ${data.inTransferCase ? 'checked' : ''} 
-                               onchange="handleCaseToggle('${flavor}', 'inTransferCase', this.checked)">
-                        Canister in Transfer Case
-                    </label>
-                </div>
-            `;
+                    
+                    <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
+                        <label class="case-checkbox-label">
+                            <input type="checkbox" 
+                                   ${data.inDisplayCase ? 'checked' : ''} 
+                                   onchange="handleCaseToggle('${flavor}', 'inDisplayCase', this.checked)">
+                            Canister in Display Case
+                        </label>
+                        <label class="case-checkbox-label">
+                            <input type="checkbox" 
+                                   ${data.inTransferCase ? 'checked' : ''} 
+                                   onchange="handleCaseToggle('${flavor}', 'inTransferCase', this.checked)">
+                            Canister in Transfer Case
+                        </label>
+                    </div>
+                `;
+            }
+
+            li.innerHTML = cardContentHtml;
             list.appendChild(li);
         }
     }
