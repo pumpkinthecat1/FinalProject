@@ -172,29 +172,13 @@ Project Description;
             letter-spacing: 0.5px;
         }
 
-        /* WORD-STYLE PAGE BREAK DIVIDER */
+        /* UPDATED: DOTTED LINE BREAK WITHOUT TEXT */
         .page-break {
             margin: 40px 0;
             border: none;
-            border-top: 1px solid #b5b5b5;
-            border-bottom: 1px solid #b5b5b5;
-            background-color: #f0f0f0;
-            height: 12px;
-            position: relative;
-            text-align: center;
-        }
-        .page-break::after {
-            content: "PAGE BREAK";
-            font-size: 9px;
-            font-weight: bold;
-            color: #999;
-            background: #fff;
-            padding: 0 10px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            letter-spacing: 2px;
+            border-top: 3px dotted var(--border-color);
+            height: 0;
+            width: 100%;
         }
 
         .section-divider {
@@ -336,7 +320,6 @@ Project Description;
             position: relative;
         }
 
-        /* NEW TAG INDICATOR STYLE */
         .new-tag {
             background-color: var(--danger);
             color: white;
@@ -644,7 +627,17 @@ Project Description;
 
             <div class="page-break"></div>
 
-            <h3 class="section-heading">🍒 Ingredients &amp; Toppings</h3>
+            <h3 class="section-heading" style="color: #9d4edd">🍰 Standalone Desserts</h3>
+            <ul class="inventory-list" id="dessertsInventoryList"></ul>
+
+            <div class="page-break"></div>
+
+            <h3 class="section-heading" style="color: #0077b6">🥤 Beverages &amp; Drinks</h3>
+            <ul class="inventory-list" id="drinksInventoryList"></ul>
+
+            <div class="page-break"></div>
+
+            <h3 class="section-heading" style="color: #2a9d8f">🍒 Ingredients &amp; Toppings</h3>
             <ul class="inventory-list" id="consumablesInventoryList"></ul>
         </div>
 
@@ -726,14 +719,12 @@ Project Description;
     };
 
     const defaultConsumables = {
-        /* CONES TRACKING COMPONENT */
         "Waffle Cones": { qty: 0, unit: "cones" },
         "Sugar Cones": { qty: 0, unit: "cones" },
         "Torch Cones": { qty: 0, unit: "cones" },
         "Premium Cones": { qty: 0, unit: "cones" },
         "Cake Cones": { qty: 0, unit: "cones" },
         "Gluten Free Cones": { qty: 0, unit: "cones" },
-        /* CORE TOPPING UNITS */
         "Cherries": { qty: 0, unit: "cans" },
         "Marshmallows": { qty: 0, unit: "bags" },
         "Sprinkles": { qty: 0, unit: "boxes" },
@@ -802,7 +793,7 @@ Project Description;
         }
     }
 
-    /* --- SECTION A: GELATO OPERATIONS + IS-NEW VERIFICATION TARGETING --- */
+    /* --- SECTION A: GELATO OPERATIONS --- */
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
         const colorInput = document.getElementById('newFlavorColor');
@@ -812,7 +803,6 @@ Project Description;
         if (!name) return alert("Enter a valid flavor name!");
         if (inventory.hasOwnProperty(name)) return alert("Flavor already exists.");
 
-        // Mark dynamic run-time user creations with 'isNew: true' flag
         inventory[name] = { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: colorInput.value, isVegan: veganInput.checked, allergens: {}, isNew: true };
         nameInput.value = ''; colorInput.value = '#ffffff'; veganInput.checked = false;
         saveAllStorage(); renderInventory();
@@ -904,7 +894,6 @@ Project Description;
                     </div>`;
             } else {
                 const badge = data.outOfSeason ? '<span class="status-badge oos">Out of Season</span>' : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
-                // Append Red Label if marked as new entry profile
                 const newTagMarkup = data.isNew ? '<span class="new-tag">New</span>' : '';
                 
                 html += `
@@ -949,7 +938,7 @@ Project Description;
         }
     }
 
-    /* --- SECTION B: PACKAGING/ITEMS SEPARATED BY MATERIAL --- */
+    /* --- SECTION B: PACKAGING/ITEMS UPDATED MATERIAL SORTING --- */
     function addNewItem() {
         const nameInput = document.getElementById('newItemName');
         const unitInput = document.getElementById('newItemUnit');
@@ -993,6 +982,9 @@ Project Description;
         const plasticList = document.getElementById('plasticItemsList');
         paperList.innerHTML = ''; plasticList.innerHTML = '';
 
+        // Explicit structural targets mapping requested items to Plastic layout
+        const plasticTargets = ["small spoons", "large spoons", "coffee cup lids", "straws", "milkshake cup", "milkshake cup lids"];
+
         for (const [name, data] of Object.entries(itemsInventory)) {
             const li = document.createElement('li'); li.className = 'inventory-item';
             const isEditing = (activeEditItem === name);
@@ -1028,9 +1020,10 @@ Project Description;
             }
             li.innerHTML = html;
 
-            // Sort logic: Milkshake Cups are flagged explicitly as plastic.
             const lowerName = name.toLowerCase();
-            if (lowerName.includes("milkshake cup")) {
+            const isPlastic = plasticTargets.some(target => lowerName.includes(target));
+
+            if (isPlastic) {
                 plasticList.appendChild(li);
             } else {
                 paperList.appendChild(li);
@@ -1038,7 +1031,7 @@ Project Description;
         }
     }
 
-    /* --- SECTION C: CONSUMABLES OPERATIONS WITH DEDICATED CONES GRID --- */
+    /* --- SECTION C: CONSUMABLES DETAILED BREAKDOWN --- */
     function addNewConsumable() {
         const nameInput = document.getElementById('newConsumableName');
         const unitInput = document.getElementById('newConsumableUnit');
@@ -1078,9 +1071,15 @@ Project Description;
     }
 
     function renderConsumablesInventory() {
-        const standardList = document.getElementById('consumablesInventoryList');
         const conesList = document.getElementById('conesInventoryList');
-        standardList.innerHTML = ''; conesList.innerHTML = '';
+        const dessertsList = document.getElementById('dessertsInventoryList');
+        const drinksList = document.getElementById('drinksInventoryList');
+        const toppingsList = document.getElementById('consumablesInventoryList');
+        
+        conesList.innerHTML = ''; dessertsList.innerHTML = ''; drinksList.innerHTML = ''; toppingsList.innerHTML = '';
+
+        const dessertTargets = ["lava cake", "macaron", "tiramisu"];
+        const drinkTargets = ["soda", "cold brew", "milk", "oatmilk", "whole milk", "soy milk", "chai", "hot chocolate", "water"];
 
         for (const [name, data] of Object.entries(consumablesInventory)) {
             const li = document.createElement('li'); li.className = 'inventory-item';
@@ -1123,16 +1122,22 @@ Project Description;
             }
             li.innerHTML = html; 
 
-            // Sort to the top Cones panel if unit matches 'cones' or name contains 'Cone'
-            if (data.unit === 'cones' || name.toLowerCase().includes('cone')) {
+            const lowerName = name.toLowerCase();
+
+            // Segment allocation logic engine
+            if (data.unit === 'cones' || lowerName.includes('cone')) {
                 conesList.appendChild(li);
+            } else if (dessertTargets.some(t => lowerName.includes(t))) {
+                dessertsList.appendChild(li);
+            } else if (drinkTargets.some(t => lowerName.includes(t)) || data.unit === 'bottles' && !lowerName.includes('drizzle')) {
+                drinksList.appendChild(li);
             } else {
-                standardList.appendChild(li);
+                toppingsList.appendChild(li);
             }
         }
     }
 
-    // Baseline Application Initial Synchronization Render Engine Callouts
+    // Master Initialization Launch Elements
     renderInventory();
     renderAllergenChart();
     renderItemsInventory();
