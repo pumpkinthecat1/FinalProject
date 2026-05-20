@@ -7,14 +7,13 @@ Project Description;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍦 Ice Cream Shop Management Hub</title>
+    <title>🍦 Gelato Shop Management Hub</title>
     <style>
         /* --- 1. DESIGN VARIABLES --- */
         :root {
             --bg-main: #f9f6f0;
             --bg-card: #ffffff;
             --primary: #d4a373;
-            --accent: #cb997e;
             --text-color: #333333;
             --border-color: #e6ccb2;
             --danger: #e63946;
@@ -38,7 +37,7 @@ Project Description;
         }
 
         .app-container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -56,18 +55,6 @@ Project Description;
         }
 
         .main-layout {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            min-height: 500px;
-        }
-
-        aside {
-            background-color: #fffbf7;
-            padding: 25px;
-            border-right: 1px solid var(--border-color);
-        }
-
-        main {
             padding: 25px;
             background-color: var(--bg-card);
         }
@@ -81,112 +68,130 @@ Project Description;
             background-color: #fffbf7;
         }
 
-        /* --- 4. COMPONENT STYLES --- */
-        h2, h3 {
-            margin-bottom: 15px;
+        h2 {
+            margin-bottom: 25px;
             color: var(--text-color);
+            text-align: center;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        select, input[type="number"], button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        button {
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s, color 0.2s;
-            text-shadow: 0px 1px 2px rgba(0,0,0,0.2);
-        }
-        
-        .btn-toggle { background-color: #6c757d; }
-        .btn-toggle:hover { opacity: 0.9; }
-
-        /* --- 5. INVENTORY LIST STYLES --- */
+        /* --- 4. GELATO CARD GRID STYLES --- */
         .inventory-list {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .inventory-item {
-            background: #fffbf7;
-            padding: 15px;
+            padding: 20px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 10px;
-            transition: border-color 0.2s;
+            gap: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .inventory-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .inventory-item.out-of-season {
-            background-color: #f1f1f1;
-            color: #999;
-            border-color: #ddd;
+            background-color: #e0e0e0 !important;
+            color: #888;
+            border-color: #ccc;
         }
 
         .inventory-item.out-of-season strong {
             text-decoration: line-through;
         }
 
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        /* --- 5. COUNTER COMPONENT (UP / DOWN BOX) --- */
+        .counter-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .counter-btn {
+            background: transparent;
+            border: none;
+            width: 32px;
+            height: 32px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .counter-btn:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .counter-btn:first-child {
+            border-right: 1px solid rgba(0,0,0,0.15);
+        }
+
         .status-badge {
-            font-size: 12px;
-            padding: 4px 8px;
+            font-size: 13px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-weight: bold;
             text-align: center;
             display: inline-block;
-            align-self: flex-start;
         }
 
         .status-badge.oos { background-color: var(--danger); color: white; }
-        .status-badge.instock { background-color: #e2eafc; color: var(--safe); }
+        .status-badge.instock { background-color: rgba(255,255,255,0.8); color: #222; border: 1px solid rgba(0,0,0,0.05); }
 
-        .display-case-control {
+        /* --- 6. CHECKBOX UTILITIES --- */
+        .case-controls-group {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-            margin-top: 5px;
-            padding-top: 8px;
-            border-top: 1px dashed var(--border-color);
-            font-size: 14px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(0,0,0,0.15);
         }
 
-        .display-case-control input {
+        .case-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .case-checkbox-label input {
             width: 16px;
             height: 16px;
             cursor: pointer;
         }
 
-        /* --- 6. RESPONSIVE DESIGN --- */
-        @media (max-width: 768px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-            aside {
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-            }
+        .season-toggle-link {
+            font-size: 12px;
+            color: #555;
+            text-decoration: underline;
+            cursor: pointer;
+            align-self: flex-start;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -195,124 +200,78 @@ Project Description;
 <div class="app-container">
     
     <header>
-        <h1>🍦 Scoop Manager Dashboard</h1>
+        <h1>🍦 Gelato Shop Management Hub</h1>
     </header>
 
     <div class="main-layout">
-        
-        <aside>
-            <h3>Stock Controls</h3>
-            
-            <div class="form-group">
-                <label for="flavorSelect">Select Flavor</label>
-                <select id="flavorSelect" onchange="applyButtonColor()">
-                    <option value="Vanilla">Vanilla</option>
-                    <option value="Chocolate">Chocolate</option>
-                    <option value="Mint Chip">Mint Chip</option>
-                    <option value="Lemon Cookie">Lemon Cookie</option>
-                    <option value="Stracciatella">Stracciatella</option>
-                    <option value="Nutty Squirrel">Nutty Squirrel</option>
-                    <option value="Ferrero Rocher">Ferrero Rocher</option>
-                    <option value="Lemon Mango Dragonfruit">Lemon Mango Dragonfruit</option>
-                    <option value="Forest Berries">Forest Berries</option>
-                    <option value="Cafe Latte">Cafe Latte</option>
-                    <option value="Pistachio">Pistachio</option>
-                    <option value="Banana Nutella">Banana Nutella</option>
-                    <option value="Turkish Coffee">Turkish Coffee</option>
-                    <option value="Strawberry Dream">Strawberry Dream</option>
-                    <option value="Mango">Mango</option>
-                    <option value="Vegan Dark Chocolate">Vegan Dark Chocolate</option>
-                    <option value="Minty Dream">Minty Dream</option>
-                    <option value="Ranier Smores">Ranier Smores</option>
-                    <option value="Bunny Kisses">Bunny Kisses</option>
-                    <option value="Birthday Cake">Birthday Cake</option>
-                    <option value="Hazelnut">Hazelnut</option>
-                    <option value="Gianduia">Gianduia</option>
-                    <option value="Kinder Bueno">Kinder Bueno</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="stockChange">Adjustment Amount</label>
-                <input type="number" id="stockChange" placeholder="Qty" value="1">
-            </div>
-
-            <button id="updateButton" onclick="updateStock()">Update Quantity</button>
-            <button class="btn-toggle" onclick="toggleSeason()">Toggle Season</button>
-        </aside>
-
-        <main>
-            <h2>Current Inventory Status</h2>
-            <ul class="inventory-list" id="inventoryList"></ul>
-        </main>
-
+        <h2>Current Gelato Canister Inventory</h2>
+        <ul class="inventory-list" id="inventoryList"></ul>
     </div>
 
     <footer>
-        <p>&copy; 2026 Ice Cream Shop POS System. All Rights Reserved.</p>
+        <p>&copy; 2026 Gelato Shop POS System. All Rights Reserved.</p>
     </footer>
 
 </div>
 
 <script>
-    // Flavor coordinated pastel mapping scheme
+    // Flavor color matching profile using legible, pastel styles
     const flavorColors = {
-        "Vanilla": "#f3e5ab",
-        "Chocolate": "#7b3f00",
-        "Mint Chip": "#98ff98",
-        "Lemon Cookie": "#fff44f",
-        "Stracciatella": "#eae0d5",
-        "Nutty Squirrel": "#cd7f32",
-        "Ferrero Rocher": "#b8860b",
-        "Lemon Mango Dragonfruit": "#ff8c00",
-        "Forest Berries": "#6a0dad",
-        "Cafe Latte": "#c8ad7f",
-        "Pistachio": "#93c572",
-        "Banana Nutella": "#e3c16f",
-        "Turkish Coffee": "#4b3621",
-        "Strawberry Dream": "#ffb7c5",
-        "Mango": "#ffc04d",
-        "Vegan Dark Chocolate": "#3d2314",
-        "Minty Dream": "#aaf0d1",
-        "Ranier Smores": "#d2b48c",
-        "Bunny Kisses": "#fbcce7",
-        "Birthday Cake": "#ffc0cb",
-        "Hazelnut": "#ae8c68",
-        "Gianduia": "#a0522d",
-        "Kinder Bueno": "#e8d8c8"
+        "Vanilla": "rgba(243, 229, 171, 0.4)",
+        "Chocolate": "rgba(123, 63, 0, 0.2)",
+        "Mint Chip": "rgba(152, 255, 152, 0.4)",
+        "Lemon Cookie": "rgba(255, 244, 79, 0.3)",
+        "Stracciatella": "rgba(234, 224, 213, 0.5)",
+        "Nutty Squirrel": "rgba(205, 127, 50, 0.25)",
+        "Ferrero Rocher": "rgba(184, 134, 11, 0.25)",
+        "Lemon Mango Dragonfruit": "rgba(255, 140, 0, 0.25)",
+        "Forest Berries": "rgba(106, 13, 173, 0.15)",
+        "Cafe Latte": "rgba(200, 173, 127, 0.35)",
+        "Pistachio": "rgba(147, 197, 114, 0.35)",
+        "Banana Nutella": "rgba(227, 193, 111, 0.35)",
+        "Turkish Coffee": "rgba(75, 54, 33, 0.18)",
+        "Strawberry Dream": "rgba(255, 183, 197, 0.45)",
+        "Mango": "rgba(255, 192, 77, 0.35)",
+        "Vegan Dark Chocolate": "rgba(61, 35, 20, 0.15)",
+        "Minty Dream": "rgba(170, 240, 209, 0.45)",
+        "Ranier Smores": "rgba(210, 180, 140, 0.4)",
+        "Bunny Kisses": "rgba(251, 204, 231, 0.45)",
+        "Birthday Cake": "rgba(255, 192, 203, 0.45)",
+        "Hazelnut": "rgba(174, 140, 104, 0.35)",
+        "Gianduia": "rgba(160, 82, 45, 0.2)",
+        "Kinder Bueno": "rgba(232, 216, 200, 0.45)"
     };
 
-    // Default configuration objects adjusted with the new tracking property 'inDisplayCase'
     const defaultInventory = {
-        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false }
+        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false },
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false }
     };
 
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
     
-    // Ensure accurate structure setup and schema compliance
-    if (!inventory || inventory.hasOwnProperty("Strawberry") || !inventory["Vanilla"].hasOwnProperty("inDisplayCase")) {
+    // Safety check initialization
+    if (!inventory || !inventory["Vanilla"] || !inventory["Vanilla"].hasOwnProperty("inTransferCase")) {
         inventory = defaultInventory;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
@@ -321,25 +280,37 @@ Project Description;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
     }
 
-    // Handles changing button color to match flavor selection
-    function applyButtonColor() {
-        const selectedFlavor = document.getElementById('flavorSelect').value;
-        const btn = document.getElementById('updateButton');
-        const color = flavorColors[selectedFlavor] || 'var(--accent)';
-        btn.style.backgroundColor = color;
-        
-        // Dynamic accessible text color choice based on light/dark pastel profiles
-        if (["Chocolate", "Forest Berries", "Turkish Coffee", "Vegan Dark Chocolate"].includes(selectedFlavor)) {
-            btn.style.color = "white";
-        } else {
-            btn.style.color = "#333333";
-        }
+    // Direct up/down button stock adjuster logic
+    function adjustQty(flavor, amount) {
+        inventory[flavor].qty = Math.max(0, inventory[flavor].qty + amount);
+        saveToStorage();
+        renderInventory();
     }
 
-    // Directly toggles display case property updates from layout cards
-    function toggleDisplayCase(flavor, isChecked) {
-        inventory[flavor].inDisplayCase = isChecked;
+    // Checkbox rules: checking a box pulls 1 canister out of stock. Unchecking puts it back.
+    function handleCaseToggle(flavor, caseKey, isChecked) {
+        if (isChecked) {
+            if (inventory[flavor].qty > 0) {
+                inventory[flavor].qty -= 1;
+                inventory[flavor][caseKey] = true;
+            } else {
+                alert(`Cannot place in case! You have 0 backup canisters of ${flavor} left.`);
+                renderInventory(); 
+                return;
+            }
+        } else {
+            inventory[flavor].qty += 1;
+            inventory[flavor][caseKey] = false;
+        }
+        
         saveToStorage();
+        renderInventory();
+    }
+
+    function toggleSeason(flavor) {
+        inventory[flavor].outOfSeason = !inventory[flavor].outOfSeason;
+        saveToStorage();
+        renderInventory();
     }
 
     function renderInventory() {
@@ -350,51 +321,49 @@ Project Description;
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
             
+            // Assigns coordinated flavor color to the tab panel itself
+            li.style.backgroundColor = flavorColors[flavor] || "#fffbf7";
+            
             const statusLabel = data.outOfSeason 
                 ? '<span class="status-badge oos">Out of Season</span>' 
-                : `<span class="status-badge instock">${data.qty} canisters left</span>`;
+                : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
 
-            // Card body template tracking canister location checkboxes
             li.innerHTML = `
                 <div>
-                    <strong>${flavor}</strong>
-                    <div style="margin-top: 5px;">${statusLabel}</div>
+                    <div class="card-header-row">
+                        <strong>${flavor}</strong>
+                        
+                        <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
+                            <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
+                            <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 8px;">${statusLabel}</div>
+                    <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">
+                        ${data.outOfSeason ? 'Mark In Season' : 'Mark Out of Season'}
+                    </div>
                 </div>
-                <label class="display-case-control">
-                    <input type="checkbox" 
-                           ${data.inDisplayCase ? 'checked' : ''} 
-                           onchange="toggleDisplayCase('${flavor}', this.checked)">
-                    Canister in Display Case
-                </label>
+                
+                <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
+                    <label class="case-checkbox-label">
+                        <input type="checkbox" 
+                               ${data.inDisplayCase ? 'checked' : ''} 
+                               onchange="handleCaseToggle('${flavor}', 'inDisplayCase', this.checked)">
+                        Canister in Display Case
+                    </label>
+                    <label class="case-checkbox-label">
+                        <input type="checkbox" 
+                               ${data.inTransferCase ? 'checked' : ''} 
+                               onchange="handleCaseToggle('${flavor}', 'inTransferCase', this.checked)">
+                        Canister in Transfer Case
+                    </label>
+                </div>
             `;
             list.appendChild(li);
         }
     }
 
-    function updateStock() {
-        const flavor = document.getElementById('flavorSelect').value;
-        const change = parseInt(document.getElementById('stockChange').value);
-
-        if (isNaN(change)) {
-            alert("Please enter a valid number!");
-            return;
-        }
-
-        inventory[flavor].qty = Math.max(0, inventory[flavor].qty + change);
-        saveToStorage();
-        renderInventory();
-    }
-
-    function toggleSeason() {
-        const flavor = document.getElementById('flavorSelect').value;
-        inventory[flavor].outOfSeason = !inventory[flavor].outOfSeason;
-        saveToStorage();
-        renderInventory();
-    }
-
-    // Render baseline setup layouts on window initialization
     renderInventory();
-    applyButtonColor();
 </script>
 
 </body>
