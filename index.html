@@ -172,7 +172,7 @@ Project Description;
             letter-spacing: 0.5px;
         }
 
-        /* UPDATED: DOTTED LINE BREAK WITHOUT TEXT */
+        /* DOTTED LINE BREAK WITHOUT TEXT */
         .page-break {
             margin: 40px 0;
             border: none;
@@ -198,7 +198,7 @@ Project Description;
             top: -12px;
         }
 
-        /* --- 5. INTERACTIVE CREATION WORKBARS --- */
+        /* --- 5. INTERACTIVE CREATION & UTILITY TOOLBARS --- */
         .creation-bar {
             background: #fffbf7;
             border: 2px solid var(--border-color);
@@ -209,6 +209,44 @@ Project Description;
             flex-wrap: wrap;
             align-items: center;
             gap: 20px;
+        }
+
+        .filter-control-bar {
+            background: #fdfaf6;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .filter-group input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
         }
 
         .creation-bar h3 {
@@ -536,6 +574,20 @@ Project Description;
                 <button class="btn-add" onclick="addNewFlavor()">Add to Registry</button>
             </div>
 
+            <div class="filter-control-bar">
+                <div class="filter-group">
+                    <input type="text" id="searchDashboard" placeholder="🔍 Search flavors (lenient typos)..." oninput="renderInventory()">
+                </div>
+                <div class="filter-group" style="justify-content: flex-end;">
+                    <label for="sortDashboard" style="font-size:14px; font-weight:bold;">Sort By:</label>
+                    <select id="sortDashboard" onchange="renderInventory()">
+                        <option value="az">A-Z</option>
+                        <option value="high-low">Quantity (Highest to Lowest)</option>
+                        <option value="low-high">Quantity (Lowest to Highest)</option>
+                    </select>
+                </div>
+            </div>
+
             <h2>In-Season Gelato Selection</h2>
             
             <h3 class="section-heading" style="color: var(--vegan-color)">🌱 Vegan Options</h3>
@@ -554,6 +606,13 @@ Project Description;
 
         <div id="panelAllergens" class="view-panel">
             <h2>Allergen Reference Chart</h2>
+            
+            <div class="filter-control-bar">
+                <div class="filter-group">
+                    <input type="text" id="searchAllergens" placeholder="🔍 Search spreadsheet flavors..." oninput="renderAllergenChart()">
+                </div>
+            </div>
+
             <div class="spreadsheet-container">
                 <table class="excel-table">
                     <thead>
@@ -588,6 +647,21 @@ Project Description;
                 </div>
                 <button class="btn-add" onclick="addNewItem()">Add Item</button>
             </div>
+
+            <div class="filter-control-bar">
+                <div class="filter-group">
+                    <input type="text" id="searchItems" placeholder="🔍 Search packing & utensils..." oninput="renderItemsInventory()">
+                </div>
+                <div class="filter-group" style="justify-content: flex-end;">
+                    <label for="sortItems" style="font-size:14px; font-weight:bold;">Sort By:</label>
+                    <select id="sortItems" onchange="renderItemsInventory()">
+                        <option value="az">A-Z</option>
+                        <option value="high-low">Quantity (Highest to Lowest)</option>
+                        <option value="low-high">Quantity (Lowest to Highest)</option>
+                    </select>
+                </div>
+            </div>
+
             <h2>Service Items &amp; Packaging Storage</h2>
             
             <h3 class="section-heading">📄 Paper Products</h3>
@@ -620,6 +694,20 @@ Project Description;
                 <button class="btn-add" onclick="addNewConsumable()">Add Consumable</button>
             </div>
 
+            <div class="filter-control-bar">
+                <div class="filter-group">
+                    <input type="text" id="searchConsumables" placeholder="🔍 Search ingredients & cones..." oninput="renderConsumablesInventory()">
+                </div>
+                <div class="filter-group" style="justify-content: flex-end;">
+                    <label for="sortConsumables" style="font-size:14px; font-weight:bold;">Sort By:</label>
+                    <select id="sortConsumables" onchange="renderConsumablesInventory()">
+                        <option value="az">A-Z</option>
+                        <option value="high-low">Quantity (Highest to Lowest)</option>
+                        <option value="low-high">Quantity (Lowest to Highest)</option>
+                    </select>
+                </div>
+            </div>
+
             <h2>Toppings, Beverages &amp; Ingredients</h2>
             
             <h3 class="section-heading" style="color: #b17a46">🍦 Serving Cones</h3>
@@ -650,6 +738,45 @@ Project Description;
 </div>
 
 <script>
+    /* --- SECTION 0: STRING LEVENSHTEIN FUZZY MATH ENGINE --- */
+    function fuzzyMatch(sourceStr, targetStr) {
+        const source = sourceStr.toLowerCase().trim();
+        const target = targetStr.toLowerCase().trim();
+        
+        if (!target) return true;
+        if (source.includes(target)) return true;
+
+        // Implementation of Levenshtein matrix distance formula
+        const track = Array(target.length + 1).fill(null).map(() => Array(source.length + 1).fill(null));
+        for (let i = 0; i <= source.length; i += 1) track[0][i] = i;
+        for (let j = 0; j <= target.length; j += 1) track[j][0] = j;
+        
+        for (let j = 1; j <= target.length; j += 1) {
+            for (let i = 1; i <= source.length; i += 1) {
+                const indicator = source[i - 1] === target[j - 1] ? 0 : 1;
+                track[j][i] = Math.min(
+                    track[j][i - 1] + 1, // deletion
+                    track[j - 1][i] + 1, // insertion
+                    track[j - 1][i - 1] + indicator // substitution
+                );
+            }
+        }
+        
+        // Dynamic allowed mistake variance based on total string length
+        const maxMistakes = target.length <= 4 ? 1 : target.length <= 7 ? 2 : 3;
+        return track[target.length][source.length] <= maxMistakes;
+    }
+
+    /* --- ARRAY ORDERING DISPATCH METHOD --- */
+    function sortInventoryEntries(entriesArray, sortType) {
+        return entriesArray.sort((a, b) => {
+            if (sortType === 'high-low') return b[1].qty - a[1].qty;
+            if (sortType === 'low-high') return a[1].qty - b[1].qty;
+            // Fallback default: Alphabetical order (A-Z)
+            return a[0].localeCompare(b[0]);
+        });
+    }
+
     function convertHexToRgba(hex, opacity) {
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
@@ -868,10 +995,17 @@ Project Description;
         const archivedList = document.getElementById('archivedList');
         const archiveDivider = document.getElementById('archiveDivider');
         
+        const query = document.getElementById('searchDashboard').value;
+        const sortVal = document.getElementById('sortDashboard').value;
+
         veganList.innerHTML = ''; dairyList.innerHTML = ''; archivedList.innerHTML = '';
         let archCount = 0;
 
-        for (const [flavor, data] of Object.entries(inventory)) {
+        // Process search and sorting dynamically via array engine
+        let rawEntries = Object.entries(inventory).filter(([flavor]) => fuzzyMatch(flavor, query));
+        let processedEntries = sortInventoryEntries(rawEntries, sortVal);
+
+        for (const [flavor, data] of processedEntries) {
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
             const isDark = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
@@ -927,8 +1061,12 @@ Project Description;
 
     function renderAllergenChart() {
         const tbody = document.getElementById('allergenTableBody'); tbody.innerHTML = '';
+        const query = document.getElementById('searchAllergens').value;
         const keys = ['treeNuts', 'gluten', 'dairy', 'egg', 'soy', 'sesame'];
+
         for (const [flavor, data] of Object.entries(inventory)) {
+            if (!fuzzyMatch(flavor, query)) continue;
+            
             const tr = document.createElement('tr'); const rAllergens = data.allergens || {};
             let html = `<td class="excel-flavor-cell">${flavor}</td>`;
             keys.forEach(k => {
@@ -938,7 +1076,7 @@ Project Description;
         }
     }
 
-    /* --- SECTION B: PACKAGING/ITEMS UPDATED MATERIAL SORTING --- */
+    /* --- SECTION B: PACKAGING/ITEMS MATERIAL SORTING --- */
     function addNewItem() {
         const nameInput = document.getElementById('newItemName');
         const unitInput = document.getElementById('newItemUnit');
@@ -980,12 +1118,18 @@ Project Description;
     function renderItemsInventory() {
         const paperList = document.getElementById('paperItemsList');
         const plasticList = document.getElementById('plasticItemsList');
+        
+        const query = document.getElementById('searchItems').value;
+        const sortVal = document.getElementById('sortItems').value;
+        
         paperList.innerHTML = ''; plasticList.innerHTML = '';
 
-        // Explicit structural targets mapping requested items to Plastic layout
         const plasticTargets = ["small spoons", "large spoons", "coffee cup lids", "straws", "milkshake cup", "milkshake cup lids"];
 
-        for (const [name, data] of Object.entries(itemsInventory)) {
+        let rawEntries = Object.entries(itemsInventory).filter(([name]) => fuzzyMatch(name, query));
+        let processedEntries = sortInventoryEntries(rawEntries, sortVal);
+
+        for (const [name, data] of processedEntries) {
             const li = document.createElement('li'); li.className = 'inventory-item';
             const isEditing = (activeEditItem === name);
             const safeId = name.replace(/\s+/g, '_');
@@ -1076,12 +1220,18 @@ Project Description;
         const drinksList = document.getElementById('drinksInventoryList');
         const toppingsList = document.getElementById('consumablesInventoryList');
         
+        const query = document.getElementById('searchConsumables').value;
+        const sortVal = document.getElementById('sortConsumables').value;
+
         conesList.innerHTML = ''; dessertsList.innerHTML = ''; drinksList.innerHTML = ''; toppingsList.innerHTML = '';
 
         const dessertTargets = ["lava cake", "macaron", "tiramisu"];
         const drinkTargets = ["soda", "cold brew", "milk", "oatmilk", "whole milk", "soy milk", "chai", "hot chocolate", "water"];
 
-        for (const [name, data] of Object.entries(consumablesInventory)) {
+        let rawEntries = Object.entries(consumablesInventory).filter(([name]) => fuzzyMatch(name, query));
+        let processedEntries = sortInventoryEntries(rawEntries, sortVal);
+
+        for (const [name, data] of processedEntries) {
             const li = document.createElement('li'); li.className = 'inventory-item';
             li.style.backgroundColor = generatePastelColor(name);
             
@@ -1124,7 +1274,6 @@ Project Description;
 
             const lowerName = name.toLowerCase();
 
-            // Segment allocation logic engine
             if (data.unit === 'cones' || lowerName.includes('cone')) {
                 conesList.appendChild(li);
             } else if (dessertTargets.some(t => lowerName.includes(t))) {
