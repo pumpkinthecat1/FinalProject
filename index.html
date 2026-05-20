@@ -273,7 +273,6 @@ Project Description;
             background-color: var(--bg-card);
         }
 
-        /* Items Inventory cards explicitly remain crisp white with structural outlines */
         .items-grid .inventory-item {
             background-color: white !important;
             border: 1px solid var(--border-color);
@@ -585,7 +584,6 @@ Project Description;
 </div>
 
 <script>
-    // System utility to map standard hex choices or hash functions to readable pastel strings
     function convertHexToRgba(hex, opacity) {
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
@@ -595,7 +593,6 @@ Project Description;
         return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     }
 
-    // Dynamic color string generation pipeline to support Consumables colors natively 
     function generatePastelColor(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -605,7 +602,7 @@ Project Description;
         return `hsla(${h}, 75%, 85%, 0.5)`;
     }
 
-    /* --- INITIAL GENERATION DEFAULTS --- */
+    /* --- RESTORED ALL CORE GELATO FLAVORS --- */
     const defaultGelato = {
         "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {} },
         "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {} },
@@ -682,7 +679,7 @@ Project Description;
         "Tiramisu": { qty: 0, unit: "boxes" }
     };
 
-    /* --- STATE REGISTRY DATA HANDLING --- */
+    /* --- STORAGE & LIFECYCLE CONTROLS --- */
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || defaultGelato;
     let itemsInventory = JSON.parse(localStorage.getItem('itemsInventory')) || defaultItems;
     let consumablesInventory = JSON.parse(localStorage.getItem('consumablesInventory')) || defaultConsumables;
@@ -691,13 +688,23 @@ Project Description;
     let activeEditItem = null;
     let activeEditConsumable = null;
 
+    // Fixed safety mechanism to prevent losing predefined flavors on older storage formats
+    if (!inventory["Vanilla"] || !inventory["Sea Salt Caramel"]) {
+        inventory = defaultGelato;
+    }
+    if (!itemsInventory["Small spoons"]) {
+        itemsInventory = defaultItems;
+    }
+    if (!consumablesInventory["Cherries"]) {
+        consumablesInventory = defaultConsumables;
+    }
+
     function saveAllStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
         localStorage.setItem('itemsInventory', JSON.stringify(itemsInventory));
         localStorage.setItem('consumablesInventory', JSON.stringify(consumablesInventory));
     }
 
-    // Main Tab Routing Controller Matrix
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
@@ -725,7 +732,7 @@ Project Description;
         }
     }
 
-    /* --- SECTION A: GELATO OPERATIONS --- */
+    /* --- SECTION A: GELATO MATRIX OPERATIONS --- */
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
         const colorInput = document.getElementById('newFlavorColor');
@@ -933,7 +940,7 @@ Project Description;
                                 <button class="counter-btn" onclick="adjustItemQty('${name}', -1)">▼</button>
                             </div>
                         </div>
-                        <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
+                        <div style="margin-top:12px;"><span class="status-badge Schuyler instock">${data.qty} ${data.unit}</span></div>
                     </div>`;
             }
             li.innerHTML = html; list.appendChild(li);
@@ -1023,8 +1030,11 @@ Project Description;
         }
     }
 
-    // Launch Default Core Thread Render Sequence
+    // Launch Baseline Master View Synchronization Render Engine
     renderInventory();
+    renderAllergenChart();
+    renderItemsInventory();
+    renderConsumablesInventory();
 </script>
 
 </body>
