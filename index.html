@@ -9,7 +9,7 @@ Project Description;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutty Squirrel Gelato Inventory Tracker</title>
     <style>
-        /* --- 1. DESIGN VARIABLES --- */
+        /* --- 1. DESIGN SYSTEM VARIABLES --- */
         :root {
             --bg-main: #f9f6f0;
             --bg-card: #ffffff;
@@ -20,9 +20,11 @@ Project Description;
             --safe: #4a4e69;
             --vegan-color: #2a9d8f;
             --radius: 12px;
+            --sidebar-width-collapsed: 60px;
+            --sidebar-width-expanded: 260px;
         }
 
-        /* --- 2. BASIC RESET & LAYOUT STRUCTURE --- */
+        /* --- 2. LAYOUT RESET & APP WRAPPER --- */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -34,66 +36,117 @@ Project Description;
             background-color: var(--bg-main);
             color: var(--text-color);
             line-height: 1.6;
-            padding: 20px;
+            display: flex;
+            min-height: 100vh;
         }
 
-        .app-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            border: 2px solid #f3e9dc;
-            overflow: hidden;
+        /* --- 3. VERTICAL HOVER SIDEBAR SYSTEM --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width-collapsed);
+            background-color: #fffbf7;
+            border-right: 2px solid var(--border-color);
+            overflow-x: hidden;
+            transition: width 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.03);
         }
 
-        /* --- 3. SEMANTIC SITE LAYOUT & NAVIGATION --- */
-        header {
-            background-color: var(--primary);
+        .sidebar:hover {
+            width: var(--sidebar-width-expanded);
+        }
+
+        .sidebar-header {
+            padding: 20px 15px;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--primary);
             color: white;
-            padding: 25px;
-            text-align: center;
-        }
-
-        header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .nav-tabs {
             display: flex;
-            background: #fffbf7;
-            border-bottom: 1px solid var(--border-color);
+            flex-direction: column;
+            width: 100%;
+            margin-top: 10px;
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 15px;
+            width: 100%;
+            padding: 15px 20px;
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             color: #666;
             cursor: pointer;
             transition: all 0.2s;
-            text-align: center;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            white-space: nowrap;
+        }
+
+        .tab-btn .btn-text {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .sidebar:hover .tab-btn .btn-text {
+            opacity: 1;
         }
 
         .tab-btn:hover {
-            background: rgba(0,0,0,0.02);
+            background: rgba(212, 163, 115, 0.1);
             color: var(--text-color);
         }
 
         .tab-btn.active {
-            background: var(--bg-card);
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* --- 4. VIEW CONTAINER OFFSET --- */
+        .app-container {
+            margin-left: var(--sidebar-width-collapsed);
+            flex: 1;
+            padding: 30px;
+            max-width: calc(100vw - var(--sidebar-width-collapsed));
+            transition: margin-left 0.3s ease;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .main-layout {
+            background: var(--bg-card);
+            border-radius: var(--radius);
             padding: 25px;
-            background-color: var(--bg-card);
+            border: 2px solid #f3e9dc;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
 
         .view-panel {
@@ -104,19 +157,11 @@ Project Description;
             display: block;
         }
 
-        footer {
-            text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            color: #888;
-            border-top: 1px solid var(--border-color);
-            background-color: #fffbf7;
-        }
-
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: var(--text-color);
             text-align: center;
+            font-size: 22px;
         }
 
         .section-divider {
@@ -136,10 +181,10 @@ Project Description;
             top: -12px;
         }
 
-        /* --- 4. FLAVOR CREATION BAR --- */
+        /* --- 5. INTERACTIVE CREATION WORKBARS --- */
         .creation-bar {
             background: #fffbf7;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             border-radius: var(--radius);
             padding: 15px 20px;
             margin-bottom: 30px;
@@ -150,7 +195,7 @@ Project Description;
         }
 
         .creation-bar h3 {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--text-color);
         }
 
@@ -160,22 +205,19 @@ Project Description;
             gap: 8px;
         }
 
-        .creation-bar input[type="text"] {
+        .creation-bar input[type="text"],
+        .creation-bar select {
             padding: 8px 12px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            min-width: 200px;
+            background: white;
+            color: var(--text-color);
         }
 
-        .color-picker-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .creation-bar input[type="text"] { min-width: 200px; }
 
+        .color-picker-wrapper,
         .creation-vegan-label {
             display: flex;
             align-items: center;
@@ -183,15 +225,9 @@ Project Description;
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            user-select: none;
-            color: var(--vegan-color);
         }
-
-        .creation-vegan-label input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
+        .creation-vegan-label { color: var(--vegan-color); user-select: none; }
+        .creation-vegan-label input { width: 16px; height: 16px; }
 
         input[type="color"] {
             -webkit-appearance: none;
@@ -200,7 +236,6 @@ Project Description;
             height: 32px;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
@@ -209,7 +244,7 @@ Project Description;
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 18px;
             font-size: 14px;
             font-weight: bold;
             border-radius: 6px;
@@ -217,7 +252,7 @@ Project Description;
         }
         .btn-add:hover { opacity: 0.9; }
 
-        /* --- 5. GELATO CARD GRID STYLES --- */
+        /* --- 6. UNIFIED INVENTORY GRID & CARD STYLES --- */
         .inventory-list {
             list-style: none;
             display: grid;
@@ -235,6 +270,13 @@ Project Description;
             gap: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             position: relative;
+            background-color: var(--bg-card);
+        }
+
+        /* Items Inventory cards explicitly remain crisp white with structural outlines */
+        .items-grid .inventory-item {
+            background-color: white !important;
+            border: 1px solid var(--border-color);
         }
 
         .inventory-item.out-of-season {
@@ -243,7 +285,6 @@ Project Description;
             border-color: #ccc;
         }
 
-        .inventory-item.out-of-season strong,
         .inventory-item.out-of-season .flavor-title {
             text-decoration: line-through;
         }
@@ -267,7 +308,7 @@ Project Description;
             right: 15px;
             cursor: pointer;
             font-size: 14px;
-            opacity: 0.6;
+            opacity: 0.5;
             background: none;
             border: none;
         }
@@ -277,12 +318,13 @@ Project Description;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 10px;
             border-radius: 6px;
             border: 1px solid rgba(0,0,0,0.1);
         }
-        .edit-mode-panel input[type="text"] {
+        .edit-mode-panel input[type="text"],
+        .edit-mode-panel select {
             padding: 6px;
             font-size: 13px;
             border: 1px solid #ccc;
@@ -295,7 +337,7 @@ Project Description;
             gap: 5px;
         }
         .btn-mini {
-            padding: 4px 8px;
+            padding: 5px 10px;
             font-size: 11px;
             border-radius: 4px;
             border: none;
@@ -305,11 +347,11 @@ Project Description;
         .btn-save { background-color: var(--vegan-color); color: white; }
         .btn-del { background-color: var(--danger); color: white; }
 
-        /* --- 6. COUNTER COMPONENT --- */
+        /* --- 7. COUNTER CONTROLS --- */
         .counter-box {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             border: 1px solid rgba(0,0,0,0.15);
             border-radius: 6px;
             overflow: hidden;
@@ -340,7 +382,7 @@ Project Description;
             display: inline-block;
         }
         .status-badge.oos { background-color: var(--danger); color: white; }
-        .status-badge.instock { background-color: rgba(255,255,255,0.8); color: #222; border: 1px solid rgba(0,0,0,0.05); }
+        .status-badge.instock { background-color: rgba(255,255,255,0.85); color: #222; border: 1px solid rgba(0,0,0,0.08); }
 
         .vegan-disclaimer {
             font-size: 12px;
@@ -349,12 +391,9 @@ Project Description;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: 5px;
-            display: flex;
-            align-items: center;
-            gap: 3px;
         }
 
-        /* --- 7. CHECKBOX UTILITIES --- */
+        /* --- 8. STRUCTURAL UTILITIES --- */
         .case-controls-group {
             display: flex;
             flex-direction: column;
@@ -381,7 +420,7 @@ Project Description;
             margin-top: 5px;
         }
 
-        /* --- 8. EXCEL ALLERGEN SPREADSHEET STYLES --- */
+        /* --- 9. ALLERGEN SPREADSHEET TABLE --- */
         .spreadsheet-container {
             width: 100%;
             overflow-x: auto;
@@ -403,7 +442,6 @@ Project Description;
             font-weight: bold;
             padding: 10px;
             border: 1px solid #c0c0c0;
-            user-select: none;
         }
 
         .excel-table td {
@@ -411,13 +449,8 @@ Project Description;
             border: 1px solid #e0e0e0;
         }
 
-        .excel-table tr:nth-child(even) {
-            background: #fdfdfd;
-        }
-
-        .excel-table tr:hover {
-            background: #f2f7fa;
-        }
+        .excel-table tr:nth-child(even) { background: #fdfdfd; }
+        .excel-table tr:hover { background: #f2f7fa; }
 
         .excel-flavor-cell {
             font-weight: 600;
@@ -437,16 +470,21 @@ Project Description;
 </head>
 <body>
 
+<div class="sidebar">
+    <div class="sidebar-header" title="Nutty Squirrel Hub">🐿️ Nutty Squirrel</div>
+    <nav class="nav-tabs">
+        <button class="tab-btn active" id="btnDashboard" onclick="switchTab('dashboard')"><span>🍦</span><span class="btn-text">Gelato Stock</span></button>
+        <button class="tab-btn" id="btnAllergens" onclick="switchTab('allergens')"><span>📊</span><span class="btn-text">Allergen Chart</span></button>
+        <button class="tab-btn" id="btnItems" onclick="switchTab('items')"><span>📦</span><span class="btn-text">Items Inventory</span></button>
+        <button class="tab-btn" id="btnConsumables" onclick="switchTab('consumables')"><span>🍒</span><span class="btn-text">Consumables</span></button>
+    </nav>
+</div>
+
 <div class="app-container">
     
     <header>
         <h1>Nutty Squirrel Gelato Inventory Tracker</h1>
     </header>
-
-    <nav class="nav-tabs">
-        <button class="tab-btn active" id="btnDashboard" onclick="switchTab('dashboard')">📋 Stock Dashboard</button>
-        <button class="tab-btn" id="btnAllergens" onclick="switchTab('allergens')">📊 Allergen Chart Spreadsheet</button>
-    </nav>
 
     <div class="main-layout">
         
@@ -495,6 +533,49 @@ Project Description;
             </div>
         </div>
 
+        <div id="panelItems" class="view-panel">
+            <div class="creation-bar">
+                <h3>Add New Item Stock:</h3>
+                <div class="input-group">
+                    <input type="text" id="newItemName" placeholder="Item Name (e.g., Medium Spoons)">
+                </div>
+                <div class="input-group">
+                    <label for="newItemUnit" style="font-size: 14px; font-weight: bold;">Tracking Unit:</label>
+                    <select id="newItemUnit">
+                        <option value="bags">bags</option>
+                        <option value="boxes">boxes</option>
+                        <option value="total bags in drawer">total bags in drawer</option>
+                    </select>
+                </div>
+                <button class="btn-add" onclick="addNewItem()">Add Item</button>
+            </div>
+            <h2>Service Items &amp; Packaging Storage</h2>
+            <ul class="inventory-list items-grid" id="itemsInventoryList"></ul>
+        </div>
+
+        <div id="panelConsumables" class="view-panel">
+            <div class="creation-bar">
+                <h3>Add New Consumable:</h3>
+                <div class="input-group">
+                    <input type="text" id="newConsumableName" placeholder="Consumable Name (e.g., Honey)">
+                </div>
+                <div class="input-group">
+                    <label for="newConsumableUnit" style="font-size: 14px; font-weight: bold;">Tracking Unit:</label>
+                    <select id="newConsumableUnit">
+                        <option value="cans">cans</option>
+                        <option value="bags">bags</option>
+                        <option value="boxes">boxes</option>
+                        <option value="bottles">bottles</option>
+                        <option value="cakes">cakes</option>
+                        <option value="packs">packs</option>
+                    </select>
+                </div>
+                <button class="btn-add" onclick="addNewConsumable()">Add Consumable</button>
+            </div>
+            <h2>Toppings, Beverages &amp; Ingredients</h2>
+            <ul class="inventory-list" id="consumablesInventoryList"></ul>
+        </div>
+
     </div>
 
     <footer>
@@ -504,18 +585,28 @@ Project Description;
 </div>
 
 <script>
+    // System utility to map standard hex choices or hash functions to readable pastel strings
     function convertHexToRgba(hex, opacity) {
         hex = hex.replace('#', '');
-        if (hex.length === 3) {
-            hex = hex.split('').map(char => char + char).join('');
-        }
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
         const r = parseInt(hex.substring(0, 2), 16);
         const g = parseInt(hex.substring(2, 4), 16);
         const b = parseInt(hex.substring(4, 6), 16);
         return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     }
 
-    const defaultInventory = {
+    // Dynamic color string generation pipeline to support Consumables colors natively 
+    function generatePastelColor(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const h = Math.abs(hash % 360);
+        return `hsla(${h}, 75%, 85%, 0.5)`;
+    }
+
+    /* --- INITIAL GENERATION DEFAULTS --- */
+    const defaultGelato = {
         "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {} },
         "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {} },
         "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", isVegan: false, allergens: {} },
@@ -548,22 +639,72 @@ Project Description;
         "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", isVegan: true, allergens: {} }
     };
 
-    // Load setup data structures securely from LocalStorage
-    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory'));
-    let activeEditFlavor = null;
+    const defaultItems = {
+        "Small spoons": { qty: 0, unit: "bags" },
+        "Large spoons": { qty: 0, unit: "bags" },
+        "Single cups": { qty: 0, unit: "boxes" },
+        "Double cups": { qty: 0, unit: "boxes" },
+        "Pint cups": { qty: 0, unit: "boxes" },
+        "Pint lids": { qty: 0, unit: "boxes" },
+        "Napkins": { qty: 0, unit: "bags" },
+        "Paper bags": { qty: 0, unit: "total bags in drawer" },
+        "Coffee cups": { qty: 0, unit: "bags" },
+        "Espresso cups": { qty: 0, unit: "bags" },
+        "Milkshake cups": { qty: 0, unit: "bags" },
+        "Coffee cup lids": { qty: 0, unit: "bags" },
+        "Milkshake cup lids": { qty: 0, unit: "bags" },
+        "Straws": { qty: 0, unit: "boxes" }
+    };
+
+    const defaultConsumables = {
+        "Cherries": { qty: 0, unit: "cans" },
+        "Marshmallows": { qty: 0, unit: "bags" },
+        "Sprinkles": { qty: 0, unit: "boxes" },
+        "chocolate chips": { qty: 0, unit: "bags" },
+        "Reese's Pieces": { qty: 0, unit: "boxes" },
+        "Whipped Cream": { qty: 0, unit: "bottles" },
+        "Chocolate drizzle": { qty: 0, unit: "bottles" },
+        "Caramel drizzle": { qty: 0, unit: "bottles" },
+        "Blood orange soda": { qty: 0, unit: "cans" },
+        "Lemon soda": { qty: 0, unit: "cans" },
+        "Tangerine soda": { qty: 0, unit: "cans" },
+        "Illy cold brews": { qty: 0, unit: "cans" },
+        "Lava cakes": { qty: 0, unit: "cakes" },
+        "Macarons": { qty: 0, unit: "packs" },
+        "Illy Coffee Intenso": { qty: 0, unit: "boxes" },
+        "Illy Coffee Decaf": { qty: 0, unit: "boxes" },
+        "Oatmilk": { qty: 0, unit: "bottles" },
+        "Whole Milk": { qty: 0, unit: "bottles" },
+        "Soy Milk": { qty: 0, unit: "bottles" },
+        "Chai": { qty: 0, unit: "bottles" },
+        "Hot chocolate": { qty: 0, unit: "bottles" },
+        "Sparkling water": { qty: 0, unit: "bottles" },
+        "Tiramisu": { qty: 0, unit: "boxes" }
+    };
+
+    /* --- STATE REGISTRY DATA HANDLING --- */
+    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || defaultGelato;
+    let itemsInventory = JSON.parse(localStorage.getItem('itemsInventory')) || defaultItems;
+    let consumablesInventory = JSON.parse(localStorage.getItem('consumablesInventory')) || defaultConsumables;
     
-    if (!inventory || !inventory["Vanilla"]) {
-        inventory = defaultInventory;
+    let activeEditFlavor = null;
+    let activeEditItem = null;
+    let activeEditConsumable = null;
+
+    function saveAllStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
+        localStorage.setItem('itemsInventory', JSON.stringify(itemsInventory));
+        localStorage.setItem('consumablesInventory', JSON.stringify(consumablesInventory));
     }
 
-    function saveToStorage() {
-        localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
-    }
-
+    // Main Tab Routing Controller Matrix
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+        
+        activeEditFlavor = null;
+        activeEditItem = null;
+        activeEditConsumable = null;
 
         if (tabId === 'dashboard') {
             document.getElementById('btnDashboard').classList.add('active');
@@ -573,241 +714,316 @@ Project Description;
             document.getElementById('btnAllergens').classList.add('active');
             document.getElementById('panelAllergens').classList.add('active');
             renderAllergenChart();
+        } else if (tabId === 'items') {
+            document.getElementById('btnItems').classList.add('active');
+            document.getElementById('panelItems').classList.add('active');
+            renderItemsInventory();
+        } else if (tabId === 'consumables') {
+            document.getElementById('btnConsumables').classList.add('active');
+            document.getElementById('panelConsumables').classList.add('active');
+            renderConsumablesInventory();
         }
     }
 
+    /* --- SECTION A: GELATO OPERATIONS --- */
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
         const colorInput = document.getElementById('newFlavorColor');
         const veganInput = document.getElementById('newFlavorVegan');
-        const rawName = nameInput.value.trim();
+        const name = nameInput.value.trim();
 
-        if (!rawName) {
-            alert("Please enter a valid name for your new flavor profile!");
-            return;
-        }
-        if (inventory.hasOwnProperty(rawName)) {
-            alert("This flavor name already exists.");
-            return;
-        }
+        if (!name) return alert("Enter a valid flavor name!");
+        if (inventory.hasOwnProperty(name)) return alert("Flavor already exists.");
 
-        inventory[rawName] = {
-            qty: 0,
-            outOfSeason: false,
-            inDisplayCase: false,
-            inTransferCase: false,
-            color: colorInput.value,
-            isVegan: veganInput.checked,
-            allergens: {}
-        };
-
-        nameInput.value = '';
-        colorInput.value = '#ffffff';
-        veganInput.checked = false;
-        
-        saveToStorage();
-        renderInventory();
+        inventory[name] = { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: colorInput.value, isVegan: veganInput.checked, allergens: {} };
+        nameInput.value = ''; colorInput.value = '#ffffff'; veganInput.checked = false;
+        saveAllStorage(); renderInventory();
     }
 
-    function adjustQty(flavor, amount) {
-        inventory[flavor].qty = Math.max(0, inventory[flavor].qty + amount);
-        saveToStorage();
-        renderInventory();
+    function adjustQty(flavor, amt) {
+        inventory[flavor].qty = Math.max(0, inventory[flavor].qty + amt);
+        saveAllStorage(); renderInventory();
     }
 
-    function handleCaseToggle(flavor, caseKey, isChecked) {
+    function handleCaseToggle(flavor, key, isChecked) {
         if (isChecked) {
             if (inventory[flavor].qty > 0) {
                 inventory[flavor].qty -= 1;
-                inventory[flavor][caseKey] = true;
+                inventory[flavor][key] = true;
             } else {
-                alert(`Cannot place in case! You have 0 backup canisters of ${flavor} left.`);
-                renderInventory(); 
+                alert(`0 backup canisters of ${flavor} left.`);
+                renderInventory();
                 return;
             }
         } else {
             inventory[flavor].qty += 1;
-            inventory[flavor][caseKey] = false;
+            inventory[flavor][key] = false;
         }
-        saveToStorage();
-        renderInventory();
+        saveAllStorage(); renderInventory();
     }
 
     function toggleSeason(flavor) {
         inventory[flavor].outOfSeason = !inventory[flavor].outOfSeason;
-        saveToStorage();
-        renderInventory();
+        saveAllStorage(); renderInventory();
     }
 
-    function enterEditMode(flavor) {
-        activeEditFlavor = (activeEditFlavor === flavor) ? null : flavor;
-        renderInventory();
-    }
+    function enterEditMode(flavor) { activeEditFlavor = (activeEditFlavor === flavor) ? null : flavor; renderInventory(); }
 
     function saveFlavorEdits(oldKey) {
-        const newNameInput = document.getElementById(`editName-${oldKey.replace(/\s+/g, '_')}`);
-        const newColorInput = document.getElementById(`editColor-${oldKey.replace(/\s+/g, '_')}`);
-        const newVeganInput = document.getElementById(`editVegan-${oldKey.replace(/\s+/g, '_')}`);
-        const updatedName = newNameInput.value.trim();
+        const safeId = oldKey.replace(/\s+/g, '_');
+        const newName = document.getElementById(`editName-${safeId}`).value.trim();
+        const newColor = document.getElementById(`editColor-${safeId}`).value;
+        const newVegan = document.getElementById(`editVegan-${safeId}`).checked;
 
-        if (!updatedName) {
-            alert("Flavor name cannot be blank.");
-            return;
-        }
-
+        if (!newName) return alert("Name cannot be blank.");
         const dataRef = inventory[oldKey];
-        dataRef.color = newColorInput.value;
-        dataRef.isVegan = newVeganInput.checked;
+        dataRef.color = newColor; dataRef.isVegan = newVegan;
 
-        if (updatedName !== oldKey) {
-            if (inventory.hasOwnProperty(updatedName)) {
-                alert("Another flavor profile already uses that title structure.");
-                return;
-            }
-            inventory[updatedName] = dataRef;
-            delete inventory[oldKey];
+        if (newName !== oldKey) {
+            if (inventory.hasOwnProperty(newName)) return alert("Name already exists.");
+            inventory[newName] = dataRef; delete inventory[oldKey];
         }
-
-        activeEditFlavor = null;
-        saveToStorage();
-        renderInventory();
+        activeEditFlavor = null; saveAllStorage(); renderInventory();
     }
 
     function deleteFlavor(flavor) {
-        if (confirm(`Are you sure you want to permanently erase ${flavor}?`)) {
-            delete inventory[flavor];
-            activeEditFlavor = null;
-            saveToStorage();
-            renderInventory();
-        }
+        if (confirm(`Delete ${flavor}?`)) { delete inventory[flavor]; activeEditFlavor = null; saveAllStorage(); renderInventory(); }
     }
 
-    function toggleAllergen(flavor, allergenKey, isChecked) {
-        if (!inventory[flavor].allergens) {
-            inventory[flavor].allergens = {};
-        }
-        inventory[flavor].allergens[allergenKey] = isChecked;
-        saveToStorage();
-    }
-
-    function createCardHtml(flavor, data) {
-        const isEditing = (activeEditFlavor === flavor);
-        const safeId = flavor.replace(/\s+/g, '_');
-        
-        let html = `<button class="edit-trigger" onclick="enterEditMode('${flavor}')" title="Edit Properties">✏️</button>`;
-
-        if (isEditing) {
-            html += `
-                <div class="edit-mode-panel">
-                    <label style="font-size:12px; font-weight:bold;">Edit Name:</label>
-                    <input type="text" id="editName-${safeId}" value="${flavor}">
-                    <div class="color-picker-wrapper" style="margin:5px 0;">
-                        <label style="font-size:12px; font-weight:bold;">Color:</label>
-                        <input type="color" id="editColor-${safeId}" value="${data.color}">
-                    </div>
-                    <label class="creation-vegan-label" style="margin-bottom: 5px;">
-                        <input type="checkbox" id="editVegan-${safeId}" ${data.isVegan ? 'checked' : ''}> Mark Vegan
-                    </label>
-                    <div class="edit-actions">
-                        <button class="btn-mini btn-save" onclick="saveFlavorEdits('${flavor}')">Save</button>
-                        <button class="btn-mini btn-del" onclick="deleteFlavor('${flavor}')">Delete</button>
-                    </div>
-                </div>
-            `;
-        } else {
-            const statusLabel = data.outOfSeason 
-                ? '<span class="status-badge oos">Out of Season</span>' 
-                : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
-
-            const veganTag = data.isVegan ? `<div class="vegan-disclaimer">🌱 Vegan</div>` : '';
-
-            html += `
-                <div>
-                    <div class="card-header-row">
-                        <span class="flavor-title">${flavor}</span>
-                        <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
-                            <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
-                            <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
-                        </div>
-                    </div>
-                    <div style="margin-top: 8px;">${statusLabel}</div>
-                    ${veganTag}
-                    <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">
-                        ${data.outOfSeason ? 'Mark In Season' : 'Mark Out of Season'}
-                    </div>
-                </div>
-                
-                <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
-                    <label class="case-checkbox-label">
-                        <input type="checkbox" ${data.inDisplayCase ? 'checked' : ''} onchange="handleCaseToggle('${flavor}', 'inDisplayCase', this.checked)">
-                        Canister in Display Case
-                    </label>
-                    <label class="case-checkbox-label">
-                        <input type="checkbox" ${data.inTransferCase ? 'checked' : ''} onchange="handleCaseToggle('${flavor}', 'inTransferCase', this.checked)">
-                        Canister in Transfer Case
-                    </label>
-                </div>
-            `;
-        }
-        return html;
+    function toggleAllergen(flavor, key, isChecked) {
+        if (!inventory[flavor].allergens) inventory[flavor].allergens = {};
+        inventory[flavor].allergens[key] = isChecked; saveAllStorage();
     }
 
     function renderInventory() {
         const activeList = document.getElementById('activeList');
         const archivedList = document.getElementById('archivedList');
         const archiveDivider = document.getElementById('archiveDivider');
-
-        activeList.innerHTML = ''; 
-        archivedList.innerHTML = ''; 
-
-        let archivedCount = 0;
+        activeList.innerHTML = ''; archivedList.innerHTML = '';
+        let archCount = 0;
 
         for (const [flavor, data] of Object.entries(inventory)) {
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
+            const isDark = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
+            li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", isDark ? 0.25 : 0.35);
             
-            const isDarkProfile = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
-            li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", isDarkProfile ? 0.25 : 0.35);
-            li.innerHTML = createCardHtml(flavor, data);
+            const isEditing = (activeEditFlavor === flavor);
+            const safeId = flavor.replace(/\s+/g, '_');
+            let html = `<button class="edit-trigger" onclick="enterEditMode('${flavor}')">✏️</button>`;
 
-            if (data.outOfSeason) {
-                archivedList.appendChild(li);
-                archivedCount++;
+            if (isEditing) {
+                html += `
+                    <div class="edit-mode-panel">
+                        <input type="text" id="editName-${safeId}" value="${flavor}">
+                        <div class="color-picker-wrapper"><label>Color:</label><input type="color" id="editColor-${safeId}" value="${data.color}"></div>
+                        <label class="creation-vegan-label"><input type="checkbox" id="editVegan-${safeId}" ${data.isVegan ? 'checked' : ''}> Vegan</label>
+                        <div class="edit-actions">
+                            <button class="btn-mini btn-save" onclick="saveFlavorEdits('${flavor}')">Save</button>
+                            <button class="btn-mini btn-del" onclick="deleteFlavor('${flavor}')">Delete</button>
+                        </div>
+                    </div>`;
             } else {
-                activeList.appendChild(li);
+                const badge = data.outOfSeason ? '<span class="status-badge oos">Out of Season</span>' : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
+                html += `
+                    <div>
+                        <div class="card-header-row">
+                            <span class="flavor-title">${flavor}</span>
+                            <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
+                                <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
+                                <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:8px;">${badge}</div>
+                        ${data.isVegan ? '<div class="vegan-disclaimer">🌱 Vegan</div>' : ''}
+                        <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">${data.outOfSeason?'Mark In Season':'Mark Out of Season'}</div>
+                    </div>
+                    <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
+                        <label class="case-checkbox-label"><input type="checkbox" ${data.inDisplayCase?'checked':''} onchange="handleCaseToggle('${flavor}','inDisplayCase',this.checked)"> Display Case</label>
+                        <label class="case-checkbox-label"><input type="checkbox" ${data.inTransferCase?'checked':''} onchange="handleCaseToggle('${flavor}','inTransferCase',this.checked)"> Transfer Case</label>
+                    </div>`;
             }
+            li.innerHTML = html;
+            if (data.outOfSeason) { archivedList.appendChild(li); archCount++; } else { activeList.appendChild(li); }
         }
-
-        archiveDivider.style.display = archivedCount > 0 ? 'block' : 'none';
+        archiveDivider.style.display = archCount > 0 ? 'block' : 'none';
     }
 
     function renderAllergenChart() {
-        const tbody = document.getElementById('allergenTableBody');
-        tbody.innerHTML = '';
-
+        const tbody = document.getElementById('allergenTableBody'); tbody.innerHTML = '';
         const keys = ['treeNuts', 'gluten', 'dairy', 'egg', 'soy', 'sesame'];
-
         for (const [flavor, data] of Object.entries(inventory)) {
-            const tr = document.createElement('tr');
-            const targetAllergens = data.allergens || {};
-
-            let rowHtml = `<td class="excel-flavor-cell">${flavor}</td>`;
-            
+            const tr = document.createElement('tr'); const rAllergens = data.allergens || {};
+            let html = `<td class="excel-flavor-cell">${flavor}</td>`;
             keys.forEach(k => {
-                const checkedStr = targetAllergens[k] ? 'checked' : '';
-                rowHtml += `
-                    <td style="text-align: center;">
-                        <input type="checkbox" class="allergen-checkbox" ${checkedStr} 
-                               onchange="toggleAllergen('${flavor}', '${k}', this.checked)">
-                    </td>
-                `;
+                html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" ${rAllergens[k]?'checked':''} onchange="toggleAllergen('${flavor}','${k}',this.checked)"></td>`;
             });
-
-            tr.innerHTML = rowHtml;
-            tbody.appendChild(tr);
+            tr.innerHTML = html; tbody.appendChild(tr);
         }
     }
 
+    /* --- SECTION B: PACKAGING/ITEMS OPERATIONS --- */
+    function addNewItem() {
+        const nameInput = document.getElementById('newItemName');
+        const unitInput = document.getElementById('newItemUnit');
+        const name = nameInput.value.trim();
+        if (!name) return alert("Enter item name!");
+        if (itemsInventory.hasOwnProperty(name)) return alert("Item already exists.");
+        
+        itemsInventory[name] = { qty: 0, unit: unitInput.value };
+        nameInput.value = ''; saveAllStorage(); renderItemsInventory();
+    }
+
+    function adjustItemQty(name, amt) {
+        itemsInventory[name].qty = Math.max(0, itemsInventory[name].qty + amt);
+        saveAllStorage(); renderItemsInventory();
+    }
+
+    function enterEditItemMode(name) { activeEditItem = (activeEditItem === name) ? null : name; renderItemsInventory(); }
+
+    function saveItemEdits(oldKey) {
+        const safeId = oldKey.replace(/\s+/g, '_');
+        const newName = document.getElementById(`editItemName-${safeId}`).value.trim();
+        const newUnit = document.getElementById(`editItemUnit-${safeId}`).value;
+
+        if (!newName) return alert("Name cannot be blank.");
+        const dataRef = itemsInventory[oldKey];
+        dataRef.unit = newUnit;
+
+        if (newName !== oldKey) {
+            if (itemsInventory.hasOwnProperty(newName)) return alert("Item already exists.");
+            itemsInventory[newName] = dataRef; delete itemsInventory[oldKey];
+        }
+        activeEditItem = null; saveAllStorage(); renderItemsInventory();
+    }
+
+    function deleteItem(name) {
+        if (confirm(`Delete ${name}?`)) { delete itemsInventory[name]; activeEditItem = null; saveAllStorage(); renderItemsInventory(); }
+    }
+
+    function renderItemsInventory() {
+        const list = document.getElementById('itemsInventoryList'); list.innerHTML = '';
+        for (const [name, data] of Object.entries(itemsInventory)) {
+            const li = document.createElement('li'); li.className = 'inventory-item';
+            const isEditing = (activeEditItem === name);
+            const safeId = name.replace(/\s+/g, '_');
+            let html = `<button class="edit-trigger" onclick="enterEditItemMode('${name}')">✏️</button>`;
+
+            if (isEditing) {
+                html += `
+                    <div class="edit-mode-panel">
+                        <input type="text" id="editItemName-${safeId}" value="${name}">
+                        <select id="editItemUnit-${safeId}">
+                            <option value="bags" ${data.unit==='bags'?'selected':''}>bags</option>
+                            <option value="boxes" ${data.unit==='boxes'?'selected':''}>boxes</option>
+                            <option value="total bags in drawer" ${data.unit==='total bags in drawer'?'selected':''}>total bags in drawer</option>
+                        </select>
+                        <div class="edit-actions">
+                            <button class="btn-mini btn-save" onclick="saveItemEdits('${name}')">Save</button>
+                            <button class="btn-mini btn-del" onclick="deleteItem('${name}')">Delete</button>
+                        </div>
+                    </div>`;
+            } else {
+                html += `
+                    <div>
+                        <div class="card-header-row">
+                            <span class="flavor-title">${name}</span>
+                            <div class="counter-box">
+                                <button class="counter-btn" onclick="adjustItemQty('${name}', 1)">▲</button>
+                                <button class="counter-btn" onclick="adjustItemQty('${name}', -1)">▼</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
+                    </div>`;
+            }
+            li.innerHTML = html; list.appendChild(li);
+        }
+    }
+
+    /* --- SECTION C: CONSUMABLES OPERATIONS --- */
+    function addNewConsumable() {
+        const nameInput = document.getElementById('newConsumableName');
+        const unitInput = document.getElementById('newConsumableUnit');
+        const name = nameInput.value.trim();
+        if (!name) return alert("Enter consumable name!");
+        if (consumablesInventory.hasOwnProperty(name)) return alert("Consumable already exists.");
+
+        consumablesInventory[name] = { qty: 0, unit: unitInput.value };
+        nameInput.value = ''; saveAllStorage(); renderConsumablesInventory();
+    }
+
+    function adjustConsumableQty(name, amt) {
+        consumablesInventory[name].qty = Math.max(0, consumablesInventory[name].qty + amt);
+        saveAllStorage(); renderConsumablesInventory();
+    }
+
+    function enterEditConsumableMode(name) { activeEditConsumable = (activeEditConsumable === name) ? null : name; renderConsumablesInventory(); }
+
+    function saveConsumableEdits(oldKey) {
+        const safeId = oldKey.replace(/\s+/g, '_');
+        const newName = document.getElementById(`editConsName-${safeId}`).value.trim();
+        const newUnit = document.getElementById(`editConsUnit-${safeId}`).value;
+
+        if (!newName) return alert("Name cannot be blank.");
+        const dataRef = consumablesInventory[oldKey];
+        dataRef.unit = newUnit;
+
+        if (newName !== oldKey) {
+            if (consumablesInventory.hasOwnProperty(newName)) return alert("Consumable already exists.");
+            consumablesInventory[newName] = dataRef; delete consumablesInventory[oldKey];
+        }
+        activeEditConsumable = null; saveAllStorage(); renderConsumablesInventory();
+    }
+
+    function deleteConsumable(name) {
+        if (confirm(`Delete ${name}?`)) { delete consumablesInventory[name]; activeEditConsumable = null; saveAllStorage(); renderConsumablesInventory(); }
+    }
+
+    function renderConsumablesInventory() {
+        const list = document.getElementById('consumablesInventoryList'); list.innerHTML = '';
+        for (const [name, data] of Object.entries(consumablesInventory)) {
+            const li = document.createElement('li'); li.className = 'inventory-item';
+            li.style.backgroundColor = generatePastelColor(name);
+            
+            const isEditing = (activeEditConsumable === name);
+            const safeId = name.replace(/\s+/g, '_');
+            let html = `<button class="edit-trigger" onclick="enterEditConsumableMode('${name}')">✏️</button>`;
+
+            if (isEditing) {
+                html += `
+                    <div class="edit-mode-panel">
+                        <input type="text" id="editConsName-${safeId}" value="${name}">
+                        <select id="editConsUnit-${safeId}">
+                            <option value="cans" ${data.unit==='cans'?'selected':''}>cans</option>
+                            <option value="bags" ${data.unit==='bags'?'selected':''}>bags</option>
+                            <option value="boxes" ${data.unit==='boxes'?'selected':''}>boxes</option>
+                            <option value="bottles" ${data.unit==='bottles'?'selected':''}>bottles</option>
+                            <option value="cakes" ${data.unit==='cakes'?'selected':''}>cakes</option>
+                            <option value="packs" ${data.unit==='packs'?'selected':''}>packs</option>
+                        </select>
+                        <div class="edit-actions">
+                            <button class="btn-mini btn-save" onclick="saveConsumableEdits('${name}')">Save</button>
+                            <button class="btn-mini btn-del" onclick="deleteConsumable('${name}')">Delete</button>
+                        </div>
+                    </div>`;
+            } else {
+                html += `
+                    <div>
+                        <div class="card-header-row">
+                            <span class="flavor-title">${name}</span>
+                            <div class="counter-box">
+                                <button class="counter-btn" onclick="adjustConsumableQty('${name}', 1)">▲</button>
+                                <button class="counter-btn" onclick="adjustConsumableQty('${name}', -1)">▼</button>
+                            </div>
+                        </div>
+                        <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
+                    </div>`;
+            }
+            li.innerHTML = html; list.appendChild(li);
+        }
+    }
+
+    // Launch Default Core Thread Render Sequence
     renderInventory();
 </script>
 
