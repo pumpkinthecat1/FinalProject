@@ -164,6 +164,39 @@ Project Description;
             font-size: 22px;
         }
 
+        h3.section-heading {
+            margin: 20px 0 15px;
+            font-size: 18px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* WORD-STYLE PAGE BREAK DIVIDER */
+        .page-break {
+            margin: 40px 0;
+            border: none;
+            border-top: 1px solid #b5b5b5;
+            border-bottom: 1px solid #b5b5b5;
+            background-color: #f0f0f0;
+            height: 12px;
+            position: relative;
+            text-align: center;
+        }
+        .page-break::after {
+            content: "PAGE BREAK";
+            font-size: 9px;
+            font-weight: bold;
+            color: #999;
+            background: #fff;
+            padding: 0 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            letter-spacing: 2px;
+        }
+
         .section-divider {
             margin: 40px 0 20px;
             border: none;
@@ -258,6 +291,7 @@ Project Description;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
+            margin-bottom: 25px;
         }
 
         .inventory-item {
@@ -299,6 +333,22 @@ Project Description;
             font-weight: bold;
             font-size: 16px;
             word-break: break-word;
+            position: relative;
+        }
+
+        /* NEW TAG INDICATOR STYLE */
+        .new-tag {
+            background-color: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 6px;
+            display: inline-block;
+            vertical-align: middle;
         }
 
         .edit-trigger {
@@ -504,7 +554,14 @@ Project Description;
             </div>
 
             <h2>In-Season Gelato Selection</h2>
-            <ul class="inventory-list" id="activeList"></ul>
+            
+            <h3 class="section-heading" style="color: var(--vegan-color)">🌱 Vegan Options</h3>
+            <ul class="inventory-list" id="activeVeganList"></ul>
+
+            <div class="page-break"></div>
+
+            <h3 class="section-heading" style="color: #4e3d30">🥛 Standard Dairy Flavors</h3>
+            <ul class="inventory-list" id="activeDairyList"></ul>
 
             <div class="section-divider" id="archiveDivider">
                 <span>Out of Season Rotation</span>
@@ -549,7 +606,14 @@ Project Description;
                 <button class="btn-add" onclick="addNewItem()">Add Item</button>
             </div>
             <h2>Service Items &amp; Packaging Storage</h2>
-            <ul class="inventory-list items-grid" id="itemsInventoryList"></ul>
+            
+            <h3 class="section-heading">📄 Paper Products</h3>
+            <ul class="inventory-list items-grid" id="paperItemsList"></ul>
+
+            <div class="page-break"></div>
+
+            <h3 class="section-heading">🧪 Plastic Products</h3>
+            <ul class="inventory-list items-grid" id="plasticItemsList"></ul>
         </div>
 
         <div id="panelConsumables" class="view-panel">
@@ -567,11 +631,20 @@ Project Description;
                         <option value="bottles">bottles</option>
                         <option value="cakes">cakes</option>
                         <option value="packs">packs</option>
+                        <option value="cones">cones</option>
                     </select>
                 </div>
                 <button class="btn-add" onclick="addNewConsumable()">Add Consumable</button>
             </div>
+
             <h2>Toppings, Beverages &amp; Ingredients</h2>
+            
+            <h3 class="section-heading" style="color: #b17a46">🍦 Serving Cones</h3>
+            <ul class="inventory-list" id="conesInventoryList"></ul>
+
+            <div class="page-break"></div>
+
+            <h3 class="section-heading">🍒 Ingredients &amp; Toppings</h3>
             <ul class="inventory-list" id="consumablesInventoryList"></ul>
         </div>
 
@@ -602,7 +675,6 @@ Project Description;
         return `hsla(${h}, 75%, 85%, 0.5)`;
     }
 
-    /* --- RESTORED ALL CORE GELATO FLAVORS --- */
     const defaultGelato = {
         "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {} },
         "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {} },
@@ -654,6 +726,14 @@ Project Description;
     };
 
     const defaultConsumables = {
+        /* CONES TRACKING COMPONENT */
+        "Waffle Cones": { qty: 0, unit: "cones" },
+        "Sugar Cones": { qty: 0, unit: "cones" },
+        "Torch Cones": { qty: 0, unit: "cones" },
+        "Premium Cones": { qty: 0, unit: "cones" },
+        "Cake Cones": { qty: 0, unit: "cones" },
+        "Gluten Free Cones": { qty: 0, unit: "cones" },
+        /* CORE TOPPING UNITS */
         "Cherries": { qty: 0, unit: "cans" },
         "Marshmallows": { qty: 0, unit: "bags" },
         "Sprinkles": { qty: 0, unit: "boxes" },
@@ -679,7 +759,6 @@ Project Description;
         "Tiramisu": { qty: 0, unit: "boxes" }
     };
 
-    /* --- STORAGE & LIFECYCLE CONTROLS --- */
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || defaultGelato;
     let itemsInventory = JSON.parse(localStorage.getItem('itemsInventory')) || defaultItems;
     let consumablesInventory = JSON.parse(localStorage.getItem('consumablesInventory')) || defaultConsumables;
@@ -688,16 +767,9 @@ Project Description;
     let activeEditItem = null;
     let activeEditConsumable = null;
 
-    // Fixed safety mechanism to prevent losing predefined flavors on older storage formats
-    if (!inventory["Vanilla"] || !inventory["Sea Salt Caramel"]) {
-        inventory = defaultGelato;
-    }
-    if (!itemsInventory["Small spoons"]) {
-        itemsInventory = defaultItems;
-    }
-    if (!consumablesInventory["Cherries"]) {
-        consumablesInventory = defaultConsumables;
-    }
+    if (!inventory["Vanilla"] || !inventory["Sea Salt Caramel"]) { inventory = defaultGelato; }
+    if (!itemsInventory["Small spoons"]) { itemsInventory = defaultItems; }
+    if (!consumablesInventory["Waffle Cones"] || !consumablesInventory["Cherries"]) { consumablesInventory = defaultConsumables; }
 
     function saveAllStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
@@ -709,9 +781,7 @@ Project Description;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
         
-        activeEditFlavor = null;
-        activeEditItem = null;
-        activeEditConsumable = null;
+        activeEditFlavor = null; activeEditItem = null; activeEditConsumable = null;
 
         if (tabId === 'dashboard') {
             document.getElementById('btnDashboard').classList.add('active');
@@ -732,7 +802,7 @@ Project Description;
         }
     }
 
-    /* --- SECTION A: GELATO MATRIX OPERATIONS --- */
+    /* --- SECTION A: GELATO OPERATIONS + IS-NEW VERIFICATION TARGETING --- */
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
         const colorInput = document.getElementById('newFlavorColor');
@@ -742,7 +812,8 @@ Project Description;
         if (!name) return alert("Enter a valid flavor name!");
         if (inventory.hasOwnProperty(name)) return alert("Flavor already exists.");
 
-        inventory[name] = { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: colorInput.value, isVegan: veganInput.checked, allergens: {} };
+        // Mark dynamic run-time user creations with 'isNew: true' flag
+        inventory[name] = { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: colorInput.value, isVegan: veganInput.checked, allergens: {}, isNew: true };
         nameInput.value = ''; colorInput.value = '#ffffff'; veganInput.checked = false;
         saveAllStorage(); renderInventory();
     }
@@ -759,8 +830,7 @@ Project Description;
                 inventory[flavor][key] = true;
             } else {
                 alert(`0 backup canisters of ${flavor} left.`);
-                renderInventory();
-                return;
+                renderInventory(); return;
             }
         } else {
             inventory[flavor].qty += 1;
@@ -803,10 +873,12 @@ Project Description;
     }
 
     function renderInventory() {
-        const activeList = document.getElementById('activeList');
+        const veganList = document.getElementById('activeVeganList');
+        const dairyList = document.getElementById('activeDairyList');
         const archivedList = document.getElementById('archivedList');
         const archiveDivider = document.getElementById('archiveDivider');
-        activeList.innerHTML = ''; archivedList.innerHTML = '';
+        
+        veganList.innerHTML = ''; dairyList.innerHTML = ''; archivedList.innerHTML = '';
         let archCount = 0;
 
         for (const [flavor, data] of Object.entries(inventory)) {
@@ -832,10 +904,13 @@ Project Description;
                     </div>`;
             } else {
                 const badge = data.outOfSeason ? '<span class="status-badge oos">Out of Season</span>' : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
+                // Append Red Label if marked as new entry profile
+                const newTagMarkup = data.isNew ? '<span class="new-tag">New</span>' : '';
+                
                 html += `
                     <div>
                         <div class="card-header-row">
-                            <span class="flavor-title">${flavor}</span>
+                            <span class="flavor-title">${flavor}${newTagMarkup}</span>
                             <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
                                 <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
                                 <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
@@ -851,7 +926,12 @@ Project Description;
                     </div>`;
             }
             li.innerHTML = html;
-            if (data.outOfSeason) { archivedList.appendChild(li); archCount++; } else { activeList.appendChild(li); }
+            
+            if (data.outOfSeason) { 
+                archivedList.appendChild(li); archCount++; 
+            } else { 
+                if (data.isVegan) { veganList.appendChild(li); } else { dairyList.appendChild(li); }
+            }
         }
         archiveDivider.style.display = archCount > 0 ? 'block' : 'none';
     }
@@ -869,7 +949,7 @@ Project Description;
         }
     }
 
-    /* --- SECTION B: PACKAGING/ITEMS OPERATIONS --- */
+    /* --- SECTION B: PACKAGING/ITEMS SEPARATED BY MATERIAL --- */
     function addNewItem() {
         const nameInput = document.getElementById('newItemName');
         const unitInput = document.getElementById('newItemUnit');
@@ -909,7 +989,10 @@ Project Description;
     }
 
     function renderItemsInventory() {
-        const list = document.getElementById('itemsInventoryList'); list.innerHTML = '';
+        const paperList = document.getElementById('paperItemsList');
+        const plasticList = document.getElementById('plasticItemsList');
+        paperList.innerHTML = ''; plasticList.innerHTML = '';
+
         for (const [name, data] of Object.entries(itemsInventory)) {
             const li = document.createElement('li'); li.className = 'inventory-item';
             const isEditing = (activeEditItem === name);
@@ -940,14 +1023,22 @@ Project Description;
                                 <button class="counter-btn" onclick="adjustItemQty('${name}', -1)">▼</button>
                             </div>
                         </div>
-                        <div style="margin-top:12px;"><span class="status-badge Schuyler instock">${data.qty} ${data.unit}</span></div>
+                        <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
                     </div>`;
             }
-            li.innerHTML = html; list.appendChild(li);
+            li.innerHTML = html;
+
+            // Sort logic: Milkshake Cups are flagged explicitly as plastic.
+            const lowerName = name.toLowerCase();
+            if (lowerName.includes("milkshake cup")) {
+                plasticList.appendChild(li);
+            } else {
+                paperList.appendChild(li);
+            }
         }
     }
 
-    /* --- SECTION C: CONSUMABLES OPERATIONS --- */
+    /* --- SECTION C: CONSUMABLES OPERATIONS WITH DEDICATED CONES GRID --- */
     function addNewConsumable() {
         const nameInput = document.getElementById('newConsumableName');
         const unitInput = document.getElementById('newConsumableUnit');
@@ -987,7 +1078,10 @@ Project Description;
     }
 
     function renderConsumablesInventory() {
-        const list = document.getElementById('consumablesInventoryList'); list.innerHTML = '';
+        const standardList = document.getElementById('consumablesInventoryList');
+        const conesList = document.getElementById('conesInventoryList');
+        standardList.innerHTML = ''; conesList.innerHTML = '';
+
         for (const [name, data] of Object.entries(consumablesInventory)) {
             const li = document.createElement('li'); li.className = 'inventory-item';
             li.style.backgroundColor = generatePastelColor(name);
@@ -1007,6 +1101,7 @@ Project Description;
                             <option value="bottles" ${data.unit==='bottles'?'selected':''}>bottles</option>
                             <option value="cakes" ${data.unit==='cakes'?'selected':''}>cakes</option>
                             <option value="packs" ${data.unit==='packs'?'selected':''}>packs</option>
+                            <option value="cones" ${data.unit==='cones'?'selected':''}>cones</option>
                         </select>
                         <div class="edit-actions">
                             <button class="btn-mini btn-save" onclick="saveConsumableEdits('${name}')">Save</button>
@@ -1026,11 +1121,18 @@ Project Description;
                         <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
                     </div>`;
             }
-            li.innerHTML = html; list.appendChild(li);
+            li.innerHTML = html; 
+
+            // Sort to the top Cones panel if unit matches 'cones' or name contains 'Cone'
+            if (data.unit === 'cones' || name.toLowerCase().includes('cone')) {
+                conesList.appendChild(li);
+            } else {
+                standardList.appendChild(li);
+            }
         }
     }
 
-    // Launch Baseline Master View Synchronization Render Engine
+    // Baseline Application Initial Synchronization Render Engine Callouts
     renderInventory();
     renderAllergenChart();
     renderItemsInventory();
