@@ -7,18 +7,27 @@
     <style>
         /* --- 1. DESIGN SYSTEM VARIABLES --- */
         :root {
-            --bg-main: #f9f6f0;
+            --bg-main: #fcfaf7;
             --bg-card: #ffffff;
-            --primary: #d4a373;
-            --text-color: #333333;
-            --border-color: #e6ccb2;
-            --danger: #e63946;
-            --danger-bg: #ffe3e5;
-            --safe: #4a4e69;
-            --vegan-color: #2a9d8f;
-            --radius: 12px;
-            --sidebar-width-collapsed: 60px;
+            --primary: #b38253;
+            --primary-light: #f5ede2;
+            --text-color: #2b2520;
+            --text-muted: #70655c;
+            --border-color: #eadece;
+            --danger: #d9414e;
+            --danger-bg: #fdf2f3;
+            --safe: #4e5366;
+            --vegan-color: #238577;
+            --vegan-bg: #eef8f6;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --sidebar-width-collapsed: 68px;
             --sidebar-width-expanded: 260px;
+            --shadow-sm: 0 2px 8px rgba(179, 130, 83, 0.05);
+            --shadow-md: 0 6px 16px rgba(179, 130, 83, 0.08);
+            --shadow-lg: 0 12px 32px rgba(43, 37, 32, 0.1);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* --- 2. LAYOUT RESET & APP WRAPPER --- */
@@ -29,19 +38,18 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-main);
+            /* Clean, modern waffle-cone inspired mesh pattern */
             background-image: 
-                linear-gradient(30deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
-                linear-gradient(150deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
-                linear-gradient(30deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
-                linear-gradient(150deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
-                linear-gradient(60deg, #f5ede2 25%, transparent 25.5%, transparent 75%, #f5ede2 75.5%, #f5ede2),
-                linear-gradient(60deg, #f5ede2 25%, transparent 25.5%, transparent 75%, #f5ede2 75.5%, #f5ede2);
-            background-size: 40px 70px;
-            background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
+                linear-gradient(45deg, #f7f2ea 25%, transparent 25%), 
+                linear-gradient(-45deg, #f7f2ea 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #f7f2ea 75%), 
+                linear-gradient(-45deg, transparent 75%, #f7f2ea 75%);
+            background-size: 30px 30px;
+            background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
             color: var(--text-color);
-            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
             display: flex;
             min-height: 100vh;
         }
@@ -53,14 +61,14 @@
             left: 0;
             height: 100vh;
             width: var(--sidebar-width-collapsed);
-            background-color: #fffbf7;
-            border-right: 2px solid var(--border-color);
+            background-color: #ffffff;
+            border-right: 1px solid var(--border-color);
             overflow-x: hidden;
-            transition: width 0.3s ease;
+            transition: var(--transition);
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.03);
+            box-shadow: 4px 0 20px rgba(43, 37, 32, 0.02);
         }
 
         .sidebar:hover {
@@ -68,13 +76,13 @@
         }
 
         .sidebar-header {
-            padding: 15px 10px;
+            padding: 16px 14px;
             white-space: nowrap;
+            background: #ffffff;
             border-bottom: 1px solid var(--border-color);
-            background: var(--primary);
-            color: white;
-            font-weight: bold;
-            font-size: 15px;
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 16px;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -82,19 +90,20 @@
         }
 
         .sidebar-logo {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             flex-shrink: 0;
-            background: white;
-            border: 1px solid rgba(255,255,255,0.5);
+            background: var(--primary-light);
+            border: 1px solid var(--border-color);
         }
 
         .sidebar-header-text {
             opacity: 0;
             transition: opacity 0.2s ease;
             white-space: nowrap;
+            color: var(--text-color);
         }
 
         .sidebar:hover .sidebar-header-text {
@@ -105,24 +114,34 @@
             display: flex;
             flex-direction: column;
             width: 100%;
-            margin-top: 10px;
+            padding: 12px 8px;
+            gap: 4px;
         }
 
         .tab-btn {
             width: 100%;
-            padding: 15px 20px;
+            padding: 12px 14px;
             background: none;
             border: none;
             font-size: 15px;
-            font-weight: bold;
-            color: #666;
+            font-weight: 600;
+            color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.2s;
+            border-radius: var(--radius-md);
+            transition: var(--transition);
             text-align: left;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
             white-space: nowrap;
+        }
+
+        .tab-btn span:first-child {
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
         }
 
         .tab-btn .btn-text {
@@ -135,8 +154,8 @@
         }
 
         .tab-btn:hover {
-            background: rgba(212, 163, 115, 0.1);
-            color: var(--text-color);
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
         .tab-btn.active {
@@ -148,91 +167,100 @@
         .app-container {
             margin-left: var(--sidebar-width-collapsed);
             flex: 1;
-            padding: 30px;
+            padding: 40px;
             max-width: calc(100vw - var(--sidebar-width-collapsed));
-            transition: margin-left 0.3s ease;
+            transition: var(--transition);
         }
 
         header {
-            background-color: var(--primary);
-            color: white;
-            padding: 25px;
-            border-radius: var(--radius);
+            background-color: #ffffff;
+            color: var(--text-color);
+            padding: 30px;
+            border-radius: var(--radius-lg);
             text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
         }
 
         header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-color);
         }
 
         /* --- GLOBAL ALERTS ENGINE LAYOUT --- */
         .global-alert-container {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             display: none;
             flex-direction: column;
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+            box-shadow: 0 10px 25px rgba(217, 65, 78, 0.12);
+            border: 1px solid rgba(217, 65, 78, 0.2);
         }
 
         .global-alert-banner {
             background-color: var(--danger);
             color: white;
-            padding: 12px 20px;
-            font-weight: bold;
+            padding: 14px 24px;
+            font-weight: 600;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             user-select: none;
             font-size: 15px;
-            transition: background-color 0.2s;
+            transition: var(--transition);
         }
 
         .global-alert-banner:hover {
-            background-color: #d62839;
+            background-color: #be323e;
         }
 
         .global-alert-dropdown {
             background-color: var(--danger-bg);
-            border: 2px solid var(--danger);
-            border-top: none;
-            padding: 15px 25px;
+            padding: 20px 24px;
             display: none;
-            color: #5c0f15;
+            color: #661920;
         }
 
         .global-alert-dropdown h4 {
-            font-size: 15px;
-            margin-bottom: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid rgba(230, 57, 70, 0.2);
-            padding-bottom: 4px;
+            letter-spacing: 0.75px;
+            border-bottom: 1px solid rgba(217, 65, 78, 0.15);
+            padding-bottom: 6px;
+            font-weight: 700;
         }
 
         .out-of-stock-list {
-            list-style-type: square;
-            padding-left: 20px;
+            list-style-type: none;
+            padding-left: 0;
             margin-bottom: 12px;
             font-size: 14px;
             font-weight: 600;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        .out-of-stock-list:last-child {
-            margin-bottom: 0;
+        
+        .out-of-stock-list li {
+            background: rgba(217, 65, 78, 0.1);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(217, 65, 78, 0.15);
         }
 
         .main-layout {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: var(--radius);
-            padding: 25px;
-            border: 2px solid #f3e9dc;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: var(--radius-lg);
+            padding: 35px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(16px);
         }
 
         .view-panel {
@@ -246,14 +274,16 @@
         .panel-title-container {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
+            justify-content: flex-start;
+            gap: 16px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .panel-inline-logo {
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             object-fit: cover;
             background: white;
@@ -262,100 +292,125 @@
 
         .panel-title-container h2 {
             margin-bottom: 0;
+            text-align: left;
         }
 
         h2 {
             color: var(--text-color);
-            text-align: center;
-            font-size: 22px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
         }
 
         h3.section-heading {
-            margin: 20px 0 15px;
-            font-size: 18px;
-            color: #555;
+            margin: 35px 0 20px;
+            font-size: 14px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .page-break {
             margin: 40px 0;
             border: none;
-            border-top: 3px dotted var(--border-color);
+            border-top: 1px solid var(--border-color);
             height: 0;
             width: 100%;
         }
 
         .section-divider {
-            margin: 40px 0 20px;
+            margin: 50px 0 30px;
             border: none;
-            border-top: 2px dashed var(--border-color);
+            border-top: 1px dashed var(--border-color);
             text-align: center;
+            position: relative;
         }
 
         .section-divider span {
-            background: var(--bg-card);
-            padding: 0 15px;
-            color: #888;
-            font-weight: bold;
-            font-size: 14px;
-            position: relative;
-            top: -12px;
+            background: #f7f4ee;
+            padding: 0 20px;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         /* --- 5. INTERACTIVE CREATION & UTILITY TOOLBARS --- */
         .creation-bar {
-            background: #fffbf7;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 15px 20px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 35px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-control-bar {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
             margin-bottom: 30px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 20px;
-        }
-
-        .filter-control-bar {
-            background: #fdfaf6;
-            border: 1px dashed var(--border-color);
-            border-radius: 8px;
-            padding: 12px 18px;
-            margin-bottom: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            gap: 20px;
+            box-shadow: var(--shadow-sm);
         }
 
         .filter-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex: 1;
-            min-width: 260px;
+            min-width: 280px;
         }
 
         .filter-group input[type="text"] {
             width: 100%;
-            padding: 8px 12px;
+            padding: 10px 16px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             font-size: 14px;
+            background: var(--bg-main);
+            transition: var(--transition);
+        }
+
+        .filter-group input[type="text"]:focus,
+        .creation-bar input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(179, 130, 83, 0.15);
         }
 
         .filter-group select {
-            padding: 8px 12px;
+            padding: 10px 16px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             font-size: 14px;
-            background: white;
+            background: #ffffff;
             cursor: pointer;
+            font-weight: 500;
+            color: var(--text-color);
         }
 
         .creation-bar h3 {
             font-size: 15px;
+            font-weight: 700;
             color: var(--text-color);
         }
 
@@ -367,36 +422,41 @@
 
         .creation-bar input[type="text"],
         .creation-bar select {
-            padding: 8px 12px;
+            padding: 10px 16px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             font-size: 14px;
-            background: white;
+            background: var(--bg-main);
             color: var(--text-color);
+            transition: var(--transition);
         }
 
-        .creation-bar input[type="text"] { min-width: 200px; }
+        .creation-bar input[type="text"] { min-width: 260px; }
 
         .color-picker-wrapper,
         .creation-vegan-label {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
         }
         .creation-vegan-label { color: var(--vegan-color); user-select: none; }
-        .creation-vegan-label input { width: 16px; height: 16px; }
+        .creation-vegan-label input { width: 18px; height: 18px; accent-color: var(--vegan-color); cursor: pointer; }
 
         input[type="color"] {
             -webkit-appearance: none;
-            border: none;
+            border: 2px solid var(--border-color);
             width: 32px;
             height: 32px;
             border-radius: 50%;
             cursor: pointer;
+            background: none;
+            padding: 0;
+            transition: var(--transition);
         }
+        input[type="color"]:hover { transform: scale(1.1); }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
 
@@ -404,198 +464,235 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 8px 18px;
+            padding: 10px 22px;
             font-size: 14px;
-            font-weight: bold;
-            border-radius: 6px;
+            font-weight: 700;
+            border-radius: var(--radius-md);
             cursor: pointer;
+            transition: var(--transition);
         }
-        .btn-add:hover { opacity: 0.9; }
+        .btn-add:hover { background-color: #96693d; transform: translateY(-1px); }
 
         /* --- UI BUTTON MODIFIERS --- */
         .btn-action-toggle {
-            background-color: var(--safe);
-            color: white;
-            border: none;
-            padding: 8px 16px;
+            background-color: #ffffff;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
             font-size: 14px;
-            font-weight: bold;
-            border-radius: 6px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: var(--transition);
+        }
+        .btn-action-toggle:hover {
+            background-color: var(--bg-main);
         }
         .btn-action-toggle.active {
             background-color: var(--danger);
+            color: white;
+            border-color: var(--danger);
         }
 
         /* --- 6. UNIFIED INVENTORY GRID & CARD STYLES --- */
         .inventory-list {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 24px;
             margin-bottom: 25px;
         }
 
         .inventory-item {
-            padding: 35px 15px 20px 36px; /* Increased top padding to yield space for corner triggers */
+            padding: 24px 24px 20px 24px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: var(--radius-lg);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            gap: 16px;
+            box-shadow: var(--shadow-sm);
             position: relative;
             background-color: var(--bg-card);
             cursor: pointer;
-            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+            transition: var(--transition);
+            /* Dynamic Left Edge Accent Base */
+            border-left: 6px solid var(--primary); 
+            overflow: hidden;
         }
 
-        /* Flavor Card 3D Hover Effect */
+        /* Flavor Card Hover Effect */
         body:not(.bulk-select-active) .inventory-item:not(.out-of-season):hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(179, 130, 83, 0.3);
         }
 
         .inventory-item.out-of-season {
-            background-color: #e0e0e0 !important;
-            background-image: none !important;
-            color: #888;
-            border-color: #ccc;
+            background-color: #f0ede9 !important;
+            border-left-color: #a0968d !important;
+            color: #8c827a;
+            border-color: var(--border-color);
             cursor: default;
+            box-shadow: none;
         }
 
         .inventory-item.out-of-season .flavor-title {
             text-decoration: line-through;
+            color: #8c827a;
+        }
+        .inventory-item.out-of-season .restock-timestamp,
+        .inventory-item.out-of-season .season-toggle-link {
+            color: #a0968d;
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding-right: 50px; /* Make space for top right overlays */
         }
 
         .flavor-card-content {
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Center-aligns layout content vertically */
-            gap: 10px;
+            align-items: center;
+            gap: 16px;
             width: 100%;
         }
 
         .flavor-text-block {
             flex: 1;
-            padding-right: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .flavor-title {
-            font-weight: bold;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-color);
             word-break: break-word;
-            position: relative;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            text-decoration-style: dotted;
+            line-height: 1.3;
         }
 
         .new-tag {
             background-color: var(--danger);
             color: white;
             font-size: 10px;
-            font-weight: 900;
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-left: 6px;
             display: inline-block;
             vertical-align: middle;
-            text-decoration: none !important;
         }
 
-        /* TIMESTAMPS OVERLAY BLOCK */
         .restock-timestamp {
-            font-size: 11px;
-            font-style: italic;
-            color: #666;
-            margin-top: 4px;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
             display: inline-block;
         }
 
         /* CORNER CONTROLS OVERLAYS */
         .card-remove-btn {
             position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 22px;
-            height: 22px;
+            top: 14px;
+            right: 14px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            background-color: var(--danger);
-            color: white;
-            border: none;
+            background-color: #fdf2f3;
+            color: var(--danger);
+            border: 1px solid rgba(217, 65, 78, 0.1);
             font-size: 14px;
-            line-height: 1;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.8;
-            transition: transform 0.2s, opacity 0.2s;
+            transition: var(--transition);
             z-index: 10;
         }
         .card-remove-btn:hover {
-            opacity: 1;
-            transform: scale(1.15);
+            background-color: var(--danger);
+            color: white;
         }
 
         .edit-trigger {
             position: absolute;
-            top: 8px;
-            right: 36px;
+            top: 14px;
+            right: 48px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
             cursor: pointer;
-            font-size: 14px;
-            opacity: 0.6;
-            background: none;
-            border: none;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
             z-index: 10;
-            padding: 2px;
+            transition: var(--transition);
         }
-        .edit-trigger:hover { opacity: 1; }
+        .edit-trigger:hover { 
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-color: rgba(179, 130, 83, 0.2);
+        }
 
         .pin-trigger {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 14px;
+            right: 82px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
             cursor: pointer;
-            font-size: 14px;
-            opacity: 0.4;
-            background: none;
-            border: none;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
             z-index: 10;
-            padding: 2px;
-            transition: opacity 0.2s, transform 0.2s;
+            transition: var(--transition);
         }
         .pin-trigger:hover, .pin-trigger.pinned {
-            opacity: 1;
-            transform: scale(1.1);
+            background-color: #fef0f1;
+            border-color: #fcd2d4;
+            color: var(--danger);
         }
 
         /* --- BULK SELECTOR ENGINE PLATFORM --- */
         .bulk-select-checkbox-container {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 16px;
+            left: 16px;
             z-index: 15;
             display: none;
         }
         .bulk-select-checkbox-container input[type="checkbox"] {
             width: 20px;
             height: 20px;
+            accent-color: var(--primary);
             cursor: pointer;
         }
         
         /* Bulk System Overlay Flag Overrides */
         .bulk-select-active .bulk-select-checkbox-container {
             display: block;
+        }
+        .bulk-select-active .inventory-item {
+            padding-left: 48px;
+            border-left-width: 2px;
         }
         .bulk-select-active .card-remove-btn,
         .bulk-select-active .edit-trigger,
@@ -605,119 +702,130 @@
 
         .bulk-action-dock {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: white;
-            border: 2px solid var(--primary);
-            padding: 15px 30px;
-            border-radius: 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border: 1px solid var(--primary);
+            padding: 16px 32px;
+            border-radius: 40px;
+            box-shadow: var(--shadow-lg);
             z-index: 1500;
             display: none;
-            gap: 15px;
+            gap: 16px;
             align-items: center;
         }
         .btn-bulk-action {
-            padding: 8px 18px;
-            border-radius: 20px;
+            padding: 10px 22px;
+            border-radius: 30px;
             border: none;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
             color: white;
+            transition: var(--transition);
         }
         .btn-bulk-archive { background-color: var(--safe); }
+        .btn-bulk-archive:hover { background-color: #3b3f4e; }
         .btn-bulk-delete { background-color: var(--danger); }
+        .btn-bulk-delete:hover { background-color: #be323e; }
 
         .edit-mode-panel {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 5px;
-            border-radius: 6px;
+            gap: 12px;
+            background: #ffffff;
+            padding: 8px 0 0 0;
             width: 100%;
         }
         .edit-mode-panel input[type="text"],
         .edit-mode-panel select {
-            padding: 6px;
-            font-size: 13px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
             width: 100%;
+            background-color: var(--bg-main);
         }
         .edit-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 5px;
+            gap: 8px;
         }
         .btn-mini {
-            padding: 5px 12px;
-            font-size: 11px;
-            border-radius: 4px;
-            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
+            transition: var(--transition);
         }
-        .btn-save { background-color: var(--vegan-color); color: white; }
+        .btn-save { background-color: var(--vegan-color); color: white; border: none; }
+        .btn-save:hover { background-color: #1a6359; }
 
-        /* --- 7. COUNTER CONTROLS (MIDDLE RIGHT SIDE POSITION) --- */
+        /* --- 7. COUNTER CONTROLS --- */
         .counter-box {
             display: flex;
             flex-direction: column;
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0,0,0,0.18);
-            border-radius: 8px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             overflow: hidden;
             z-index: 12;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
             flex-shrink: 0;
-            align-self: center; /* Forces vertical centering inside the flex row wrapper */
         }
 
         .counter-btn {
             background: transparent;
             border: none;
-            width: 44px;
+            width: 42px;
             height: 38px;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-color);
-            font-weight: bold;
-            transition: background 0.2s;
+            font-weight: 700;
+            transition: var(--transition);
         }
-        .counter-btn:hover { background: rgba(0, 0, 0, 0.08); }
-        .counter-btn:first-child { border-bottom: 1px solid rgba(0,0,0,0.18); }
+        .counter-btn:hover { background: var(--primary-light); color: var(--primary); }
+        .counter-btn:first-child { border-bottom: 1px solid var(--border-color); }
 
         .status-badge {
-            font-size: 13px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: inline-block;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        .status-badge.oos { background-color: var(--danger); color: white; }
-        .status-badge.instock { background-color: rgba(255,255,255,0.85); color: #222; border: 1px solid rgba(0,0,0,0.08); }
+        .status-badge.oos { background-color: var(--danger-bg); color: var(--danger); }
+        .status-badge.instock { background-color: #f7f4ee; color: var(--text-color); border: 1px solid var(--border-color); }
 
         .vegan-disclaimer {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--vegan-color);
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-top: 5px;
+            background: var(--vegan-bg);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            display: inline-block;
+            align-self: flex-start;
         }
 
         /* --- 8. STRUCTURAL UTILITIES --- */
         .case-controls-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding-top: 12px;
-            border-top: 1px dashed rgba(0,0,0,0.15);
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border-color);
             z-index: 12;
             width: 100%;
         }
@@ -727,27 +835,33 @@
             align-items: center;
             gap: 10px;
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
         }
-        .case-checkbox-label input { width: 16px; height: 16px; }
+        .case-checkbox-label input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
 
         .season-toggle-link {
             font-size: 12px;
-            color: #555;
-            text-decoration: underline;
+            color: var(--text-muted);
+            text-decoration: none;
             cursor: pointer;
             align-self: flex-start;
-            margin-top: 5px;
+            font-weight: 600;
+            transition: var(--transition);
             z-index: 12;
+            padding: 2px 0;
+            border-bottom: 1px dotted var(--text-muted);
         }
+        .season-toggle-link:hover { color: var(--primary); border-bottom-color: var(--primary); }
 
         /* --- 9. ALLERGEN SPREADSHEET TABLE --- */
         .spreadsheet-container {
             width: 100%;
             overflow-x: auto;
-            border: 1px solid #c0c0c0;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
             background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
         }
 
         .excel-table {
@@ -758,38 +872,43 @@
         }
 
         .excel-table th {
-            background: #e6e6e6;
-            color: #333;
-            font-weight: bold;
-            padding: 10px;
-            border: 1px solid #c0c0c0;
+            background: var(--bg-main);
+            color: var(--text-color);
+            font-weight: 700;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
         }
 
         .excel-table td {
-            padding: 8px 10px;
-            border: 1px solid #e0e0e0;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            color: var(--text-color);
         }
 
-        .excel-table tr:nth-child(even) { background: #fdfdfd; }
-        .excel-table tr:hover { background: #f2f7fa; }
+        .excel-table tr:last-child td { border-bottom: none; }
+        .excel-table tr:nth-child(even) { background: #faf8f5; }
+        .excel-table tr:hover { background: var(--primary-light); }
 
         .excel-flavor-cell {
-            font-weight: 600;
-            background: #fcfcfc;
-            border-right: 2px solid #c0c0c0 !important;
-            width: 250px;
+            font-weight: 700;
+            background: #ffffff;
+            color: var(--text-color);
+            width: 260px;
         }
 
         .allergen-checkbox {
             width: 18px;
             height: 18px;
+            accent-color: var(--danger);
             cursor: pointer;
             display: block;
             margin: 0 auto;
         }
         .allergen-checkbox:disabled {
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.4;
         }
 
         /* --- 10. FLAVOR DETAILS OVERLAY MODAL SYSTEM --- */
@@ -799,35 +918,37 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(43, 37, 32, 0.4);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(4px);
         }
 
         .modal-card {
             background: white;
-            border-radius: var(--radius);
-            width: 500px;
+            border-radius: var(--radius-lg);
+            width: 520px;
             max-width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 0.25s ease-out;
+            animation: fadeIn 0.2s ease-out;
+            border: 1px solid var(--border-color);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .modal-header {
-            padding: 18px 25px;
+            padding: 20px 28px;
+            background: var(--primary);
             color: white;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 18px;
             display: flex;
             justify-content: space-between;
@@ -841,87 +962,97 @@
             font-size: 24px;
             cursor: pointer;
             line-height: 1;
+            opacity: 0.8;
+            transition: var(--transition);
         }
+        .modal-close-trigger:hover { opacity: 1; }
 
         .modal-body {
-            padding: 25px;
+            padding: 28px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            max-height: 75vh;
+            gap: 24px;
+            max-height: 70vh;
             overflow-y: auto;
         }
 
         .modal-section-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #666;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 4px;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
         }
 
         .modal-allergen-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
         }
 
         .modal-allergen-label {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
+            padding: 8px 12px;
+            background: var(--bg-main);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
         }
-        .modal-allergen-label input {
-            width: 16px;
-            height: 16px;
-        }
-        .modal-allergen-label input:disabled {
-            cursor: not-allowed;
-        }
+        .modal-allergen-label input { width: 18px; height: 18px; accent-color: var(--danger); }
 
         .modal-notes-area {
             width: 100%;
-            height: 120px;
-            padding: 10px;
+            height: 110px;
+            padding: 12px;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             font-family: inherit;
             font-size: 14px;
             resize: vertical;
             color: var(--text-color);
+            background: var(--bg-main);
+        }
+        .modal-notes-area:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #ffffff;
         }
 
         .modal-footer {
-            padding: 15px 25px;
-            background: #fdfaf6;
-            border-top: 1px solid #f3e9dc;
+            padding: 18px 28px;
+            background: var(--bg-main);
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: flex-end;
             gap: 12px;
         }
 
         .btn-modal {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
             font-size: 14px;
             cursor: pointer;
             border: none;
+            transition: var(--transition);
         }
         .btn-modal-cancel {
-            background: #e0e0e0;
-            color: #444;
+            background: #e3ded7;
+            color: var(--text-color);
         }
+        .btn-modal-cancel:hover { background: #d5cfc6; }
         .btn-modal-save {
             background: var(--vegan-color);
             color: white;
         }
+        .btn-modal-save:hover { background: #1a6359; }
     </style>
 </head>
 <body>
@@ -962,7 +1093,7 @@
                     <input type="text" id="newFlavorName" placeholder="Flavor Name (e.g., Blood Orange)">
                 </div>
                 <div class="color-picker-wrapper">
-                    <label for="newFlavorColor">Card Base Color:</label>
+                    <label for="newFlavorColor">Card Edge Color:</label>
                     <input type="color" id="newFlavorColor" value="#d4a373">
                 </div>
                 <label class="creation-vegan-label">
@@ -992,7 +1123,7 @@
             </div>
             
             <div id="pinnedFlavorsSection" style="display: none;">
-                <h3 class="section-heading" style="color: #e63946">📌 Pinned Favorites</h3>
+                <h3 class="section-heading" style="color: var(--danger)">📌 Pinned Favorites</h3>
                 <ul class="inventory-list" id="activePinnedList"></ul>
                 <div class="page-break"></div>
             </div>
@@ -1002,7 +1133,7 @@
 
             <div class="page-break"></div>
 
-            <h3 class="section-heading" style="color: #4e3d30">🥛 Standard Dairy Flavors</h3>
+            <h3 class="section-heading" style="color: #614d3f">🥛 Standard Dairy Flavors</h3>
             <ul class="inventory-list" id="activeDairyList"></ul>
 
             <div class="section-divider" id="archiveDivider">
@@ -1029,972 +1160,16 @@
                         <tr>
                             <th class="excel-flavor-cell">Gelato Flavor</th>
                             <th style="text-align: center;">Tree Nuts</th>
-                            <th style="text-align: center;">Gluten</th>
                             <th style="text-align: center;">Dairy</th>
-                            <th style="text-align: center;">Egg</th>
-                            <th style="text-align: center;">Soy</th>
-                            <th style="text-align: center;">Sesame</th>
                         </tr>
                     </thead>
-                    <tbody id="allergenTableBody"></tbody>
+                    <tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
-
-        <div id="panelItems" class="view-panel">
-            <div class="creation-bar">
-                <h3>Add New Item Stock:</h3>
-                <div class="input-group">
-                    <input type="text" id="newItemName" placeholder="Item Name (e.g., Medium Spoons)">
-                </div>
-                <div class="input-group">
-                    <label for="newItemUnit" style="font-size: 14px; font-weight: bold;">Tracking Unit:</label>
-                    <select id="newItemUnit">
-                        <option value="bags">bags</option>
-                        <option value="boxes">boxes</option>
-                        <option value="total bags in drawer">total bags in drawer</option>
-                    </select>
-                </div>
-                <button class="btn-add" onclick="addNewItem()">Add Item</button>
-            </div>
-
-            <div class="filter-control-bar">
-                <div class="filter-group">
-                    <input type="text" id="searchItems" placeholder="🔍 Search packing & utensils..." oninput="renderItemsInventory()">
-                </div>
-                <div class="filter-group" style="justify-content: flex-end;">
-                    <label for="sortItems" style="font-size:14px; font-weight:bold;">Sort By:</label>
-                    <select id="sortItems" onchange="renderItemsInventory()">
-                        <option value="az">A-Z</option>
-                        <option value="high-low">Quantity (Highest to Lowest)</option>
-                        <option value="low-high">Quantity (Lowest to Highest)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="panel-title-container">
-                <img src="https://cdn.shopify.com/s/files/1/0695/5332/4245/files/logoSolidClassic.webp?v=1740539707&width=500&height=500&crop=center" alt="Nutty Squirrel Logo" class="panel-inline-logo">
-                <h2>Service Items &amp; Packaging Storage</h2>
-            </div>
-            
-            <h3 class="section-heading">📄 Paper Products</h3>
-            <ul class="inventory-list" id="paperItemsList"></ul>
-
-            <div class="page-break"></div>
-
-            <h3 class="section-heading">🧪 Plastic Products</h3>
-            <ul class="inventory-list" id="plasticItemsList"></ul>
-        </div>
-
-        <div id="panelConsumables" class="view-panel">
-            <div class="creation-bar">
-                <h3>Add New Consumable:</h3>
-                <div class="input-group">
-                    <input type="text" id="newConsumableName" placeholder="Consumable Name (e.g., Honey)">
-                </div>
-                <div class="input-group">
-                    <label for="newConsumableUnit" style="font-size: 14px; font-weight: bold;">Tracking Unit:</label>
-                    <select id="newConsumableUnit">
-                        <option value="cans">cans</option>
-                        <option value="bags">bags</option>
-                        <option value="boxes">boxes</option>
-                        <option value="bottles">bottles</option>
-                        <option value="cakes">cakes</option>
-                        <option value="packs">packs</option>
-                        <option value="cones">cones</option>
-                    </select>
-                </div>
-                <button class="btn-add" onclick="addNewConsumable()">Add Consumable</button>
-            </div>
-
-            <div class="filter-control-bar">
-                <div class="filter-group">
-                    <input type="text" id="searchConsumables" placeholder="🔍 Search ingredients & cones..." oninput="renderConsumablesInventory()">
-                </div>
-                <div class="filter-group" style="justify-content: flex-end;">
-                    <label for="sortConsumables" style="font-size:14px; font-weight:bold;">Sort By:</label>
-                    <select id="sortConsumables" onchange="renderConsumablesInventory()">
-                        <option value="az">A-Z</option>
-                        <option value="high-low">Quantity (Highest to Lowest)</option>
-                        <option value="low-high">Quantity (Lowest to Highest)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="panel-title-container">
-                <img src="https://cdn.shopify.com/s/files/1/0695/5332/4245/files/logoSolidClassic.webp?v=1740539707&width=500&height=500&crop=center" alt="Nutty Squirrel Logo" class="panel-inline-logo">
-                <h2>Toppings, Beverages &amp; Ingredients</h2>
-            </div>
-            
-            <h3 class="section-heading" style="color: #b17a46">🍦 Serving Cones</h3>
-            <ul class="inventory-list" id="conesInventoryList"></ul>
-
-            <div class="page-break"></div>
-
-            <h3 class="section-heading" style="color: #9d4edd">🍰 Standalone Desserts</h3>
-            <ul class="inventory-list" id="dessertsInventoryList"></ul>
-
-            <div class="page-break"></div>
-
-            <h3 class="section-heading" style="color: #0077b6">🥤 Beverages &amp; Drinks</h3>
-            <ul class="inventory-list" id="drinksInventoryList"></ul>
-
-            <div class="page-break"></div>
-
-            <h3 class="section-heading" style="color: #2a9d8f">🍒 Ingredients &amp; Toppings</h3>
-            <ul class="inventory-list" id="consumablesInventoryList"></ul>
-        </div>
-
-    </div>
-
-    <footer>
-        <p>&copy; 2026 Gelato Shop POS System. All Rights Reserved.</p>
-    </footer>
-
-</div>
-
-<div class="bulk-action-dock" id="bulkActionDock">
-    <span style="font-weight: bold; font-size: 14px; color: var(--text-color);" id="bulkSelectCountText">0 Items Selected</span>
-    <button class="btn-bulk-action btn-bulk-archive" onclick="triggerBulkArchive()">Bulk Out of Season</button>
-    <button class="btn-bulk-action btn-bulk-delete" onclick="triggerBulkDelete()">Bulk Delete</button>
-</div>
-
-<div class="modal-overlay" id="flavorModalOverlay" onclick="closeFlavorModal(false)">
-    <div class="modal-card" onclick="event.stopPropagation()">
-        <div class="modal-header" id="modalHeaderEl">
-            <span id="modalTitleText">Flavor Profile</span>
-            <button class="modal-close-trigger" onclick="closeFlavorModal(false)">×</button>
-        </div>
-        <div class="modal-body">
-            <div>
-                <div class="modal-section-title">Allergen Safety Settings</div>
-                <div class="modal-allergen-grid">
-                    <label class="modal-allergen-label">
-                        <input type="checkbox" id="modalAllergen-dairy"> Dairy
-                    </label>
-                    <label class="modal-allergen-label">
-                        <input type="checkbox" id="modalAllergen-gluten"> Gluten
-                    </label>
-                    <label class="modal-allergen-label">
-                        <input type="checkbox" id="modalAllergen-treeNuts"> Tree Nuts
-                    </label>
-                    <label class="modal-allergen-label">
-                        <input type="checkbox" id="modalAllergen-egg"> Egg
-                    </label>
-                    <label class="modal-allergen-label">
-                        <input type="checkbox" id="modalAllergen-soy"> Soy
-                    </label>
-                    <label class="modal-allergen-label">
-                        <input type="checkbox" id="modalAllergen-sesame"> Sesame
-                    </label>
-                </div>
-            </div>
-            <div>
-                <div class="modal-section-title">Internal Batch &amp; Description Notes</div>
-                <textarea class="modal-notes-area" id="modalNotesTextarea" placeholder="Enter custom flavor profiles, seasonal details, or specific ingredient notifications here..."></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-modal btn-modal-cancel" onclick="closeFlavorModal(false)">Cancel</button>
-            <button class="btn-modal btn-modal-save" onclick="closeFlavorModal(true)">Save Changes</button>
-        </div>
     </div>
 </div>
-
-<script>
-    /* --- SECTION 0: HELPERS & FUZZY LOGIC --- */
-    function fuzzyMatch(sourceStr, targetStr) {
-        const source = sourceStr.toLowerCase().trim();
-        const target = targetStr.toLowerCase().trim();
-        if (!target) return true;
-        if (source.includes(target)) return true;
-
-        const track = Array(target.length + 1).fill(null).map(() => Array(source.length + 1).fill(null));
-        for (let i = 0; i <= source.length; i += 1) track[0][i] = i;
-        for (let j = 0; j <= target.length; j += 1) track[j][0] = j;
-        
-        for (let j = 1; j <= target.length; j += 1) {
-            for (let i = 1; i <= source.length; i += 1) {
-                const indicator = source[i - 1] === target[j - 1] ? 0 : 1;
-                track[j][i] = Math.min(
-                    track[j][i - 1] + 1,
-                    track[j - 1][i] + 1,
-                    track[j - 1][i - 1] + indicator
-                );
-            }
-        }
-        const maxMistakes = target.length <= 4 ? 1 : target.length <= 7 ? 2 : 3;
-        return track[target.length][source.length] <= maxMistakes;
-    }
-
-    function escapeJSString(str) {
-        return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
-    }
-
-    function sortInventoryEntries(entriesArray, sortType) {
-        return entriesArray.sort((a, b) => {
-            if (sortType === 'high-low') return b[1].qty - a[1].qty;
-            if (sortType === 'low-high') return a[1].qty - b[1].qty;
-            return a[0].localeCompare(b[0]);
-        });
-    }
-
-    function adjustColorBrightness(hex, percent) {
-        hex = hex.replace('#', '');
-        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-        let r = parseInt(hex.substring(0, 2), 16);
-        let g = parseInt(hex.substring(2, 4), 16);
-        let b = parseInt(hex.substring(4, 6), 16);
-
-        r = Math.min(255, Math.max(0, parseInt(r * (1 + percent))));
-        g = Math.min(255, Math.max(0, parseInt(g * (1 + percent))));
-        b = Math.min(255, Math.max(0, parseInt(b * (1 + percent))));
-
-        const rr = ((r.toString(16).length === 1) ? "0" : "") + r.toString(16);
-        const gg = ((g.toString(16).length === 1) ? "0" : "") + g.toString(16);
-        const bb = ((b.toString(16).length === 1) ? "0" : "") + b.toString(16);
-
-        return `#${rr}${gg}${bb}`;
-    }
-
-    function generateGradientStyle(baseHex, isDarkFlavor) {
-        if (!baseHex || baseHex.indexOf('#') !== 0) baseHex = '#ffffff';
-        
-        const topColor = adjustColorBrightness(baseHex, isDarkFlavor ? -0.15 : -0.10);
-        const bottomColor = adjustColorBrightness(baseHex, isDarkFlavor ? 0.20 : 0.15);
-        
-        return `linear-gradient(180deg, ${convertHexToRgba(topColor, isDarkFlavor ? 0.35 : 0.5)} 0%, ${convertHexToRgba(bottomColor, isDarkFlavor ? 0.15 : 0.25)} 100%)`;
-    }
-
-    function convertHexToRgba(hex, opacity) {
-        hex = hex.replace('#', '');
-        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    }
-
-    function generatePastelColor(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        return `hsla(${Math.abs(hash % 360)}, 75%, 85%, 0.5)`;
-    }
-
-    /* --- INITIAL SYSTEM REGISTRY STATE --- */
-    const defaultGelato = {
-        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" }
-    };
-
-    const defaultItems = {
-        "Small spoons": { qty: 0, unit: "bags" },
-        "Large spoons": { qty: 0, unit: "bags" },
-        "Single cups": { qty: 0, unit: "boxes" },
-        "Double cups": { qty: 0, unit: "boxes" },
-        "Pint cups": { qty: 0, unit: "boxes" },
-        "Pint lids": { qty: 0, unit: "boxes" },
-        "Napkins": { qty: 0, unit: "bags" },
-        "Paper bags": { qty: 0, unit: "total bags in drawer" },
-        "Coffee cups": { qty: 0, unit: "bags" },
-        "Espresso cups": { qty: 0, unit: "bags" },
-        "Milkshake cups": { qty: 0, unit: "bags" },
-        "Coffee cup lids": { qty: 0, unit: "bags" },
-        "Milkshake cup lids": { qty: 0, unit: "bags" },
-        "Straws": { qty: 0, unit: "boxes" }
-    };
-
-    const defaultConsumables = {
-        "Waffle Cones": { qty: 0, unit: "cones" },
-        "Sugar Cones": { qty: 0, unit: "cones" },
-        "Torch Cones": { qty: 0, unit: "cones" },
-        "Premium Cones": { qty: 0, unit: "cones" },
-        "Cake Cones": { qty: 0, unit: "cones" },
-        "Gluten Free Cones": { qty: 0, unit: "cones" },
-        "Cherries": { qty: 0, unit: "cans" },
-        "Marshmallows": { qty: 0, unit: "bags" },
-        "Sprinkles": { qty: 0, unit: "boxes" },
-        "chocolate chips": { qty: 0, unit: "bags" },
-        "Reese's Pieces": { qty: 0, unit: "boxes" },
-        "Whipped Cream": { qty: 0, unit: "bottles" },
-        "Chocolate drizzle": { qty: 0, unit: "bottles" },
-        "Caramel drizzle": { qty: 0, unit: "bottles" },
-        "Blood orange soda": { qty: 0, unit: "cans" },
-        "Lemon soda": { qty: 0, unit: "cans" },
-        "Tangerine soda": { qty: 0, unit: "cans" },
-        "Illy cold brews": { qty: 0, unit: "cans" },
-        "Lava cakes": { qty: 0, unit: "cakes" },
-        "Macarons": { qty: 0, unit: "packs" },
-        "Illy Coffee Intenso": { qty: 0, unit: "boxes" },
-        "Illy Coffee Decaf": { qty: 0, unit: "boxes" },
-        "Oatmilk": { qty: 0, unit: "bottles" },
-        "Whole Milk": { qty: 0, unit: "bottles" },
-        "Soy Milk": { qty: 0, unit: "bottles" },
-        "Chai": { qty: 0, unit: "bottles" },
-        "Hot chocolate": { qty: 0, unit: "bottles" },
-        "Sparkling water": { qty: 0, unit: "bottles" },
-        "Tiramisu": { qty: 0, unit: "boxes" }
-    };
-
-    let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || defaultGelato;
-    let itemsInventory = JSON.parse(localStorage.getItem('itemsInventory')) || defaultItems;
-    let consumablesInventory = JSON.parse(localStorage.getItem('consumablesInventory')) || defaultConsumables;
-
-    let activeEditFlavor = null;
-    let activeEditItem = null;
-    let activeEditConsumable = null;
-    let currentModalFlavorKey = null;
-
-    let isBulkSelectMode = false;
-    let selectedFlavorsSet = new Set();
-
-    function saveAllStorage() {
-        localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
-        localStorage.setItem('itemsInventory', JSON.stringify(itemsInventory));
-        localStorage.setItem('consumablesInventory', JSON.stringify(consumablesInventory));
-        evaluateGlobalStockAlerts();
-    }
-
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-        activeEditFlavor = null; activeEditItem = null; activeEditConsumable = null;
-        if(isBulkSelectMode) toggleBulkSelectMode();
-
-        if (tabId === 'dashboard') {
-            document.getElementById('btnDashboard').classList.add('active');
-            document.getElementById('panelDashboard').classList.add('active');
-            renderInventory();
-        } else if (tabId === 'allergens') {
-            document.getElementById('btnAllergens').classList.add('active');
-            document.getElementById('panelAllergens').classList.add('active');
-            renderAllergenChart();
-        } else if (tabId === 'items') {
-            document.getElementById('btnItems').classList.add('active');
-            document.getElementById('panelItems').classList.add('active');
-            renderItemsInventory();
-        } else if (tabId === 'consumables') {
-            document.getElementById('btnConsumables').classList.add('active');
-            document.getElementById('panelConsumables').classList.add('active');
-            renderConsumablesInventory();
-        }
-    }
-
-    /* --- SECTION 1: GLOBAL MONITOR ALERT LOOPS --- */
-    function evaluateGlobalStockAlerts() {
-        const alertContainer = document.getElementById('globalAlertContainer');
-        const alertDropdown = document.getElementById('globalAlertDropdown');
-        const titleSpan = document.getElementById('globalAlertTitle');
-
-        let missingFlavors = [], missingItems = [], missingConsumables = [];
-
-        for (const [flavor, data] of Object.entries(inventory)) {
-            if (!data.outOfSeason && data.qty === 0) missingFlavors.push(flavor);
-        }
-        for (const [item, data] of Object.entries(itemsInventory)) {
-            if (data.qty === 0) missingItems.push(item);
-        }
-        for (const [consumable, data] of Object.entries(consumablesInventory)) {
-            if (data.qty === 0) missingConsumables.push(consumable);
-        }
-
-        const grandTotalMissing = missingFlavors.length + missingItems.length + missingConsumables.length;
-        if (grandTotalMissing === 0) {
-            alertContainer.style.display = 'none'; alertDropdown.style.display = 'none'; return;
-        }
-
-        alertContainer.style.display = 'flex';
-        titleSpan.innerHTML = `⚠️ Warning: ${grandTotalMissing} Asset${grandTotalMissing > 1 ? 's' : ''} Completely Missing (0 Stock)!`;
-
-        let menuHtml = '';
-        if (missingFlavors.length > 0) {
-            menuHtml += `<h4>🍦 Missing Gelato Canisters</h4><ul class="out-of-stock-list">`;
-            missingFlavors.forEach(f => menuHtml += `<li>${f}</li>`);
-            menuHtml += `</ul>`;
-        }
-        if (missingItems.length > 0) {
-            menuHtml += `<h4>📦 Missing Packaging &amp; Utensils</h4><ul class="out-of-stock-list">`;
-            missingItems.forEach(i => menuHtml += `<li>${i}</li>`);
-            menuHtml += `</ul>`;
-        }
-        if (missingConsumables.length > 0) {
-            menuHtml += `<h4>🍒 Missing Ingredients &amp; Cones</h4><ul class="out-of-stock-list">`;
-            missingConsumables.forEach(c => menuHtml += `<li>${c}</li>`);
-            menuHtml += `</ul>`;
-        }
-        alertDropdown.innerHTML = menuHtml;
-    }
-
-    function toggleAlertMenu() {
-        const dropdown = document.getElementById('globalAlertDropdown');
-        const toggleBtn = document.getElementById('globalAlertToggleBtn');
-        if (dropdown.style.display === 'block') {
-            dropdown.style.display = 'none'; toggleBtn.innerText = 'Click to view lists ▼';
-        } else {
-            dropdown.style.display = 'block'; toggleBtn.innerText = 'Click to collapse lists ▲';
-        }
-    }
-
-    /* --- SECTION 2: INTERACTIVE POPUP DETAIL OVERLAYS --- */
-    function openFlavorModal(flavorKey) {
-        if (isBulkSelectMode) return; 
-        currentModalFlavorKey = flavorKey;
-        const data = inventory[flavorKey];
-        if (!data) return;
-
-        document.getElementById('modalHeaderEl').style.background = generateGradientStyle(data.color, false);
-        document.getElementById('modalTitleText').innerText = `${flavorKey} — Profile Info`;
-        document.getElementById('modalNotesTextarea').value = data.notes || "";
-
-        const allergenKeys = ['dairy', 'gluten', 'treeNuts', 'egg', 'soy', 'sesame'];
-        const currentAllergens = data.allergens || {};
-
-        allergenKeys.forEach(k => {
-            const checkbox = document.getElementById(`modalAllergen-${k}`);
-            if (k === 'dairy' && !data.isVegan) {
-                checkbox.checked = true; checkbox.disabled = true;
-            } else {
-                checkbox.checked = !!currentAllergens[k]; checkbox.disabled = false;
-            }
-        });
-        document.getElementById('flavorModalOverlay').style.display = 'flex';
-    }
-
-    function closeFlavorModal(shouldSave) {
-        if (shouldSave && currentModalFlavorKey) {
-            const data = inventory[currentModalFlavorKey];
-            if (data) {
-                if (!data.allergens) data.allergens = {};
-                ['dairy', 'gluten', 'treeNuts', 'egg', 'soy', 'sesame'].forEach(k => {
-                    const checkbox = document.getElementById(`modalAllergen-${k}`);
-                    if (k === 'dairy' && !data.isVegan) data.allergens[k] = true;
-                    else data.allergens[k] = checkbox.checked;
-                });
-                data.notes = document.getElementById('modalNotesTextarea').value;
-                saveAllStorage(); renderInventory(); renderAllergenChart();
-            }
-        }
-        document.getElementById('flavorModalOverlay').style.display = 'none';
-        currentModalFlavorKey = null;
-    }
-
-    /* --- SECTION 3: BULK SELECT PLATFORM OPERATIONS --- */
-    function toggleBulkSelectMode() {
-        isBulkSelectMode = !isBulkSelectMode;
-        selectedFlavorsSet.clear();
-        
-        const btn = document.getElementById('btnBulkSelectToggle');
-        const dock = document.getElementById('bulkActionDock');
-        
-        if (isBulkSelectMode) {
-            document.body.classList.add('bulk-select-active');
-            btn.innerText = "Cancel";
-            btn.classList.add('active');
-            dock.style.display = 'flex';
-            updateBulkSelectCountUI();
-        } else {
-            document.body.classList.remove('bulk-select-active');
-            btn.innerText = "Select";
-            btn.classList.remove('active');
-            dock.style.display = 'none';
-        }
-        renderInventory();
-    }
-
-    function handleCardSelectionToggle(flavor, event) {
-        if (event.target.closest('.counter-box') || event.target.closest('.case-controls-group') || event.target.closest('.season-toggle-link') || event.target.closest('.edit-trigger') || event.target.closest('.card-remove-btn') || event.target.closest('.pin-trigger')) {
-            return;
-        }
-
-        if (isBulkSelectMode) {
-            const checkbox = document.getElementById(`bulkCheck-${flavor.replace(/\s+/g, '_')}`);
-            if (selectedFlavorsSet.has(flavor)) {
-                selectedFlavorsSet.delete(flavor);
-                if (checkbox) checkbox.checked = false;
-            } else {
-                selectedFlavorsSet.add(flavor);
-                if (checkbox) checkbox.checked = true;
-            }
-            updateBulkSelectCountUI();
-        } else {
-            openFlavorModal(flavor);
-        }
-    }
-
-    function handleCheckboxDirectClick(flavor, checkboxElement) {
-        if (checkboxElement.checked) {
-            selectedFlavorsSet.add(flavor);
-        } else {
-            selectedFlavorsSet.delete(flavor);
-        }
-        updateBulkSelectCountUI();
-    }
-
-    function updateBulkSelectCountUI() {
-        document.getElementById('bulkSelectCountText').innerText = `${selectedFlavorsSet.size} Item${selectedFlavorsSet.size !== 1 ? 's' : ''} Selected`;
-    }
-
-    function triggerBulkArchive() {
-        if (selectedFlavorsSet.size === 0) return alert("No flavors selected.");
-        if (confirm(`Mark all ${selectedFlavorsSet.size} selected flavors as out of season?`)) {
-            selectedFlavorsSet.forEach(flavor => {
-                if (inventory[flavor]) inventory[flavor].outOfSeason = true;
-            });
-            saveAllStorage(); toggleBulkSelectMode();
-        }
-    }
-
-    function triggerBulkDelete() {
-        if (selectedFlavorsSet.size === 0) return alert("No flavors selected.");
-        if (confirm(`Permanently delete all ${selectedFlavorsSet.size} selected flavors from the system?`)) {
-            selectedFlavorsSet.forEach(flavor => {
-                delete inventory[flavor];
-            });
-            saveAllStorage(); toggleBulkSelectMode();
-        }
-    }
-
-    /* --- SECTION 4: GELATO REGISTRY ENGINE --- */
-    function addNewFlavor() {
-        const nameInput = document.getElementById('newFlavorName');
-        const colorInput = document.getElementById('newFlavorColor');
-        const veganInput = document.getElementById('newFlavorVegan');
-        const name = nameInput.value.trim();
-
-        if (!name) return alert("Enter a valid flavor name!");
-        if (inventory.hasOwnProperty(name)) return alert("Flavor already exists.");
-
-        inventory[name] = { 
-            qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, 
-            color: colorInput.value, isVegan: veganInput.checked, allergens: {}, 
-            notes: "", isPinned: false, lastRestocked: "", isNew: true 
-        };
-        nameInput.value = ''; colorInput.value = '#d4a373'; veganInput.checked = false;
-        saveAllStorage(); renderInventory();
-    }
-
-    function adjustQty(flavor, amt) {
-        inventory[flavor].qty = Math.max(0, inventory[flavor].qty + amt);
-        if (amt > 0) {
-            const now = new Date();
-            inventory[flavor].lastRestocked = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
-        saveAllStorage(); renderInventory();
-    }
-
-    function togglePin(flavor) {
-        inventory[flavor].isPinned = !inventory[flavor].isPinned;
-        saveAllStorage(); renderInventory();
-    }
-
-    function handleCaseToggle(flavor, key, isChecked) {
-        if (isChecked) {
-            if (inventory[flavor].qty > 0) {
-                inventory[flavor].qty -= 1; inventory[flavor][key] = true;
-            } else {
-                alert(`0 backup canisters left.`); renderInventory(); return;
-            }
-        } else {
-            inventory[flavor].qty += 1; inventory[flavor][key] = false;
-        }
-        saveAllStorage(); renderInventory();
-    }
-
-    function toggleSeason(flavor) {
-        inventory[flavor].outOfSeason = !inventory[flavor].outOfSeason;
-        saveAllStorage(); renderInventory();
-    }
-
-    function enterEditMode(flavor) { activeEditFlavor = (activeEditFlavor === flavor) ? null : flavor; renderInventory(); }
-
-    function saveFlavorEdits(oldKey) {
-        const safeId = oldKey.replace(/\s+/g, '_');
-        const newName = document.getElementById(`editName-${safeId}`).value.trim();
-        const newColor = document.getElementById(`editColor-${safeId}`).value;
-        const newVegan = document.getElementById(`editVegan-${safeId}`).checked;
-
-        if (!newName) return alert("Name cannot be blank.");
-        const dataRef = inventory[oldKey];
-        dataRef.color = newColor; dataRef.isVegan = newVegan;
-
-        if (newName !== oldKey) {
-            if (inventory.hasOwnProperty(newName)) return alert("Name already exists.");
-            inventory[newName] = dataRef; delete inventory[oldKey];
-        }
-        activeEditFlavor = null; saveAllStorage(); renderInventory();
-    }
-
-    function deleteFlavor(flavor) {
-        if (confirm(`Are you sure you want to delete ${flavor}?`)) { 
-            delete inventory[flavor]; activeEditFlavor = null; saveAllStorage(); renderInventory(); 
-        }
-    }
-
-    function toggleAllergen(flavor, key, isChecked) {
-        if (!inventory[flavor].allergens) inventory[flavor].allergens = {};
-        inventory[flavor].allergens[key] = isChecked; saveAllStorage();
-    }
-
-    function renderInventory() {
-        const pinnedList = document.getElementById('activePinnedList');
-        const pinnedSection = document.getElementById('pinnedFlavorsSection');
-        const veganList = document.getElementById('activeVeganList');
-        const dairyList = document.getElementById('activeDairyList');
-        const archivedList = document.getElementById('archivedList');
-        const archiveDivider = document.getElementById('archiveDivider');
-        
-        const query = document.getElementById('searchDashboard').value;
-        const sortVal = document.getElementById('sortDashboard').value;
-
-        pinnedList.innerHTML = ''; veganList.innerHTML = ''; dairyList.innerHTML = ''; archivedList.innerHTML = '';
-        let archCount = 0, pinnedCount = 0;
-
-        let rawEntries = Object.entries(inventory).filter(([flavor]) => fuzzyMatch(flavor, query));
-        let processedEntries = sortInventoryEntries(rawEntries, sortVal);
-
-        for (const [flavor, data] of processedEntries) {
-            const li = document.createElement('li');
-            li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
-            
-            const escapedFlavor = escapeJSString(flavor);
-            li.setAttribute('onclick', `handleCardSelectionToggle('${escapedFlavor}', event)`);
-            
-            const isDark = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
-            li.style.background = generateGradientStyle(data.color, isDark);
-            
-            const isEditing = (activeEditFlavor === flavor);
-            const safeId = flavor.replace(/\s+/g, '_');
-            const isCheckedInSet = selectedFlavorsSet.has(flavor);
-            
-            let html = `
-                <div class="bulk-select-checkbox-container">
-                    <input type="checkbox" id="bulkCheck-${safeId}" ${isCheckedInSet ? 'checked' : ''} onclick="event.stopPropagation(); handleCheckboxDirectClick('${escapedFlavor}', this)">
-                </div>
-                <button class="card-remove-btn" title="Delete flavor" onclick="event.stopPropagation(); deleteFlavor('${escapedFlavor}')">×</button>
-                <button class="edit-trigger" title="Edit fields" onclick="event.stopPropagation(); enterEditMode('${escapedFlavor}')">✏️</button>
-                <button class="pin-trigger ${data.isPinned ? 'pinned' : ''}" title="Pin Favorite" onclick="event.stopPropagation(); togglePin('${escapedFlavor}')">${data.isPinned ? '📌' : '📍'}</button>`;
-
-            if (isEditing) {
-                html += `
-                    <div class="edit-mode-panel" onclick="event.stopPropagation()">
-                        <input type="text" id="editName-${safeId}" value="${flavor}">
-                        <div class="color-picker-wrapper"><label>Color:</label><input type="color" id="editColor-${safeId}" value="${data.color}"></div>
-                        <label class="creation-vegan-label"><input type="checkbox" id="editVegan-${safeId}" ${data.isVegan ? 'checked' : ''}> Vegan</label>
-                        <div class="edit-actions">
-                            <button class="btn-mini btn-save" onclick="saveFlavorEdits('${escapedFlavor}')">Save</button>
-                        </div>
-                    </div>`;
-            } else {
-                const badge = data.outOfSeason ? '<span class="status-badge oos">Out of Season</span>' : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
-                const newTagMarkup = data.isNew ? '<span class="new-tag">New</span>' : '';
-                const timeMarkup = (!data.outOfSeason && data.lastRestocked) ? `<div class="restock-timestamp">⏱️ Added: ${data.lastRestocked}</div>` : '';
-                
-                html += `
-                    <div>
-                        <div class="flavor-card-content">
-                            <div class="flavor-text-block">
-                                <span class="flavor-title">${flavor}${newTagMarkup}</span>
-                                <div style="margin-top:8px;">${badge}</div>
-                                ${timeMarkup}
-                                ${data.isVegan ? '<div class="vegan-disclaimer">🌱 Vegan</div>' : ''}
-                            </div>
-                            
-                            <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}" onclick="event.stopPropagation()">
-                                <button class="counter-btn" onclick="adjustQty('${escapedFlavor}', 1)">▲</button>
-                                <button class="counter-btn" onclick="adjustQty('${escapedFlavor}', -1)">▼</button>
-                            </div>
-                        </div>
-                        <div class="season-toggle-link" onclick="event.stopPropagation(); toggleSeason('${escapedFlavor}')">${data.outOfSeason?'Mark In Season':'Mark Out of Season'}</div>
-                    </div>
-                    <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}" onclick="event.stopPropagation()">
-                        <label class="case-checkbox-label"><input type="checkbox" ${data.inDisplayCase?'checked':''} onchange="handleCaseToggle('${escapedFlavor}','inDisplayCase',this.checked)"> Display Case</label>
-                        <label class="case-checkbox-label"><input type="checkbox" ${data.inTransferCase?'checked':''} onchange="handleCaseToggle('${escapedFlavor}','inTransferCase',this.checked)"> Transfer Case</label>
-                    </div>`;
-            }
-            li.innerHTML = html;
-            
-            if (data.outOfSeason) { 
-                archivedList.appendChild(li); archCount++; 
-            } else if (data.isPinned) {
-                pinnedList.appendChild(li); pinnedCount++;
-            } else { 
-                if (data.isVegan) { veganList.appendChild(li); } else { dairyList.appendChild(li); }
-            }
-        }
-        archiveDivider.style.display = archCount > 0 ? 'block' : 'none';
-        pinnedSection.style.display = pinnedCount > 0 ? 'block' : 'none';
-    }
-
-    function renderAllergenChart() {
-        const tbody = document.getElementById('allergenTableBody'); tbody.innerHTML = '';
-        const query = document.getElementById('searchAllergens').value;
-        const keys = ['treeNuts', 'gluten', 'dairy', 'egg', 'soy', 'sesame'];
-
-        for (const [flavor, data] of Object.entries(inventory)) {
-            if (!fuzzyMatch(flavor, query)) continue;
-            const tr = document.createElement('tr'); const rAllergens = data.allergens || {};
-            const escapedFlavor = escapeJSString(flavor);
-            let html = `<td class="excel-flavor-cell">${flavor}</td>`;
-            keys.forEach(k => {
-                if (k === 'dairy' && !data.isVegan) {
-                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" checked disabled title="Automated Dairy Check"></td>`;
-                } else {
-                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" ${rAllergens[k]?'checked':''} onchange="toggleAllergen('${escapedFlavor}','${k}',this.checked)"></td>`;
-                }
-            });
-            tr.innerHTML = html; tbody.appendChild(tr);
-        }
-    }
-
-    /* --- SECTION 5: PACKAGING & UTENSIL MANAGEMENT --- */
-    function addNewItem() {
-        const nameInput = document.getElementById('newItemName');
-        const unitInput = document.getElementById('newItemUnit');
-        const name = nameInput.value.trim();
-        if (!name) return alert("Enter item name!");
-        if (itemsInventory.hasOwnProperty(name)) return alert("Item already exists.");
-        
-        itemsInventory[name] = { qty: 0, unit: unitInput.value };
-        nameInput.value = ''; saveAllStorage(); renderItemsInventory();
-    }
-
-    function adjustItemQty(name, amt) {
-        itemsInventory[name].qty = Math.max(0, itemsInventory[name].qty + amt);
-        saveAllStorage(); renderItemsInventory();
-    }
-
-    function enterEditItemMode(name) { activeEditItem = (activeEditItem === name) ? null : name; renderItemsInventory(); }
-
-    function saveItemEdits(oldKey) {
-        const safeId = oldKey.replace(/\s+/g, '_');
-        const newName = document.getElementById(`editItemName-${safeId}`).value.trim();
-        const newUnit = document.getElementById(`editItemUnit-${safeId}`).value;
-
-        if (!newName) return alert("Name cannot be blank.");
-        const dataRef = itemsInventory[oldKey];
-        dataRef.unit = newUnit;
-
-        if (newName !== oldKey) {
-            if (itemsInventory.hasOwnProperty(newName)) return alert("Item already exists.");
-            itemsInventory[newName] = dataRef; delete itemsInventory[oldKey];
-        }
-        activeEditItem = null; saveAllStorage(); renderItemsInventory();
-    }
-
-    function deleteItem(name) {
-        if (confirm(`Delete item record for ${name}?`)) { delete itemsInventory[name]; activeEditItem = null; saveAllStorage(); renderItemsInventory(); }
-    }
-
-    function renderItemsInventory() {
-        const paperList = document.getElementById('paperItemsList');
-        const plasticList = document.getElementById('plasticItemsList');
-        const query = document.getElementById('searchItems').value;
-        const sortVal = document.getElementById('sortItems').value;
-        
-        paperList.innerHTML = ''; plasticList.innerHTML = '';
-        const plasticTargets = ["small spoons", "large spoons", "coffee cup lids", "straws", "milkshake cup", "milkshake cup lids"];
-
-        let rawEntries = Object.entries(itemsInventory).filter(([name]) => fuzzyMatch(name, query));
-        let processedEntries = sortInventoryEntries(rawEntries, sortVal);
-
-        for (const [name, data] of processedEntries) {
-            const li = document.createElement('li'); li.className = 'inventory-item';
-            const isEditing = (activeEditItem === name);
-            const safeId = name.replace(/\s+/g, '_');
-            const escapedName = escapeJSString(name);
-            
-            let html = `
-                <button class="card-remove-btn" title="Delete item" onclick="deleteItem('${escapedName}')">×</button>
-                <button class="edit-trigger" title="Edit fields" onclick="enterEditItemMode('${escapedName}')">✏️</button>`;
-
-            if (isEditing) {
-                html += `
-                    <div class="edit-mode-panel">
-                        <input type="text" id="editItemName-${safeId}" value="${name}">
-                        <select id="editItemUnit-${safeId}">
-                            <option value="bags" ${data.unit==='bags'?'selected':''}>bags</option>
-                            <option value="boxes" ${data.unit==='boxes'?'selected':''}>boxes</option>
-                            <option value="total bags in drawer" ${data.unit==='total bags in drawer'?'selected':''}>total bags in drawer</option>
-                        </select>
-                        <div class="edit-actions">
-                            <button class="btn-mini btn-save" onclick="saveItemEdits('${escapedName}')">Save</button>
-                        </div>
-                    </div>`;
-            } else {
-                html += `
-                    <div style="width: 100%;">
-                        <div class="flavor-card-content">
-                            <div class="flavor-text-block">
-                                <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
-                                <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
-                            </div>
-                            <div class="counter-box">
-                                <button class="counter-btn" onclick="adjustItemQty('${escapedName}', 1)">▲</button>
-                                <button class="counter-btn" onclick="adjustItemQty('${escapedName}', -1)">▼</button>
-                            </div>
-                        </div>
-                    </div>`;
-            }
-            li.innerHTML = html;
-
-            const lowerName = name.toLowerCase();
-            const isPlastic = plasticTargets.some(target => lowerName.includes(target));
-            if (isPlastic) plasticList.appendChild(li); else paperList.appendChild(li);
-        }
-    }
-
-    /* --- SECTION 6: INGREDIENTS & CONSUMABLES --- */
-    function addNewConsumable() {
-        const nameInput = document.getElementById('newConsumableName');
-        const unitInput = document.getElementById('newConsumableUnit');
-        const name = nameInput.value.trim();
-        if (!name) return alert("Enter consumable name!");
-        if (consumablesInventory.hasOwnProperty(name)) return alert("Consumable already exists.");
-
-        consumablesInventory[name] = { qty: 0, unit: unitInput.value };
-        nameInput.value = ''; saveAllStorage(); renderConsumablesInventory();
-    }
-
-    function adjustConsumableQty(name, amt) {
-        consumablesInventory[name].qty = Math.max(0, consumablesInventory[name].qty + amt);
-        saveAllStorage(); renderConsumablesInventory();
-    }
-
-    function enterEditConsumableMode(name) { activeEditConsumable = (activeEditConsumable === name) ? null : name; renderConsumablesInventory(); }
-
-    function saveConsumableEdits(oldKey) {
-        const safeId = oldKey.replace(/\s+/g, '_');
-        const newName = document.getElementById(`editConsName-${safeId}`).value.trim();
-        const newUnit = document.getElementById(`editConsUnit-${safeId}`).value;
-
-        if (!newName) return alert("Name cannot be blank.");
-        const dataRef = consumablesInventory[oldKey];
-        dataRef.unit = newUnit;
-
-        if (newName !== oldKey) {
-            if (consumablesInventory.hasOwnProperty(newName)) return alert("Consumable already exists.");
-            consumablesInventory[newName] = dataRef; delete consumablesInventory[oldKey];
-        }
-        activeEditConsumable = null; saveAllStorage(); renderConsumablesInventory();
-    }
-
-    function deleteConsumable(name) {
-        if (confirm(`Delete consumable record for ${name}?`)) { delete consumablesInventory[name]; activeEditConsumable = null; saveAllStorage(); renderConsumablesInventory(); }
-    }
-
-    function renderConsumablesInventory() {
-        const conesList = document.getElementById('conesInventoryList');
-        const dessertsList = document.getElementById('dessertsInventoryList');
-        const drinksList = document.getElementById('drinksInventoryList');
-        const toppingsList = document.getElementById('consumablesInventoryList');
-        
-        const query = document.getElementById('searchConsumables').value;
-        const sortVal = document.getElementById('sortConsumables').value;
-
-        conesList.innerHTML = ''; dessertsList.innerHTML = ''; drinksList.innerHTML = ''; toppingsList.innerHTML = '';
-        const dessertTargets = ["lava cake", "macaron", "tiramisu"];
-        const drinkTargets = ["soda", "cold brew", "milk", "oatmilk", "whole milk", "soy milk", "chai", "hot chocolate", "water"];
-
-        let rawEntries = Object.entries(consumablesInventory).filter(([name]) => fuzzyMatch(name, query));
-        let processedEntries = sortInventoryEntries(rawEntries, sortVal);
-
-        for (const [name, data] of processedEntries) {
-            const li = document.createElement('li'); li.className = 'inventory-item';
-            
-            const basePastel = generatePastelColor(name);
-            li.style.background = `linear-gradient(180deg, ${basePastel} 0%, rgba(255,255,255,0.4) 100%)`;
-            
-            const isEditing = (activeEditConsumable === name);
-            const safeId = name.replace(/\s+/g, '_');
-            const escapedName = escapeJSString(name);
-
-            let html = `
-                <button class="card-remove-btn" title="Delete consumable" onclick="deleteConsumable('${escapedName}')">×</button>
-                <button class="edit-trigger" title="Edit fields" onclick="enterEditConsumableMode('${escapedName}')">✏️</button>`;
-
-            if (isEditing) {
-                html += `
-                    <div class="edit-mode-panel">
-                        <input type="text" id="editConsName-${safeId}" value="${name}">
-                        <select id="editConsUnit-${safeId}">
-                            <option value="cans" ${data.unit==='cans'?'selected':''}>cans</option>
-                            <option value="bags" ${data.unit==='bags'?'selected':''}>bags</option>
-                            <option value="boxes" ${data.unit==='boxes'?'selected':''}>boxes</option>
-                            <option value="bottles" ${data.unit==='bottles'?'selected':''}>bottles</option>
-                            <option value="cakes" ${data.unit==='cakes'?'selected':''}>cakes</option>
-                            <option value="packs" ${data.unit==='packs'?'selected':''}>packs</option>
-                            <option value="cones" ${data.unit==='cones'?'selected':''}>cones</option>
-                        </select>
-                        <div class="edit-actions">
-                            <button class="btn-mini btn-save" onclick="saveConsumableEdits('${escapedName}')">Save</button>
-                        </div>
-                    </div>`;
-            } else {
-                html += `
-                    <div style="width: 100%;">
-                        <div class="flavor-card-content">
-                            <div class="flavor-text-block">
-                                <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
-                                <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
-                            </div>
-                            <div class="counter-box">
-                                <button class="counter-btn" onclick="adjustConsumableQty('${escapedName}', 1)">▲</button>
-                                <button class="counter-btn" onclick="adjustConsumableQty('${escapedName}', -1)">▼</button>
-                            </div>
-                        </div>
-                    </div>`;
-            }
-            li.innerHTML = html; 
-
-            const lowerName = name.toLowerCase();
-            if (data.unit === 'cones' || lowerName.includes('cone')) {
-                conesList.appendChild(li);
-            } else if (dessertTargets.some(t => lowerName.includes(t))) {
-                dessertsList.appendChild(li);
-            } else if (drinkTargets.some(t => lowerName.includes(t)) || data.unit === 'bottles' && !lowerName.includes('drizzle')) {
-                drinksList.appendChild(li);
-            } else {
-                toppingsList.appendChild(li);
-            }
-        }
-    }
-
-    renderInventory();
-    renderAllergenChart();
-    renderItemsInventory();
-    renderConsumablesInventory();
-    evaluateGlobalStockAlerts();
-</script>
 
 </body>
 </html>
