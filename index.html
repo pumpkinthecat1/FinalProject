@@ -35,6 +35,16 @@ Project Description;
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-main);
+            /* Subtle Repeating Ice Cream Pattern background */
+            background-image: 
+                linear-gradient(30deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(150deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(30deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(150deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(60deg, #f5ede2 25%, transparent 25.5%, transparent 75%, #f5ede2 75.5%, #f5ede2),
+                linear-gradient(60deg, #f5ede2 25%, transparent 25.5%, transparent 75%, #f5ede2 75.5%, #f5ede2);
+            background-size: 40px 70px;
+            background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
             color: var(--text-color);
             line-height: 1.6;
             display: flex;
@@ -222,11 +232,12 @@ Project Description;
         }
 
         .main-layout {
-            background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: var(--radius);
             padding: 25px;
             border: 2px solid #f3e9dc;
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            backdrop-filter: blur(10px);
         }
 
         .view-panel {
@@ -446,7 +457,7 @@ Project Description;
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
         }
 
-        /* Flavor Card 3D Hover Effect Triggered outside selection/edit mode */
+        /* Flavor Card 3D Hover Effect */
         body:not(.bulk-select-active) .inventory-item:not(.out-of-season):hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
@@ -454,12 +465,14 @@ Project Description;
 
         .items-grid .inventory-item {
             background-color: white !important;
+            background-image: none !important;
             border: 1px solid var(--border-color);
             cursor: default;
         }
 
         .inventory-item.out-of-season {
             background-color: #e0e0e0 !important;
+            background-image: none !important;
             color: #888;
             border-color: #ccc;
             cursor: default;
@@ -474,6 +487,18 @@ Project Description;
             justify-content: space-between;
             align-items: flex-start;
             gap: 10px;
+        }
+
+        .flavor-card-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .flavor-text-block {
+            flex: 1;
         }
 
         .flavor-title {
@@ -507,7 +532,7 @@ Project Description;
             font-style: italic;
             color: #666;
             margin-top: 4px;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.5);
             padding: 2px 6px;
             border-radius: 4px;
             display: inline-block;
@@ -627,6 +652,7 @@ Project Description;
             background: rgba(255, 255, 255, 0.95);
             padding: 5px;
             border-radius: 6px;
+            width: 100%;
         }
         .edit-mode-panel input[type="text"],
         .edit-mode-panel select {
@@ -651,33 +677,35 @@ Project Description;
         }
         .btn-save { background-color: var(--vegan-color); color: white; }
 
-        /* --- 7. COUNTER CONTROLS --- */
+        /* --- 7. COUNTER CONTROLS (MIDDLE POSITION & ENLARGED) --- */
         .counter-box {
             display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.85);
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(0,0,0,0.15);
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
-            margin-left: auto;
             z-index: 12;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex-shrink: 0;
         }
 
         .counter-btn {
             background: transparent;
             border: none;
-            width: 32px;
-            height: 32px;
-            font-size: 11px;
+            width: 44px;
+            height: 38px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-color);
             font-weight: bold;
+            transition: background 0.2s;
         }
         .counter-btn:hover { background: rgba(0, 0, 0, 0.08); }
-        .counter-btn:first-child { border-right: 1px solid rgba(0,0,0,0.15); }
+        .counter-btn:first-child { border-bottom: 1px solid rgba(0,0,0,0.15); }
 
         .status-badge {
             font-size: 13px;
@@ -706,6 +734,7 @@ Project Description;
             padding-top: 12px;
             border-top: 1px dashed rgba(0,0,0,0.15);
             z-index: 12;
+            width: 100%;
         }
 
         .case-checkbox-label {
@@ -948,8 +977,8 @@ Project Description;
                     <input type="text" id="newFlavorName" placeholder="Flavor Name (e.g., Blood Orange)">
                 </div>
                 <div class="color-picker-wrapper">
-                    <label for="newFlavorColor">Card Tint:</label>
-                    <input type="color" id="newFlavorColor" value="#ffffff">
+                    <label for="newFlavorColor">Card Base Color:</label>
+                    <input type="color" id="newFlavorColor" value="#d4a373">
                 </div>
                 <label class="creation-vegan-label">
                     <input type="checkbox" id="newFlavorVegan"> Mark Vegan
@@ -1225,6 +1254,35 @@ Project Description;
         });
     }
 
+    // Advanced color shift tool to compute darker/lighter variants for CSS background gradients
+    function adjustColorBrightness(hex, percent) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        let r = parseInt(hex.substring(0, 2), 16);
+        let g = parseInt(hex.substring(2, 4), 16);
+        let b = parseInt(hex.substring(4, 6), 16);
+
+        r = Math.min(255, Math.max(0, parseInt(r * (1 + percent))));
+        g = Math.min(255, Math.max(0, parseInt(g * (1 + percent))));
+        b = Math.min(255, Math.max(0, parseInt(b * (1 + percent))));
+
+        const rr = ((r.toString(16).length === 1) ? "0" : "") + r.toString(16);
+        const gg = ((g.toString(16).length === 1) ? "0" : "") + g.toString(16);
+        const bb = ((b.toString(16).length === 1) ? "0" : "") + b.toString(16);
+
+        return `#${rr}${gg}${bb}`;
+    }
+
+    function generateGradientStyle(baseHex, isDarkFlavor) {
+        // Safe defaults if baseHex is missing or incorrect
+        if (!baseHex || baseHex.indexOf('#') !== 0) baseHex = '#ffffff';
+        
+        const topColor = adjustColorBrightness(baseHex, isDarkFlavor ? -0.15 : -0.10);
+        const bottomColor = adjustColorBrightness(baseHex, isDarkFlavor ? 0.20 : 0.15);
+        
+        return `linear-gradient(180deg, ${convertHexToRgba(topColor, isDarkFlavor ? 0.35 : 0.5)} 0%, ${convertHexToRgba(bottomColor, isDarkFlavor ? 0.15 : 0.25)} 100%)`;
+    }
+
     function convertHexToRgba(hex, opacity) {
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
@@ -1251,7 +1309,7 @@ Project Description;
         "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" }, // Replaced with custom pink
         "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
@@ -1329,6 +1387,11 @@ Project Description;
     let itemsInventory = JSON.parse(localStorage.getItem('itemsInventory')) || defaultItems;
     let consumablesInventory = JSON.parse(localStorage.getItem('consumablesInventory')) || defaultConsumables;
     
+    // Safety verification check to make sure custom pink handles properly over old cached storage
+    if (inventory["Lemon Mango Dragonfruit"] && inventory["Lemon Mango Dragonfruit"].color === "#ff8c00") {
+        inventory["Lemon Mango Dragonfruit"].color = "#ffb7c5";
+    }
+
     let activeEditFlavor = null;
     let activeEditItem = null;
     let activeEditConsumable = null;
@@ -1427,12 +1490,12 @@ Project Description;
 
     /* --- SECTION 2: INTERACTIVE POPUP DETAIL OVERLAYS --- */
     function openFlavorModal(flavorKey) {
-        if (isBulkSelectMode) return; // Prevent modals inside processing loops
+        if (isBulkSelectMode) return; 
         currentModalFlavorKey = flavorKey;
         const data = inventory[flavorKey];
         if (!data) return;
 
-        document.getElementById('modalHeaderEl').style.backgroundColor = data.color || "var(--primary)";
+        document.getElementById('modalHeaderEl').style.background = generateGradientStyle(data.color, false);
         document.getElementById('modalTitleText').innerText = `${flavorKey} — Profile Info`;
         document.getElementById('modalNotesTextarea').value = data.notes || "";
 
@@ -1492,7 +1555,6 @@ Project Description;
     }
 
     function handleCardSelectionToggle(flavor, event) {
-        // Isolate sub-element interactions from parsing card selections
         if (event.target.closest('.counter-box') || event.target.closest('.case-controls-group') || event.target.closest('.season-toggle-link') || event.target.closest('.edit-trigger') || event.target.closest('.card-remove-btn') || event.target.closest('.pin-trigger')) {
             return;
         }
@@ -1560,7 +1622,7 @@ Project Description;
             color: colorInput.value, isVegan: veganInput.checked, allergens: {}, 
             notes: "", isPinned: false, lastRestocked: "", isNew: true 
         };
-        nameInput.value = ''; colorInput.value = '#ffffff'; veganInput.checked = false;
+        nameInput.value = ''; colorInput.value = '#d4a373'; veganInput.checked = false;
         saveAllStorage(); renderInventory();
     }
 
@@ -1650,8 +1712,9 @@ Project Description;
             const escapedFlavor = escapeJSString(flavor);
             li.setAttribute('onclick', `handleCardSelectionToggle('${escapedFlavor}', event)`);
             
+            // Render Dynamic Color Gradients on Flavor Cards
             const isDark = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
-            li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", isDark ? 0.25 : 0.35);
+            li.style.background = generateGradientStyle(data.color, isDark);
             
             const isEditing = (activeEditFlavor === flavor);
             const safeId = flavor.replace(/\s+/g, '_');
@@ -1682,16 +1745,19 @@ Project Description;
                 
                 html += `
                     <div>
-                        <div class="card-header-row">
-                            <span class="flavor-title">${flavor}${newTagMarkup}</span>
+                        <div class="flavor-card-content">
+                            <div class="flavor-text-block">
+                                <span class="flavor-title">${flavor}${newTagMarkup}</span>
+                                <div style="margin-top:8px;">${badge}</div>
+                                ${timeMarkup}
+                                ${data.isVegan ? '<div class="vegan-disclaimer">🌱 Vegan</div>' : ''}
+                            </div>
+                            
                             <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}" onclick="event.stopPropagation()">
                                 <button class="counter-btn" onclick="adjustQty('${escapedFlavor}', 1)">▲</button>
                                 <button class="counter-btn" onclick="adjustQty('${escapedFlavor}', -1)">▼</button>
                             </div>
                         </div>
-                        <div style="margin-top:8px;">${badge}</div>
-                        ${timeMarkup}
-                        ${data.isVegan ? '<div class="vegan-disclaimer">🌱 Vegan</div>' : ''}
                         <div class="season-toggle-link" onclick="event.stopPropagation(); toggleSeason('${escapedFlavor}')">${data.outOfSeason?'Mark In Season':'Mark Out of Season'}</div>
                     </div>
                     <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}" onclick="event.stopPropagation()">
@@ -1810,15 +1876,17 @@ Project Description;
                     </div>`;
             } else {
                 html += `
-                    <div>
-                        <div class="card-header-row">
-                            <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
+                    <div style="width: 100%;">
+                        <div class="flavor-card-content">
+                            <div class="flavor-text-block">
+                                <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
+                                <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
+                            </div>
                             <div class="counter-box">
                                 <button class="counter-btn" onclick="adjustItemQty('${escapedName}', 1)">▲</button>
                                 <button class="counter-btn" onclick="adjustItemQty('${escapedName}', -1)">▼</button>
                             </div>
                         </div>
-                        <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
                     </div>`;
             }
             li.innerHTML = html;
@@ -1886,7 +1954,9 @@ Project Description;
 
         for (const [name, data] of processedEntries) {
             const li = document.createElement('li'); li.className = 'inventory-item';
-            li.style.backgroundColor = generatePastelColor(name);
+            
+            const basePastel = generatePastelColor(name);
+            li.style.background = `linear-gradient(180deg, ${basePastel} 0%, rgba(255,255,255,0.4) 100%)`;
             
             const isEditing = (activeEditConsumable === name);
             const safeId = name.replace(/\s+/g, '_');
@@ -1915,15 +1985,17 @@ Project Description;
                     </div>`;
             } else {
                 html += `
-                    <div>
-                        <div class="card-header-row">
-                            <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
+                    <div style="width: 100%;">
+                        <div class="flavor-card-content">
+                            <div class="flavor-text-block">
+                                <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
+                                <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
+                            </div>
                             <div class="counter-box">
                                 <button class="counter-btn" onclick="adjustConsumableQty('${escapedName}', 1)">▲</button>
                                 <button class="counter-btn" onclick="adjustConsumableQty('${escapedName}', -1)">▼</button>
                             </div>
                         </div>
-                        <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
                     </div>`;
             }
             li.innerHTML = html; 
