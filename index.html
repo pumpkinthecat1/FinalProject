@@ -17,6 +17,7 @@ Project Description;
             --text-color: #333333;
             --border-color: #e6ccb2;
             --danger: #e63946;
+            --danger-bg: #ffe3e5;
             --safe: #4a4e69;
             --vegan-color: #2a9d8f;
             --radius: 12px;
@@ -153,7 +154,7 @@ Project Description;
             padding: 25px;
             border-radius: var(--radius);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
@@ -161,6 +162,63 @@ Project Description;
             font-size: 26px;
             font-weight: 700;
             letter-spacing: 0.5px;
+        }
+
+        /* --- GLOBAL ALERTS ENGINE LAYOUT --- */
+        .global-alert-container {
+            margin-bottom: 25px;
+            display: none; /* Controlled by JS */
+            flex-direction: column;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+        }
+
+        .global-alert-banner {
+            background-color: var(--danger);
+            color: white;
+            padding: 12px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .global-alert-banner:hover {
+            background-color: #d62839;
+        }
+
+        .global-alert-dropdown {
+            background-color: var(--danger-bg);
+            border: 2px solid var(--danger);
+            border-top: none;
+            padding: 15px 25px;
+            display: none; /* Controlled by UI toggle click */
+            color: #5c0f15;
+        }
+
+        .global-alert-dropdown h4 {
+            font-size: 15px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(230, 57, 70, 0.2);
+            padding-bottom: 4px;
+        }
+
+        .out-of-stock-list {
+            list-style-type: square;
+            padding-left: 20px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .out-of-stock-list:last-child {
+            margin-bottom: 0;
         }
 
         .main-layout {
@@ -628,6 +686,15 @@ Project Description;
         <h1>Nutty Squirrel Gelato Inventory Tracker</h1>
     </header>
 
+    <div class="global-alert-container" id="globalAlertContainer">
+        <div class="global-alert-banner" onclick="toggleAlertMenu()">
+            <span id="globalAlertTitle">⚠️ Warning: Items Missing from Stock!</span>
+            <span id="globalAlertToggleBtn">Click to view lists ▼</span>
+        </div>
+        <div class="global-alert-dropdown" id="globalAlertDropdown">
+            </div>
+    </div>
+
     <div class="main-layout">
         
         <div id="panelDashboard" class="view-panel active">
@@ -974,6 +1041,7 @@ Project Description;
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
         localStorage.setItem('itemsInventory', JSON.stringify(itemsInventory));
         localStorage.setItem('consumablesInventory', JSON.stringify(consumablesInventory));
+        evaluateGlobalStockAlerts();
     }
 
     function switchTab(tabId) {
@@ -998,6 +1066,86 @@ Project Description;
             document.getElementById('btnConsumables').classList.add('active');
             document.getElementById('panelConsumables').classList.add('active');
             renderConsumablesInventory();
+        }
+    }
+
+    /* --- SECTION: GLOBAL ALERTS AND MISSING ITEMS CONTROLLER --- */
+    function evaluateGlobalStockAlerts() {
+        const alertContainer = document.getElementById('globalAlertContainer');
+        const alertDropdown = document.getElementById('globalAlertDropdown');
+        const titleSpan = document.getElementById('globalAlertTitle');
+
+        let missingFlavors = [];
+        let missingItems = [];
+        let missingConsumables = [];
+
+        // 1. Inspect Gelato Flavors (Filter out variables marked outOfSeason)
+        for (const [flavor, data] of Object.entries(inventory)) {
+            if (!data.outOfSeason && data.qty === 0) {
+                missingFlavors.push(flavor);
+            }
+        }
+
+        // 2. Inspect Service Products & Packaging
+        for (const [item, data] of Object.entries(itemsInventory)) {
+            if (data.qty === 0) {
+                missingItems.push(item);
+            }
+        }
+
+        // 3. Inspect Toppings & Consumables
+        for (const [consumable, data] of Object.entries(consumablesInventory)) {
+            if (data.qty === 0) {
+                missingConsumables.push(consumable);
+            }
+        }
+
+        const grandTotalMissing = missingFlavors.length + missingItems.length + missingConsumables.length;
+
+        if (grandTotalMissing === 0) {
+            alertContainer.style.display = 'none';
+            alertDropdown.style.display = 'none';
+            return;
+        }
+
+        // Display Warning System Banner
+        alertContainer.style.display = 'flex';
+        titleSpan.innerHTML = `⚠️ Warning: ${grandTotalMissing} Inventory Asset${grandTotalMissing > 1 ? 's' : ''} Completely Missing (0 Stock Available)!`;
+
+        // Generate Red Dropdown Markup Grid
+        let menuHtml = '';
+
+        if (missingFlavors.length > 0) {
+            menuHtml += `<h4>🍦 Missing Gelato Canisters</h4><ul class="out-of-stock-list">`;
+            missingFlavors.forEach(f => menuHtml += `<li>${f}</li>`);
+            menuHtml += `</ul>`;
+        }
+
+        if (missingItems.length > 0) {
+            menuHtml += `<h4>📦 Missing Packaging &amp; Utensils</h4><ul class="out-of-stock-list">`;
+            missingItems.forEach(i => menuHtml += `<li>${i}</li>`);
+            menuHtml += `</ul>`;
+        }
+
+        if (missingConsumables.length > 0) {
+            menuHtml += `<h4>🍒 Missing Ingredients &amp; Cones</h4><ul class="out-of-stock-list">`;
+            missingConsumables.forEach(c => menuHtml += `<li>${c}</li>`);
+            menuHtml += `</ul>`;
+        }
+
+        alertDropdown.innerHTML = menuHtml;
+    }
+
+    function toggleAlertMenu() {
+        const dropdown = document.getElementById('globalAlertDropdown');
+        const toggleBtn = document.getElementById('globalAlertToggleBtn');
+        
+        if (dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+            toggleBtn.innerText = 'Click to view lists ▼';
+        } else {
+            dropdown.style.display = 'block';
+            toggleBtn.innerText = 'Click to collapse lists ▲';
         }
     }
 
@@ -1324,6 +1472,9 @@ Project Description;
             const li = document.createElement('li'); li.className = 'inventory-item';
             li.style.backgroundColor = generatePastelColor(name);
             
+            const isEditing = (activeEditConsumable === name);
+            const safeId = name.replace(/\s+/g, '_');
+
             let html = `
                 <button class="card-remove-btn" title="Delete consumable" onclick="deleteConsumable('${name}')">×</button>
                 <button class="edit-trigger" title="Edit fields" onclick="enterEditConsumableMode('${name}')">✏️</button>`;
@@ -1379,6 +1530,7 @@ Project Description;
     renderAllergenChart();
     renderItemsInventory();
     renderConsumablesInventory();
+    evaluateGlobalStockAlerts();
 </script>
 
 </body>
