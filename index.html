@@ -167,7 +167,7 @@ Project Description;
         /* --- GLOBAL ALERTS ENGINE LAYOUT --- */
         .global-alert-container {
             margin-bottom: 25px;
-            display: none; /* Controlled by JS */
+            display: none;
             flex-direction: column;
             border-radius: var(--radius);
             overflow: hidden;
@@ -197,7 +197,7 @@ Project Description;
             border: 2px solid var(--danger);
             border-top: none;
             padding: 15px 25px;
-            display: none; /* Controlled by UI toggle click */
+            display: none;
             color: #5c0f15;
         }
 
@@ -237,7 +237,6 @@ Project Description;
             display: block;
         }
 
-        /* PANEL SUB-HEADER LOGO & TEXT LAYOUT */
         .panel-title-container {
             display: flex;
             align-items: center;
@@ -273,7 +272,6 @@ Project Description;
             letter-spacing: 0.5px;
         }
 
-        /* DOTTED LINE BREAK WITHOUT TEXT */
         .page-break {
             margin: 40px 0;
             border: none;
@@ -408,6 +406,22 @@ Project Description;
         }
         .btn-add:hover { opacity: 0.9; }
 
+        /* --- UI BUTTON MODIFIERS --- */
+        .btn-action-toggle {
+            background-color: var(--safe);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-action-toggle.active {
+            background-color: var(--danger);
+        }
+
         /* --- 6. UNIFIED INVENTORY GRID & CARD STYLES --- */
         .inventory-list {
             list-style: none;
@@ -418,7 +432,7 @@ Project Description;
         }
 
         .inventory-item {
-            padding: 20px 20px 20px 32px; /* Breathing room for the deletion button */
+            padding: 20px 20px 20px 36px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             display: flex;
@@ -428,17 +442,27 @@ Project Description;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             position: relative;
             background-color: var(--bg-card);
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
+        }
+
+        /* Flavor Card 3D Hover Effect Triggered outside selection/edit mode */
+        body:not(.bulk-select-active) .inventory-item:not(.out-of-season):hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
         }
 
         .items-grid .inventory-item {
             background-color: white !important;
             border: 1px solid var(--border-color);
+            cursor: default;
         }
 
         .inventory-item.out-of-season {
             background-color: #e0e0e0 !important;
             color: #888;
             border-color: #ccc;
+            cursor: default;
         }
 
         .inventory-item.out-of-season .flavor-title {
@@ -449,7 +473,7 @@ Project Description;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 15px;
+            gap: 10px;
         }
 
         .flavor-title {
@@ -457,14 +481,9 @@ Project Description;
             font-size: 16px;
             word-break: break-word;
             position: relative;
-            cursor: pointer;
             text-decoration: underline;
             text-underline-offset: 3px;
             text-decoration-style: dotted;
-            transition: color 0.2s;
-        }
-        .flavor-title:hover {
-            color: var(--primary);
         }
 
         .new-tag {
@@ -480,6 +499,18 @@ Project Description;
             display: inline-block;
             vertical-align: middle;
             text-decoration: none !important;
+        }
+
+        /* TIMESTAMPS OVERLAY BLOCK */
+        .restock-timestamp {
+            font-size: 11px;
+            font-style: italic;
+            color: #666;
+            margin-top: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
         /* CORNER CONTROLS OVERLAYS */
@@ -512,7 +543,7 @@ Project Description;
         .edit-trigger {
             position: absolute;
             top: 8px;
-            right: 8px;
+            right: 32px;
             cursor: pointer;
             font-size: 14px;
             opacity: 0.5;
@@ -521,6 +552,73 @@ Project Description;
             z-index: 10;
         }
         .edit-trigger:hover { opacity: 1; }
+
+        .pin-trigger {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.3;
+            background: none;
+            border: none;
+            z-index: 10;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .pin-trigger:hover, .pin-trigger.pinned {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* --- BULK SELECTOR ENGINE PLATFORM --- */
+        .bulk-select-checkbox-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 15;
+            display: none;
+        }
+        .bulk-select-checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        /* Bulk System Overlay Flag Overrides */
+        .bulk-select-active .bulk-select-checkbox-container {
+            display: block;
+        }
+        .bulk-select-active .card-remove-btn,
+        .bulk-select-active .edit-trigger,
+        .bulk-select-active .pin-trigger {
+            display: none !important;
+        }
+
+        .bulk-action-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border: 2px solid var(--primary);
+            padding: 15px 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 1500;
+            display: none;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn-bulk-action {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+        }
+        .btn-bulk-archive { background-color: var(--safe); }
+        .btn-bulk-delete { background-color: var(--danger); }
 
         .edit-mode-panel {
             display: flex;
@@ -562,6 +660,7 @@ Project Description;
             border-radius: 6px;
             overflow: hidden;
             margin-left: auto;
+            z-index: 12;
         }
 
         .counter-btn {
@@ -606,6 +705,7 @@ Project Description;
             gap: 8px;
             padding-top: 12px;
             border-top: 1px dashed rgba(0,0,0,0.15);
+            z-index: 12;
         }
 
         .case-checkbox-label {
@@ -624,6 +724,7 @@ Project Description;
             cursor: pointer;
             align-self: flex-start;
             margin-top: 5px;
+            z-index: 12;
         }
 
         /* --- 9. ALLERGEN SPREADSHEET TABLE --- */
@@ -835,8 +936,7 @@ Project Description;
             <span id="globalAlertTitle">⚠️ Warning: Items Missing from Stock!</span>
             <span id="globalAlertToggleBtn">Click to view lists ▼</span>
         </div>
-        <div class="global-alert-dropdown" id="globalAlertDropdown">
-            </div>
+        <div class="global-alert-dropdown" id="globalAlertDropdown"></div>
     </div>
 
     <div class="main-layout">
@@ -861,7 +961,8 @@ Project Description;
                 <div class="filter-group">
                     <input type="text" id="searchDashboard" placeholder="🔍 Search flavors (lenient typos)..." oninput="renderInventory()">
                 </div>
-                <div class="filter-group" style="justify-content: flex-end;">
+                <div class="filter-group" style="justify-content: flex-end; gap: 15px;">
+                    <button class="btn-action-toggle" id="btnBulkSelectToggle" onclick="toggleBulkSelectMode()">Select</button>
                     <label for="sortDashboard" style="font-size:14px; font-weight:bold;">Sort By:</label>
                     <select id="sortDashboard" onchange="renderInventory()">
                         <option value="az">A-Z</option>
@@ -876,6 +977,12 @@ Project Description;
                 <h2>In-Season Gelato Selection</h2>
             </div>
             
+            <div id="pinnedFlavorsSection" style="display: none;">
+                <h3 class="section-heading" style="color: #e63946">📌 Pinned Favorites</h3>
+                <ul class="inventory-list" id="activePinnedList"></ul>
+                <div class="page-break"></div>
+            </div>
+
             <h3 class="section-heading" style="color: var(--vegan-color)">🌱 Vegan Options</h3>
             <ul class="inventory-list" id="activeVeganList"></ul>
 
@@ -1032,6 +1139,12 @@ Project Description;
 
 </div>
 
+<div class="bulk-action-dock" id="bulkActionDock">
+    <span style="font-weight: bold; font-size: 14px; color: var(--text-color);" id="bulkSelectCountText">0 Items Selected</span>
+    <button class="btn-bulk-action btn-bulk-archive" onclick="triggerBulkArchive()">Bulk Out of Season</button>
+    <button class="btn-bulk-action btn-bulk-delete" onclick="triggerBulkDelete()">Bulk Delete</button>
+</div>
+
 <div class="modal-overlay" id="flavorModalOverlay" onclick="closeFlavorModal(false)">
     <div class="modal-card" onclick="event.stopPropagation()">
         <div class="modal-header" id="modalHeaderEl">
@@ -1075,11 +1188,10 @@ Project Description;
 </div>
 
 <script>
-    /* --- SECTION 0: STRING LEVENSHTEIN FUZZY MATH ENGINE --- */
+    /* --- SECTION 0: HELPERS & FUZZY LOGIC --- */
     function fuzzyMatch(sourceStr, targetStr) {
         const source = sourceStr.toLowerCase().trim();
         const target = targetStr.toLowerCase().trim();
-        
         if (!target) return true;
         if (source.includes(target)) return true;
 
@@ -1097,12 +1209,14 @@ Project Description;
                 );
             }
         }
-        
         const maxMistakes = target.length <= 4 ? 1 : target.length <= 7 ? 2 : 3;
         return track[target.length][source.length] <= maxMistakes;
     }
 
-    /* --- ARRAY ORDERING DISPATCH METHOD --- */
+    function escapeJSString(str) {
+        return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
     function sortInventoryEntries(entriesArray, sortType) {
         return entriesArray.sort((a, b) => {
             if (sortType === 'high-low') return b[1].qty - a[1].qty;
@@ -1125,41 +1239,41 @@ Project Description;
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const h = Math.abs(hash % 360);
-        return `hsla(${h}, 75%, 85%, 0.5)`;
+        return `hsla(${Math.abs(hash % 360)}, 75%, 85%, 0.5)`;
     }
 
+    /* --- INITIAL SYSTEM REGISTRY STATE --- */
     const defaultGelato = {
-        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {}, notes: "" },
-        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {}, notes: "" },
-        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", isVegan: false, allergens: {}, notes: "" },
-        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", isVegan: false, allergens: {}, notes: "" },
-        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {}, notes: "" },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {}, notes: "" },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {}, notes: "" },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", isVegan: true, allergens: {}, notes: "" },
-        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {}, notes: "" },
-        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {}, notes: "" },
-        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {}, notes: "" },
-        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", isVegan: false, allergens: {}, notes: "" },
-        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", isVegan: false, allergens: {}, notes: "" },
-        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: false, allergens: {}, notes: "" },
-        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", isVegan: true, allergens: {}, notes: "" },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", isVegan: true, allergens: {}, notes: "" },
-        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", isVegan: false, allergens: {}, notes: "" },
-        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", isVegan: false, allergens: {}, notes: "" },
-        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", isVegan: false, allergens: {}, notes: "" },
-        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", isVegan: false, allergens: {}, notes: "" },
-        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", isVegan: false, allergens: {}, notes: "" },
-        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", isVegan: false, allergens: {}, notes: "" },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", isVegan: false, allergens: {}, notes: "" },
-        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", isVegan: false, allergens: {}, notes: "" },
-        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", isVegan: false, allergens: {}, notes: "" },
-        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", isVegan: false, allergens: {}, notes: "" },
-        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", isVegan: false, allergens: {}, notes: "" },
-        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", isVegan: false, allergens: {}, notes: "" },
-        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", isVegan: false, allergens: {}, notes: "" },
-        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", isVegan: true, allergens: {}, notes: "" }
+        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
+        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" }
     };
 
     const defaultItems = {
@@ -1218,11 +1332,11 @@ Project Description;
     let activeEditFlavor = null;
     let activeEditItem = null;
     let activeEditConsumable = null;
-    let currentModalFlavorKey = null; // Track currently open overlay item
+    let currentModalFlavorKey = null;
 
-    if (!inventory["Vanilla"] || !inventory["Sea Salt Caramel"]) { inventory = defaultGelato; }
-    if (!itemsInventory["Small spoons"]) { itemsInventory = defaultItems; }
-    if (!consumablesInventory["Waffle Cones"] || !consumablesInventory["Cherries"]) { consumablesInventory = defaultConsumables; }
+    // Bulk Management State Flag Registry
+    let isBulkSelectMode = false;
+    let selectedFlavorsSet = new Set();
 
     function saveAllStorage() {
         localStorage.setItem('iceCreamInventory', JSON.stringify(inventory));
@@ -1234,8 +1348,8 @@ Project Description;
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
-        
         activeEditFlavor = null; activeEditItem = null; activeEditConsumable = null;
+        if(isBulkSelectMode) toggleBulkSelectMode();
 
         if (tabId === 'dashboard') {
             document.getElementById('btnDashboard').classList.add('active');
@@ -1256,117 +1370,83 @@ Project Description;
         }
     }
 
-    /* --- SECTION: GLOBAL ALERTS AND MISSING ITEMS CONTROLLER --- */
+    /* --- SECTION 1: GLOBAL MONITOR ALERT LOOPS --- */
     function evaluateGlobalStockAlerts() {
         const alertContainer = document.getElementById('globalAlertContainer');
         const alertDropdown = document.getElementById('globalAlertDropdown');
         const titleSpan = document.getElementById('globalAlertTitle');
 
-        let missingFlavors = [];
-        let missingItems = [];
-        let missingConsumables = [];
+        let missingFlavors = [], missingItems = [], missingConsumables = [];
 
-        // 1. Inspect Gelato Flavors (Filter out variables marked outOfSeason)
         for (const [flavor, data] of Object.entries(inventory)) {
-            if (!data.outOfSeason && data.qty === 0) {
-                missingFlavors.push(flavor);
-            }
+            if (!data.outOfSeason && data.qty === 0) missingFlavors.push(flavor);
         }
-
-        // 2. Inspect Service Products & Packaging
         for (const [item, data] of Object.entries(itemsInventory)) {
-            if (data.qty === 0) {
-                missingItems.push(item);
-            }
+            if (data.qty === 0) missingItems.push(item);
         }
-
-        // 3. Inspect Toppings & Consumables
         for (const [consumable, data] of Object.entries(consumablesInventory)) {
-            if (data.qty === 0) {
-                missingConsumables.push(consumable);
-            }
+            if (data.qty === 0) missingConsumables.push(consumable);
         }
 
         const grandTotalMissing = missingFlavors.length + missingItems.length + missingConsumables.length;
-
         if (grandTotalMissing === 0) {
-            alertContainer.style.display = 'none';
-            alertDropdown.style.display = 'none';
-            return;
+            alertContainer.style.display = 'none'; alertDropdown.style.display = 'none'; return;
         }
 
-        // Display Warning System Banner
         alertContainer.style.display = 'flex';
-        titleSpan.innerHTML = `⚠️ Warning: ${grandTotalMissing} Inventory Asset${grandTotalMissing > 1 ? 's' : ''} Completely Missing (0 Stock Available)!`;
+        titleSpan.innerHTML = `⚠️ Warning: ${grandTotalMissing} Asset${grandTotalMissing > 1 ? 's' : ''} Completely Missing (0 Stock)!`;
 
-        // Generate Red Dropdown Markup Grid
         let menuHtml = '';
-
         if (missingFlavors.length > 0) {
             menuHtml += `<h4>🍦 Missing Gelato Canisters</h4><ul class="out-of-stock-list">`;
             missingFlavors.forEach(f => menuHtml += `<li>${f}</li>`);
             menuHtml += `</ul>`;
         }
-
         if (missingItems.length > 0) {
             menuHtml += `<h4>📦 Missing Packaging &amp; Utensils</h4><ul class="out-of-stock-list">`;
             missingItems.forEach(i => menuHtml += `<li>${i}</li>`);
             menuHtml += `</ul>`;
         }
-
         if (missingConsumables.length > 0) {
             menuHtml += `<h4>🍒 Missing Ingredients &amp; Cones</h4><ul class="out-of-stock-list">`;
             missingConsumables.forEach(c => menuHtml += `<li>${c}</li>`);
             menuHtml += `</ul>`;
         }
-
         alertDropdown.innerHTML = menuHtml;
     }
 
     function toggleAlertMenu() {
         const dropdown = document.getElementById('globalAlertDropdown');
         const toggleBtn = document.getElementById('globalAlertToggleBtn');
-        
         if (dropdown.style.display === 'block') {
-            dropdown.style.display = 'none';
-            toggleBtn.innerText = 'Click to view lists ▼';
+            dropdown.style.display = 'none'; toggleBtn.innerText = 'Click to view lists ▼';
         } else {
-            dropdown.style.display = 'block';
-            toggleBtn.innerText = 'Click to collapse lists ▲';
+            dropdown.style.display = 'block'; toggleBtn.innerText = 'Click to collapse lists ▲';
         }
     }
 
-    /* --- FEATURE EXTENSION: DETAILS POPUP & DISCRIPTION NOTES CONTROLLER --- */
+    /* --- SECTION 2: INTERACTIVE POPUP DETAIL OVERLAYS --- */
     function openFlavorModal(flavorKey) {
+        if (isBulkSelectMode) return; // Prevent modals inside processing loops
         currentModalFlavorKey = flavorKey;
         const data = inventory[flavorKey];
         if (!data) return;
 
-        const headerEl = document.getElementById('modalHeaderEl');
-        const titleEl = document.getElementById('modalTitleText');
-        const notesTextArea = document.getElementById('modalNotesTextarea');
+        document.getElementById('modalHeaderEl').style.backgroundColor = data.color || "var(--primary)";
+        document.getElementById('modalTitleText').innerText = `${flavorKey} — Profile Info`;
+        document.getElementById('modalNotesTextarea').value = data.notes || "";
 
-        // Apply visual branding context matching flavor color setup
-        headerEl.style.backgroundColor = data.color || "var(--primary)";
-        titleEl.innerText = `${flavorKey} — Profile Info`;
-        notesTextArea.value = data.notes || "";
-
-        // Establish structural allergen references 
         const allergenKeys = ['dairy', 'gluten', 'treeNuts', 'egg', 'soy', 'sesame'];
         const currentAllergens = data.allergens || {};
 
         allergenKeys.forEach(k => {
             const checkbox = document.getElementById(`modalAllergen-${k}`);
             if (k === 'dairy' && !data.isVegan) {
-                // FORCE LOCK DAIRY FOR NON-VEGAN FLAVORS AUTOMATICALLY
-                checkbox.checked = true;
-                checkbox.disabled = true;
+                checkbox.checked = true; checkbox.disabled = true;
             } else {
-                checkbox.checked = !!currentAllergens[k];
-                checkbox.disabled = false;
+                checkbox.checked = !!currentAllergens[k]; checkbox.disabled = false;
             }
         });
-
         document.getElementById('flavorModalOverlay').style.display = 'flex';
     }
 
@@ -1375,29 +1455,97 @@ Project Description;
             const data = inventory[currentModalFlavorKey];
             if (data) {
                 if (!data.allergens) data.allergens = {};
-                
-                const allergenKeys = ['dairy', 'gluten', 'treeNuts', 'egg', 'soy', 'sesame'];
-                allergenKeys.forEach(k => {
+                ['dairy', 'gluten', 'treeNuts', 'egg', 'soy', 'sesame'].forEach(k => {
                     const checkbox = document.getElementById(`modalAllergen-${k}`);
-                    if (k === 'dairy' && !data.isVegan) {
-                        data.allergens[k] = true; // Hard set dairy for normal dairy lines
-                    } else {
-                        data.allergens[k] = checkbox.checked;
-                    }
+                    if (k === 'dairy' && !data.isVegan) data.allergens[k] = true;
+                    else data.allergens[k] = checkbox.checked;
                 });
-
                 data.notes = document.getElementById('modalNotesTextarea').value;
-                saveAllStorage();
-                renderInventory();
-                renderAllergenChart();
+                saveAllStorage(); renderInventory(); renderAllergenChart();
             }
         }
-        
         document.getElementById('flavorModalOverlay').style.display = 'none';
         currentModalFlavorKey = null;
     }
 
-    /* --- SECTION A: GELATO OPERATIONS --- */
+    /* --- SECTION 3: BULK SELECT PLATFORM OPERATIONS --- */
+    function toggleBulkSelectMode() {
+        isBulkSelectMode = !isBulkSelectMode;
+        selectedFlavorsSet.clear();
+        
+        const btn = document.getElementById('btnBulkSelectToggle');
+        const dock = document.getElementById('bulkActionDock');
+        
+        if (isBulkSelectMode) {
+            document.body.classList.add('bulk-select-active');
+            btn.innerText = "Cancel";
+            btn.classList.add('active');
+            dock.style.display = 'flex';
+            updateBulkSelectCountUI();
+        } else {
+            document.body.classList.remove('bulk-select-active');
+            btn.innerText = "Select";
+            btn.classList.remove('active');
+            dock.style.display = 'none';
+        }
+        renderInventory();
+    }
+
+    function handleCardSelectionToggle(flavor, event) {
+        // Isolate sub-element interactions from parsing card selections
+        if (event.target.closest('.counter-box') || event.target.closest('.case-controls-group') || event.target.closest('.season-toggle-link') || event.target.closest('.edit-trigger') || event.target.closest('.card-remove-btn') || event.target.closest('.pin-trigger')) {
+            return;
+        }
+
+        if (isBulkSelectMode) {
+            const checkbox = document.getElementById(`bulkCheck-${flavor.replace(/\s+/g, '_')}`);
+            if (selectedFlavorsSet.has(flavor)) {
+                selectedFlavorsSet.delete(flavor);
+                if (checkbox) checkbox.checked = false;
+            } else {
+                selectedFlavorsSet.add(flavor);
+                if (checkbox) checkbox.checked = true;
+            }
+            updateBulkSelectCountUI();
+        } else {
+            openFlavorModal(flavor);
+        }
+    }
+
+    function handleCheckboxDirectClick(flavor, checkboxElement) {
+        if (checkboxElement.checked) {
+            selectedFlavorsSet.add(flavor);
+        } else {
+            selectedFlavorsSet.delete(flavor);
+        }
+        updateBulkSelectCountUI();
+    }
+
+    function updateBulkSelectCountUI() {
+        document.getElementById('bulkSelectCountText').innerText = `${selectedFlavorsSet.size} Item${selectedFlavorsSet.size !== 1 ? 's' : ''} Selected`;
+    }
+
+    function triggerBulkArchive() {
+        if (selectedFlavorsSet.size === 0) return alert("No flavors selected.");
+        if (confirm(`Mark all ${selectedFlavorsSet.size} selected flavors as out of season?`)) {
+            selectedFlavorsSet.forEach(flavor => {
+                if (inventory[flavor]) inventory[flavor].outOfSeason = true;
+            });
+            saveAllStorage(); toggleBulkSelectMode();
+        }
+    }
+
+    function triggerBulkDelete() {
+        if (selectedFlavorsSet.size === 0) return alert("No flavors selected.");
+        if (confirm(`Permanently delete all ${selectedFlavorsSet.size} selected flavors from the system?`)) {
+            selectedFlavorsSet.forEach(flavor => {
+                delete inventory[flavor];
+            });
+            saveAllStorage(); toggleBulkSelectMode();
+        }
+    }
+
+    /* --- SECTION 4: GELATO REGISTRY ENGINE --- */
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
         const colorInput = document.getElementById('newFlavorColor');
@@ -1408,38 +1556,37 @@ Project Description;
         if (inventory.hasOwnProperty(name)) return alert("Flavor already exists.");
 
         inventory[name] = { 
-            qty: 0, 
-            outOfSeason: false, 
-            inDisplayCase: false, 
-            inTransferCase: false, 
-            color: colorInput.value, 
-            isVegan: veganInput.checked, 
-            allergens: {}, 
-            notes: "",
-            isNew: true 
+            qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, 
+            color: colorInput.value, isVegan: veganInput.checked, allergens: {}, 
+            notes: "", isPinned: false, lastRestocked: "", isNew: true 
         };
-        
         nameInput.value = ''; colorInput.value = '#ffffff'; veganInput.checked = false;
         saveAllStorage(); renderInventory();
     }
 
     function adjustQty(flavor, amt) {
         inventory[flavor].qty = Math.max(0, inventory[flavor].qty + amt);
+        if (amt > 0) {
+            const now = new Date();
+            inventory[flavor].lastRestocked = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        saveAllStorage(); renderInventory();
+    }
+
+    function togglePin(flavor) {
+        inventory[flavor].isPinned = !inventory[flavor].isPinned;
         saveAllStorage(); renderInventory();
     }
 
     function handleCaseToggle(flavor, key, isChecked) {
         if (isChecked) {
             if (inventory[flavor].qty > 0) {
-                inventory[flavor].qty -= 1;
-                inventory[flavor][key] = true;
+                inventory[flavor].qty -= 1; inventory[flavor][key] = true;
             } else {
-                alert(`0 backup canisters of ${flavor} left.`);
-                renderInventory(); return;
+                alert(`0 backup canisters left.`); renderInventory(); return;
             }
         } else {
-            inventory[flavor].qty += 1;
-            inventory[flavor][key] = false;
+            inventory[flavor].qty += 1; inventory[flavor][key] = false;
         }
         saveAllStorage(); renderInventory();
     }
@@ -1469,11 +1616,8 @@ Project Description;
     }
 
     function deleteFlavor(flavor) {
-        if (confirm(`Are you sure you want to permanently delete ${flavor} from records?`)) { 
-            delete inventory[flavor]; 
-            activeEditFlavor = null; 
-            saveAllStorage(); 
-            renderInventory(); 
+        if (confirm(`Are you sure you want to delete ${flavor}?`)) { 
+            delete inventory[flavor]; activeEditFlavor = null; saveAllStorage(); renderInventory(); 
         }
     }
 
@@ -1483,6 +1627,8 @@ Project Description;
     }
 
     function renderInventory() {
+        const pinnedList = document.getElementById('activePinnedList');
+        const pinnedSection = document.getElementById('pinnedFlavorsSection');
         const veganList = document.getElementById('activeVeganList');
         const dairyList = document.getElementById('activeDairyList');
         const archivedList = document.getElementById('archivedList');
@@ -1491,8 +1637,8 @@ Project Description;
         const query = document.getElementById('searchDashboard').value;
         const sortVal = document.getElementById('sortDashboard').value;
 
-        veganList.innerHTML = ''; dairyList.innerHTML = ''; archivedList.innerHTML = '';
-        let archCount = 0;
+        pinnedList.innerHTML = ''; veganList.innerHTML = ''; dairyList.innerHTML = ''; archivedList.innerHTML = '';
+        let archCount = 0, pinnedCount = 0;
 
         let rawEntries = Object.entries(inventory).filter(([flavor]) => fuzzyMatch(flavor, query));
         let processedEntries = sortInventoryEntries(rawEntries, sortVal);
@@ -1500,57 +1646,71 @@ Project Description;
         for (const [flavor, data] of processedEntries) {
             const li = document.createElement('li');
             li.className = `inventory-item ${data.outOfSeason ? 'out-of-season' : ''}`;
+            
+            const escapedFlavor = escapeJSString(flavor);
+            li.setAttribute('onclick', `handleCardSelectionToggle('${escapedFlavor}', event)`);
+            
             const isDark = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
             li.style.backgroundColor = convertHexToRgba(data.color || "#ffffff", isDark ? 0.25 : 0.35);
             
             const isEditing = (activeEditFlavor === flavor);
             const safeId = flavor.replace(/\s+/g, '_');
+            const isCheckedInSet = selectedFlavorsSet.has(flavor);
             
             let html = `
-                <button class="card-remove-btn" title="Delete flavor" onclick="deleteFlavor('${flavor}')">×</button>
-                <button class="edit-trigger" title="Edit fields" onclick="enterEditMode('${flavor}')">✏️</button>`;
+                <div class="bulk-select-checkbox-container">
+                    <input type="checkbox" id="bulkCheck-${safeId}" ${isCheckedInSet ? 'checked' : ''} onclick="event.stopPropagation(); handleCheckboxDirectClick('${escapedFlavor}', this)">
+                </div>
+                <button class="card-remove-btn" title="Delete flavor" onclick="event.stopPropagation(); deleteFlavor('${escapedFlavor}')">×</button>
+                <button class="edit-trigger" title="Edit fields" onclick="event.stopPropagation(); enterEditMode('${escapedFlavor}')">✏️</button>
+                <button class="pin-trigger ${data.isPinned ? 'pinned' : ''}" title="Pin Favorite" onclick="event.stopPropagation(); togglePin('${escapedFlavor}')">${data.isPinned ? '📌' : '📍'}</button>`;
 
             if (isEditing) {
                 html += `
-                    <div class="edit-mode-panel">
+                    <div class="edit-mode-panel" onclick="event.stopPropagation()">
                         <input type="text" id="editName-${safeId}" value="${flavor}">
                         <div class="color-picker-wrapper"><label>Color:</label><input type="color" id="editColor-${safeId}" value="${data.color}"></div>
                         <label class="creation-vegan-label"><input type="checkbox" id="editVegan-${safeId}" ${data.isVegan ? 'checked' : ''}> Vegan</label>
                         <div class="edit-actions">
-                            <button class="btn-mini btn-save" onclick="saveFlavorEdits('${flavor}')">Save</button>
+                            <button class="btn-mini btn-save" onclick="saveFlavorEdits('${escapedFlavor}')">Save</button>
                         </div>
                     </div>`;
             } else {
                 const badge = data.outOfSeason ? '<span class="status-badge oos">Out of Season</span>' : `<span class="status-badge instock">${data.qty} backup canisters</span>`;
                 const newTagMarkup = data.isNew ? '<span class="new-tag">New</span>' : '';
+                const timeMarkup = (!data.outOfSeason && data.lastRestocked) ? `<div class="restock-timestamp">⏱️ Added: ${data.lastRestocked}</div>` : '';
                 
                 html += `
                     <div>
                         <div class="card-header-row">
-                            <span class="flavor-title" onclick="openFlavorModal('${flavor.replace(/'/g, "\\'")}')" title="Click to view flavor profile & notes">${flavor}${newTagMarkup}</span>
-                            <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
-                                <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
-                                <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
+                            <span class="flavor-title">${flavor}${newTagMarkup}</span>
+                            <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}" onclick="event.stopPropagation()">
+                                <button class="counter-btn" onclick="adjustQty('${escapedFlavor}', 1)">▲</button>
+                                <button class="counter-btn" onclick="adjustQty('${escapedFlavor}', -1)">▼</button>
                             </div>
                         </div>
                         <div style="margin-top:8px;">${badge}</div>
+                        ${timeMarkup}
                         ${data.isVegan ? '<div class="vegan-disclaimer">🌱 Vegan</div>' : ''}
-                        <div class="season-toggle-link" onclick="toggleSeason('${flavor}')">${data.outOfSeason?'Mark In Season':'Mark Out of Season'}</div>
+                        <div class="season-toggle-link" onclick="event.stopPropagation(); toggleSeason('${escapedFlavor}')">${data.outOfSeason?'Mark In Season':'Mark Out of Season'}</div>
                     </div>
-                    <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}">
-                        <label class="case-checkbox-label"><input type="checkbox" ${data.inDisplayCase?'checked':''} onchange="handleCaseToggle('${flavor}','inDisplayCase',this.checked)"> Display Case</label>
-                        <label class="case-checkbox-label"><input type="checkbox" ${data.inTransferCase?'checked':''} onchange="handleCaseToggle('${flavor}','inTransferCase',this.checked)"> Transfer Case</label>
+                    <div class="case-controls-group" style="${data.outOfSeason ? 'display:none;' : ''}" onclick="event.stopPropagation()">
+                        <label class="case-checkbox-label"><input type="checkbox" ${data.inDisplayCase?'checked':''} onchange="handleCaseToggle('${escapedFlavor}','inDisplayCase',this.checked)"> Display Case</label>
+                        <label class="case-checkbox-label"><input type="checkbox" ${data.inTransferCase?'checked':''} onchange="handleCaseToggle('${escapedFlavor}','inTransferCase',this.checked)"> Transfer Case</label>
                     </div>`;
             }
             li.innerHTML = html;
             
             if (data.outOfSeason) { 
                 archivedList.appendChild(li); archCount++; 
+            } else if (data.isPinned) {
+                pinnedList.appendChild(li); pinnedCount++;
             } else { 
                 if (data.isVegan) { veganList.appendChild(li); } else { dairyList.appendChild(li); }
             }
         }
         archiveDivider.style.display = archCount > 0 ? 'block' : 'none';
+        pinnedSection.style.display = pinnedCount > 0 ? 'block' : 'none';
     }
 
     function renderAllergenChart() {
@@ -1560,22 +1720,21 @@ Project Description;
 
         for (const [flavor, data] of Object.entries(inventory)) {
             if (!fuzzyMatch(flavor, query)) continue;
-            
             const tr = document.createElement('tr'); const rAllergens = data.allergens || {};
+            const escapedFlavor = escapeJSString(flavor);
             let html = `<td class="excel-flavor-cell">${flavor}</td>`;
             keys.forEach(k => {
                 if (k === 'dairy' && !data.isVegan) {
-                    // Force render checkmark if item is non-vegan standard line item
-                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" checked disabled title="Automated Dairy Asset Tracking"></td>`;
+                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" checked disabled title="Automated Dairy Check"></td>`;
                 } else {
-                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" ${rAllergens[k]?'checked':''} onchange="toggleAllergen('${flavor}','${k}',this.checked)"></td>`;
+                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" ${rAllergens[k]?'checked':''} onchange="toggleAllergen('${escapedFlavor}','${k}',this.checked)"></td>`;
                 }
             });
             tr.innerHTML = html; tbody.appendChild(tr);
         }
     }
 
-    /* --- SECTION B: PACKAGING/ITEMS MATERIAL SORTING --- */
+    /* --- SECTION 5: PACKAGING & UTENSIL MANAGEMENT --- */
     function addNewItem() {
         const nameInput = document.getElementById('newItemName');
         const unitInput = document.getElementById('newItemUnit');
@@ -1617,12 +1776,10 @@ Project Description;
     function renderItemsInventory() {
         const paperList = document.getElementById('paperItemsList');
         const plasticList = document.getElementById('plasticItemsList');
-        
         const query = document.getElementById('searchItems').value;
         const sortVal = document.getElementById('sortItems').value;
         
         paperList.innerHTML = ''; plasticList.innerHTML = '';
-
         const plasticTargets = ["small spoons", "large spoons", "coffee cup lids", "straws", "milkshake cup", "milkshake cup lids"];
 
         let rawEntries = Object.entries(itemsInventory).filter(([name]) => fuzzyMatch(name, query));
@@ -1632,10 +1789,11 @@ Project Description;
             const li = document.createElement('li'); li.className = 'inventory-item';
             const isEditing = (activeEditItem === name);
             const safeId = name.replace(/\s+/g, '_');
+            const escapedName = escapeJSString(name);
             
             let html = `
-                <button class="card-remove-btn" title="Delete item" onclick="deleteItem('${name}')">×</button>
-                <button class="edit-trigger" title="Edit fields" onclick="enterEditItemMode('${name}')">✏️</button>`;
+                <button class="card-remove-btn" title="Delete item" onclick="deleteItem('${escapedName}')">×</button>
+                <button class="edit-trigger" title="Edit fields" onclick="enterEditItemMode('${escapedName}')">✏️</button>`;
 
             if (isEditing) {
                 html += `
@@ -1647,7 +1805,7 @@ Project Description;
                             <option value="total bags in drawer" ${data.unit==='total bags in drawer'?'selected':''}>total bags in drawer</option>
                         </select>
                         <div class="edit-actions">
-                            <button class="btn-mini btn-save" onclick="saveItemEdits('${name}')">Save</button>
+                            <button class="btn-mini btn-save" onclick="saveItemEdits('${escapedName}')">Save</button>
                         </div>
                     </div>`;
             } else {
@@ -1656,8 +1814,8 @@ Project Description;
                         <div class="card-header-row">
                             <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
                             <div class="counter-box">
-                                <button class="counter-btn" onclick="adjustItemQty('${name}', 1)">▲</button>
-                                <button class="counter-btn" onclick="adjustItemQty('${name}', -1)">▼</button>
+                                <button class="counter-btn" onclick="adjustItemQty('${escapedName}', 1)">▲</button>
+                                <button class="counter-btn" onclick="adjustItemQty('${escapedName}', -1)">▼</button>
                             </div>
                         </div>
                         <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
@@ -1667,16 +1825,11 @@ Project Description;
 
             const lowerName = name.toLowerCase();
             const isPlastic = plasticTargets.some(target => lowerName.includes(target));
-
-            if (isPlastic) {
-                plasticList.appendChild(li);
-            } else {
-                paperList.appendChild(li);
-            }
+            if (isPlastic) plasticList.appendChild(li); else paperList.appendChild(li);
         }
     }
 
-    /* --- SECTION C: CONSUMABLES DETAILED BREAKDOWN --- */
+    /* --- SECTION 6: INGREDIENTS & CONSUMABLES --- */
     function addNewConsumable() {
         const nameInput = document.getElementById('newConsumableName');
         const unitInput = document.getElementById('newConsumableUnit');
@@ -1725,7 +1878,6 @@ Project Description;
         const sortVal = document.getElementById('sortConsumables').value;
 
         conesList.innerHTML = ''; dessertsList.innerHTML = ''; drinksList.innerHTML = ''; toppingsList.innerHTML = '';
-
         const dessertTargets = ["lava cake", "macaron", "tiramisu"];
         const drinkTargets = ["soda", "cold brew", "milk", "oatmilk", "whole milk", "soy milk", "chai", "hot chocolate", "water"];
 
@@ -1738,10 +1890,11 @@ Project Description;
             
             const isEditing = (activeEditConsumable === name);
             const safeId = name.replace(/\s+/g, '_');
+            const escapedName = escapeJSString(name);
 
             let html = `
-                <button class="card-remove-btn" title="Delete consumable" onclick="deleteConsumable('${name}')">×</button>
-                <button class="edit-trigger" title="Edit fields" onclick="enterEditConsumableMode('${name}')">✏️</button>`;
+                <button class="card-remove-btn" title="Delete consumable" onclick="deleteConsumable('${escapedName}')">×</button>
+                <button class="edit-trigger" title="Edit fields" onclick="enterEditConsumableMode('${escapedName}')">✏️</button>`;
 
             if (isEditing) {
                 html += `
@@ -1757,7 +1910,7 @@ Project Description;
                             <option value="cones" ${data.unit==='cones'?'selected':''}>cones</option>
                         </select>
                         <div class="edit-actions">
-                            <button class="btn-mini btn-save" onclick="saveConsumableEdits('${name}')">Save</button>
+                            <button class="btn-mini btn-save" onclick="saveConsumableEdits('${escapedName}')">Save</button>
                         </div>
                     </div>`;
             } else {
@@ -1766,8 +1919,8 @@ Project Description;
                         <div class="card-header-row">
                             <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
                             <div class="counter-box">
-                                <button class="counter-btn" onclick="adjustConsumableQty('${name}', 1)">▲</button>
-                                <button class="counter-btn" onclick="adjustConsumableQty('${name}', -1)">▼</button>
+                                <button class="counter-btn" onclick="adjustConsumableQty('${escapedName}', 1)">▲</button>
+                                <button class="counter-btn" onclick="adjustConsumableQty('${escapedName}', -1)">▼</button>
                             </div>
                         </div>
                         <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
@@ -1776,7 +1929,6 @@ Project Description;
             li.innerHTML = html; 
 
             const lowerName = name.toLowerCase();
-
             if (data.unit === 'cones' || lowerName.includes('cone')) {
                 conesList.appendChild(li);
             } else if (dessertTargets.some(t => lowerName.includes(t))) {
@@ -1789,7 +1941,7 @@ Project Description;
         }
     }
 
-    // Master Initialization Launch Elements
+    // Initialize System Core Run-Loops
     renderInventory();
     renderAllergenChart();
     renderItemsInventory();
