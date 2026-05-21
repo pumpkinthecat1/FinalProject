@@ -457,6 +457,14 @@ Project Description;
             font-size: 16px;
             word-break: break-word;
             position: relative;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-style: dotted;
+            transition: color 0.2s;
+        }
+        .flavor-title:hover {
+            color: var(--primary);
         }
 
         .new-tag {
@@ -471,6 +479,7 @@ Project Description;
             margin-left: 6px;
             display: inline-block;
             vertical-align: middle;
+            text-decoration: none !important;
         }
 
         /* CORNER CONTROLS OVERLAYS */
@@ -662,6 +671,141 @@ Project Description;
             cursor: pointer;
             display: block;
             margin: 0 auto;
+        }
+        .allergen-checkbox:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* --- 10. FLAVOR DETAILS OVERLAY MODAL SYSTEM --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: var(--radius);
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 18px 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close-trigger {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+
+        .modal-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 4px;
+        }
+
+        .modal-allergen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .modal-allergen-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .modal-allergen-label input {
+            width: 16px;
+            height: 16px;
+        }
+        .modal-allergen-label input:disabled {
+            cursor: not-allowed;
+        }
+
+        .modal-notes-area {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            color: var(--text-color);
+        }
+
+        .modal-footer {
+            padding: 15px 25px;
+            background: #fdfaf6;
+            border-top: 1px solid #f3e9dc;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-modal {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-modal-cancel {
+            background: #e0e0e0;
+            color: #444;
+        }
+        .btn-modal-save {
+            background: var(--vegan-color);
+            color: white;
         }
     </style>
 </head>
@@ -888,6 +1032,48 @@ Project Description;
 
 </div>
 
+<div class="modal-overlay" id="flavorModalOverlay" onclick="closeFlavorModal(false)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-header" id="modalHeaderEl">
+            <span id="modalTitleText">Flavor Profile</span>
+            <button class="modal-close-trigger" onclick="closeFlavorModal(false)">×</button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <div class="modal-section-title">Allergen Safety Settings</div>
+                <div class="modal-allergen-grid">
+                    <label class="modal-allergen-label">
+                        <input type="checkbox" id="modalAllergen-dairy"> Dairy
+                    </label>
+                    <label class="modal-allergen-label">
+                        <input type="checkbox" id="modalAllergen-gluten"> Gluten
+                    </label>
+                    <label class="modal-allergen-label">
+                        <input type="checkbox" id="modalAllergen-treeNuts"> Tree Nuts
+                    </label>
+                    <label class="modal-allergen-label">
+                        <input type="checkbox" id="modalAllergen-egg"> Egg
+                    </label>
+                    <label class="modal-allergen-label">
+                        <input type="checkbox" id="modalAllergen-soy"> Soy
+                    </label>
+                    <label class="modal-allergen-label">
+                        <input type="checkbox" id="modalAllergen-sesame"> Sesame
+                    </label>
+                </div>
+            </div>
+            <div>
+                <div class="modal-section-title">Internal Batch &amp; Description Notes</div>
+                <textarea class="modal-notes-area" id="modalNotesTextarea" placeholder="Enter custom flavor profiles, seasonal details, or specific ingredient notifications here..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal btn-modal-cancel" onclick="closeFlavorModal(false)">Cancel</button>
+            <button class="btn-modal btn-modal-save" onclick="closeFlavorModal(true)">Save Changes</button>
+        </div>
+    </div>
+</div>
+
 <script>
     /* --- SECTION 0: STRING LEVENSHTEIN FUZZY MATH ENGINE --- */
     function fuzzyMatch(sourceStr, targetStr) {
@@ -944,36 +1130,36 @@ Project Description;
     }
 
     const defaultGelato = {
-        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {} },
-        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {} },
-        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", isVegan: false, allergens: {} },
-        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", isVegan: false, allergens: {} },
-        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {} },
-        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {} },
-        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {} },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", isVegan: true, allergens: {} },
-        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {} },
-        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {} },
-        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {} },
-        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", isVegan: false, allergens: {} },
-        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", isVegan: false, allergens: {} },
-        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: false, allergens: {} },
-        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", isVegan: true, allergens: {} },
-        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", isVegan: true, allergens: {} },
-        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", isVegan: false, allergens: {} },
-        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", isVegan: false, allergens: {} },
-        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", isVegan: false, allergens: {} },
-        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", isVegan: false, allergens: {} },
-        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", isVegan: false, allergens: {} },
-        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", isVegan: false, allergens: {} },
-        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", isVegan: false, allergens: {} },
-        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", isVegan: false, allergens: {} },
-        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", isVegan: false, allergens: {} },
-        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", isVegan: false, allergens: {} },
-        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", isVegan: false, allergens: {} },
-        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", isVegan: false, allergens: {} },
-        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", isVegan: false, allergens: {} },
-        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", isVegan: true, allergens: {} }
+        "Vanilla": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#f3e5ab", isVegan: false, allergens: {}, notes: "" },
+        "Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#7b3f00", isVegan: false, allergens: {}, notes: "" },
+        "Mint Chip": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#98ff98", isVegan: false, allergens: {}, notes: "" },
+        "Lemon Cookie": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fff44f", isVegan: false, allergens: {}, notes: "" },
+        "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {}, notes: "" },
+        "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {}, notes: "" },
+        "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {}, notes: "" },
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff8c00", isVegan: true, allergens: {}, notes: "" },
+        "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {}, notes: "" },
+        "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {}, notes: "" },
+        "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {}, notes: "" },
+        "Banana Nutella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e3c16f", isVegan: false, allergens: {}, notes: "" },
+        "Turkish Coffee": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#4b3621", isVegan: false, allergens: {}, notes: "" },
+        "Strawberry Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: false, allergens: {}, notes: "" },
+        "Mango": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc04d", isVegan: true, allergens: {}, notes: "" },
+        "Vegan Dark Chocolate": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#3d2314", isVegan: true, allergens: {}, notes: "" },
+        "Minty Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#aaf0d1", isVegan: false, allergens: {}, notes: "" },
+        "Ranier Smores": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#d2b48c", isVegan: false, allergens: {}, notes: "" },
+        "Bunny Kisses": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#fbcce7", isVegan: false, allergens: {}, notes: "" },
+        "Birthday Cake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffc0cb", isVegan: false, allergens: {}, notes: "" },
+        "Hazelnut": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ae8c68", isVegan: false, allergens: {}, notes: "" },
+        "Gianduia": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#a0522d", isVegan: false, allergens: {}, notes: "" },
+        "Kinder Bueno": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#e8d8c8", isVegan: false, allergens: {}, notes: "" },
+        "Sea Salt Caramel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c6966a", isVegan: false, allergens: {}, notes: "" },
+        "Cookies and Dream": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#8c8c8c", isVegan: false, allergens: {}, notes: "" },
+        "Mon Cherry": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#de3163", isVegan: false, allergens: {}, notes: "" },
+        "Banana Split": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffe985", isVegan: false, allergens: {}, notes: "" },
+        "Strawberry Shortcake": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff9999", isVegan: false, allergens: {}, notes: "" },
+        "Fior De Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffffff", isVegan: false, allergens: {}, notes: "" },
+        "Prickly pear": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ff6f91", isVegan: true, allergens: {}, notes: "" }
     };
 
     const defaultItems = {
@@ -1032,6 +1218,7 @@ Project Description;
     let activeEditFlavor = null;
     let activeEditItem = null;
     let activeEditConsumable = null;
+    let currentModalFlavorKey = null; // Track currently open overlay item
 
     if (!inventory["Vanilla"] || !inventory["Sea Salt Caramel"]) { inventory = defaultGelato; }
     if (!itemsInventory["Small spoons"]) { itemsInventory = defaultItems; }
@@ -1149,6 +1336,67 @@ Project Description;
         }
     }
 
+    /* --- FEATURE EXTENSION: DETAILS POPUP & DISCRIPTION NOTES CONTROLLER --- */
+    function openFlavorModal(flavorKey) {
+        currentModalFlavorKey = flavorKey;
+        const data = inventory[flavorKey];
+        if (!data) return;
+
+        const headerEl = document.getElementById('modalHeaderEl');
+        const titleEl = document.getElementById('modalTitleText');
+        const notesTextArea = document.getElementById('modalNotesTextarea');
+
+        // Apply visual branding context matching flavor color setup
+        headerEl.style.backgroundColor = data.color || "var(--primary)";
+        titleEl.innerText = `${flavorKey} — Profile Info`;
+        notesTextArea.value = data.notes || "";
+
+        // Establish structural allergen references 
+        const allergenKeys = ['dairy', 'gluten', 'treeNuts', 'egg', 'soy', 'sesame'];
+        const currentAllergens = data.allergens || {};
+
+        allergenKeys.forEach(k => {
+            const checkbox = document.getElementById(`modalAllergen-${k}`);
+            if (k === 'dairy' && !data.isVegan) {
+                // FORCE LOCK DAIRY FOR NON-VEGAN FLAVORS AUTOMATICALLY
+                checkbox.checked = true;
+                checkbox.disabled = true;
+            } else {
+                checkbox.checked = !!currentAllergens[k];
+                checkbox.disabled = false;
+            }
+        });
+
+        document.getElementById('flavorModalOverlay').style.display = 'flex';
+    }
+
+    function closeFlavorModal(shouldSave) {
+        if (shouldSave && currentModalFlavorKey) {
+            const data = inventory[currentModalFlavorKey];
+            if (data) {
+                if (!data.allergens) data.allergens = {};
+                
+                const allergenKeys = ['dairy', 'gluten', 'treeNuts', 'egg', 'soy', 'sesame'];
+                allergenKeys.forEach(k => {
+                    const checkbox = document.getElementById(`modalAllergen-${k}`);
+                    if (k === 'dairy' && !data.isVegan) {
+                        data.allergens[k] = true; // Hard set dairy for normal dairy lines
+                    } else {
+                        data.allergens[k] = checkbox.checked;
+                    }
+                });
+
+                data.notes = document.getElementById('modalNotesTextarea').value;
+                saveAllStorage();
+                renderInventory();
+                renderAllergenChart();
+            }
+        }
+        
+        document.getElementById('flavorModalOverlay').style.display = 'none';
+        currentModalFlavorKey = null;
+    }
+
     /* --- SECTION A: GELATO OPERATIONS --- */
     function addNewFlavor() {
         const nameInput = document.getElementById('newFlavorName');
@@ -1159,7 +1407,18 @@ Project Description;
         if (!name) return alert("Enter a valid flavor name!");
         if (inventory.hasOwnProperty(name)) return alert("Flavor already exists.");
 
-        inventory[name] = { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: colorInput.value, isVegan: veganInput.checked, allergens: {}, isNew: true };
+        inventory[name] = { 
+            qty: 0, 
+            outOfSeason: false, 
+            inDisplayCase: false, 
+            inTransferCase: false, 
+            color: colorInput.value, 
+            isVegan: veganInput.checked, 
+            allergens: {}, 
+            notes: "",
+            isNew: true 
+        };
+        
         nameInput.value = ''; colorInput.value = '#ffffff'; veganInput.checked = false;
         saveAllStorage(); renderInventory();
     }
@@ -1268,7 +1527,7 @@ Project Description;
                 html += `
                     <div>
                         <div class="card-header-row">
-                            <span class="flavor-title">${flavor}${newTagMarkup}</span>
+                            <span class="flavor-title" onclick="openFlavorModal('${flavor.replace(/'/g, "\\'")}')" title="Click to view flavor profile & notes">${flavor}${newTagMarkup}</span>
                             <div class="counter-box" style="${data.outOfSeason ? 'display:none;' : ''}">
                                 <button class="counter-btn" onclick="adjustQty('${flavor}', 1)">▲</button>
                                 <button class="counter-btn" onclick="adjustQty('${flavor}', -1)">▼</button>
@@ -1305,7 +1564,12 @@ Project Description;
             const tr = document.createElement('tr'); const rAllergens = data.allergens || {};
             let html = `<td class="excel-flavor-cell">${flavor}</td>`;
             keys.forEach(k => {
-                html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" ${rAllergens[k]?'checked':''} onchange="toggleAllergen('${flavor}','${k}',this.checked)"></td>`;
+                if (k === 'dairy' && !data.isVegan) {
+                    // Force render checkmark if item is non-vegan standard line item
+                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" checked disabled title="Automated Dairy Asset Tracking"></td>`;
+                } else {
+                    html += `<td style="text-align:center;"><input type="checkbox" class="allergen-checkbox" ${rAllergens[k]?'checked':''} onchange="toggleAllergen('${flavor}','${k}',this.checked)"></td>`;
+                }
             });
             tr.innerHTML = html; tbody.appendChild(tr);
         }
@@ -1390,7 +1654,7 @@ Project Description;
                 html += `
                     <div>
                         <div class="card-header-row">
-                            <span class="flavor-title">${name}</span>
+                            <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
                             <div class="counter-box">
                                 <button class="counter-btn" onclick="adjustItemQty('${name}', 1)">▲</button>
                                 <button class="counter-btn" onclick="adjustItemQty('${name}', -1)">▼</button>
@@ -1500,7 +1764,7 @@ Project Description;
                 html += `
                     <div>
                         <div class="card-header-row">
-                            <span class="flavor-title">${name}</span>
+                            <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
                             <div class="counter-box">
                                 <button class="counter-btn" onclick="adjustConsumableQty('${name}', 1)">▲</button>
                                 <button class="counter-btn" onclick="adjustConsumableQty('${name}', -1)">▼</button>
