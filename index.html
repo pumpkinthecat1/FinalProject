@@ -360,7 +360,7 @@ Project Description;
         }
 
         .inventory-item {
-            padding: 20px 20px 20px 32px; /* Left padding creates breathing room for the deletion button */
+            padding: 20px 20px 20px 32px; /* Breathing room for the deletion button */
             border: 1px solid var(--border-color);
             border-radius: 8px;
             display: flex;
@@ -611,7 +611,7 @@ Project Description;
 
 <div class="sidebar">
     <div class="sidebar-header">
-        <img src="image_46727f.png" alt="Nutty Squirrel Logo" class="sidebar-logo">
+        <img src="https://cdn.shopify.com/s/files/1/0695/5332/4245/files/logoSolidClassic.webp?v=1740539707&width=500&height=500&crop=center" alt="Nutty Squirrel Logo" class="sidebar-logo">
         <span class="sidebar-header-text">Nutty Squirrel Hub</span>
     </div>
     <nav class="nav-tabs">
@@ -661,7 +661,7 @@ Project Description;
             </div>
 
             <div class="panel-title-container">
-                <img src="image_46727f.png" alt="Nutty Squirrel Logo" class="panel-inline-logo">
+                <img src="https://cdn.shopify.com/s/files/1/0695/5332/4245/files/logoSolidClassic.webp?v=1740539707&width=500&height=500&crop=center" alt="Nutty Squirrel Logo" class="panel-inline-logo">
                 <h2>In-Season Gelato Selection</h2>
             </div>
             
@@ -681,7 +681,7 @@ Project Description;
 
         <div id="panelAllergens" class="view-panel">
             <div class="panel-title-container">
-                <img src="image_46727f.png" alt="Nutty Squirrel Logo" class="panel-inline-logo">
+                <img src="https://cdn.shopify.com/s/files/1/0695/5332/4245/files/logoSolidClassic.webp?v=1740539707&width=500&height=500&crop=center" alt="Nutty Squirrel Logo" class="panel-inline-logo">
                 <h2>Allergen Reference Chart</h2>
             </div>
             
@@ -741,7 +741,7 @@ Project Description;
             </div>
 
             <div class="panel-title-container">
-                <img src="image_46727f.png" alt="Nutty Squirrel Logo" class="panel-inline-logo">
+                <img src="https://cdn.shopify.com/s/files/1/0695/5332/4245/files/logoSolidClassic.webp?v=1740539707&width=500&height=500&crop=center" alt="Nutty Squirrel Logo" class="panel-inline-logo">
                 <h2>Service Items &amp; Packaging Storage</h2>
             </div>
             
@@ -790,7 +790,7 @@ Project Description;
             </div>
 
             <div class="panel-title-container">
-                <img src="image_46727f.png" alt="Nutty Squirrel Logo" class="panel-inline-logo">
+                <img src="https://cdn.shopify.com/s/files/1/0695/5332/4245/files/logoSolidClassic.webp?v=1740539707&width=500&height=500&crop=center" alt="Nutty Squirrel Logo" class="panel-inline-logo">
                 <h2>Toppings, Beverages &amp; Ingredients</h2>
             </div>
             
@@ -1099,7 +1099,6 @@ Project Description;
             const isEditing = (activeEditFlavor === flavor);
             const safeId = flavor.replace(/\s+/g, '_');
             
-            // Core component addition: Corner left close button widget, corner right editing link
             let html = `
                 <button class="card-remove-btn" title="Delete flavor" onclick="deleteFlavor('${flavor}')">×</button>
                 <button class="edit-trigger" title="Edit fields" onclick="enterEditMode('${flavor}')">✏️</button>`;
@@ -1222,7 +1221,6 @@ Project Description;
             const isEditing = (activeEditItem === name);
             const safeId = name.replace(/\s+/g, '_');
             
-            // Added cross-panel functional symmetry corner close items deletion actions here as well
             let html = `
                 <button class="card-remove-btn" title="Delete item" onclick="deleteItem('${name}')">×</button>
                 <button class="edit-trigger" title="Edit fields" onclick="enterEditItemMode('${name}')">✏️</button>`;
@@ -1326,10 +1324,6 @@ Project Description;
             const li = document.createElement('li'); li.className = 'inventory-item';
             li.style.backgroundColor = generatePastelColor(name);
             
-            const isEditing = (activeEditConsumable === name);
-            const safeId = name.replace(/\s+/g, '_');
-            
-            // Added cross-panel functional symmetry corner close consumable deletion actions here as well
             let html = `
                 <button class="card-remove-btn" title="Delete consumable" onclick="deleteConsumable('${name}')">×</button>
                 <button class="edit-trigger" title="Edit fields" onclick="enterEditConsumableMode('${name}')">✏️</button>`;
