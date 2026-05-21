@@ -1,7 +1,3 @@
-<!--
-Name(s); Gabe and Atlas
-Project Description; 
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -461,13 +457,6 @@ Project Description;
         body:not(.bulk-select-active) .inventory-item:not(.out-of-season):hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
-        }
-
-        .items-grid .inventory-item {
-            background-color: white !important;
-            background-image: none !important;
-            border: 1px solid var(--border-color);
-            cursor: default;
         }
 
         .inventory-item.out-of-season {
@@ -1093,12 +1082,12 @@ Project Description;
             </div>
             
             <h3 class="section-heading">📄 Paper Products</h3>
-            <ul class="inventory-list items-grid" id="paperItemsList"></ul>
+            <ul class="inventory-list" id="paperItemsList"></ul>
 
             <div class="page-break"></div>
 
             <h3 class="section-heading">🧪 Plastic Products</h3>
-            <ul class="inventory-list items-grid" id="plasticItemsList"></ul>
+            <ul class="inventory-list" id="plasticItemsList"></ul>
         </div>
 
         <div id="panelConsumables" class="view-panel">
@@ -1274,7 +1263,6 @@ Project Description;
     }
 
     function generateGradientStyle(baseHex, isDarkFlavor) {
-        // Safe defaults if baseHex is missing or incorrect
         if (!baseHex || baseHex.indexOf('#') !== 0) baseHex = '#ffffff';
         
         const topColor = adjustColorBrightness(baseHex, isDarkFlavor ? -0.15 : -0.10);
@@ -1309,7 +1297,7 @@ Project Description;
         "Stracciatella": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#eae0d5", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Nutty Squirrel": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#cd7f32", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Ferrero Rocher": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#b8860b", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
-        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" }, // Replaced with custom pink
+        "Lemon Mango Dragonfruit": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#ffb7c5", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Forest Berries": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#6a0dad", isVegan: true, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Cafe Latte": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#c8ad7f", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
         "Pistachio": { qty: 0, outOfSeason: false, inDisplayCase: false, inTransferCase: false, color: "#93c572", isVegan: false, allergens: {}, notes: "", isPinned: false, lastRestocked: "" },
@@ -1386,18 +1374,12 @@ Project Description;
     let inventory = JSON.parse(localStorage.getItem('iceCreamInventory')) || defaultGelato;
     let itemsInventory = JSON.parse(localStorage.getItem('itemsInventory')) || defaultItems;
     let consumablesInventory = JSON.parse(localStorage.getItem('consumablesInventory')) || defaultConsumables;
-    
-    // Safety verification check to make sure custom pink handles properly over old cached storage
-    if (inventory["Lemon Mango Dragonfruit"] && inventory["Lemon Mango Dragonfruit"].color === "#ff8c00") {
-        inventory["Lemon Mango Dragonfruit"].color = "#ffb7c5";
-    }
 
     let activeEditFlavor = null;
     let activeEditItem = null;
     let activeEditConsumable = null;
     let currentModalFlavorKey = null;
 
-    // Bulk Management State Flag Registry
     let isBulkSelectMode = false;
     let selectedFlavorsSet = new Set();
 
@@ -1712,7 +1694,6 @@ Project Description;
             const escapedFlavor = escapeJSString(flavor);
             li.setAttribute('onclick', `handleCardSelectionToggle('${escapedFlavor}', event)`);
             
-            // Render Dynamic Color Gradients on Flavor Cards
             const isDark = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
             li.style.background = generateGradientStyle(data.color, isDark);
             
