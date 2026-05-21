@@ -31,7 +31,6 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-main);
-            /* Subtle Repeating Ice Cream Pattern background */
             background-image: 
                 linear-gradient(30deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
                 linear-gradient(150deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
@@ -433,13 +432,13 @@
         .inventory-list {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
             gap: 20px;
             margin-bottom: 25px;
         }
 
         .inventory-item {
-            padding: 20px 20px 20px 36px;
+            padding: 35px 15px 20px 36px; /* Increased top padding to yield space for corner triggers */
             border: 1px solid var(--border-color);
             border-radius: 8px;
             display: flex;
@@ -471,23 +470,17 @@
             text-decoration: line-through;
         }
 
-        .card-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
         .flavor-card-content {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center; /* Center-aligns layout content vertically */
             gap: 10px;
             width: 100%;
         }
 
         .flavor-text-block {
             flex: 1;
+            padding-right: 5px;
         }
 
         .flavor-title {
@@ -530,10 +523,10 @@
         /* CORNER CONTROLS OVERLAYS */
         .card-remove-btn {
             position: absolute;
-            top: 6px;
-            left: 6px;
-            width: 20px;
-            height: 20px;
+            top: 8px;
+            left: 8px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background-color: var(--danger);
             color: white;
@@ -557,13 +550,14 @@
         .edit-trigger {
             position: absolute;
             top: 8px;
-            right: 32px;
+            right: 36px;
             cursor: pointer;
             font-size: 14px;
-            opacity: 0.5;
+            opacity: 0.6;
             background: none;
             border: none;
             z-index: 10;
+            padding: 2px;
         }
         .edit-trigger:hover { opacity: 1; }
 
@@ -573,10 +567,11 @@
             right: 8px;
             cursor: pointer;
             font-size: 14px;
-            opacity: 0.3;
+            opacity: 0.4;
             background: none;
             border: none;
             z-index: 10;
+            padding: 2px;
             transition: opacity 0.2s, transform 0.2s;
         }
         .pin-trigger:hover, .pin-trigger.pinned {
@@ -666,17 +661,18 @@
         }
         .btn-save { background-color: var(--vegan-color); color: white; }
 
-        /* --- 7. COUNTER CONTROLS (MIDDLE POSITION & ENLARGED) --- */
+        /* --- 7. COUNTER CONTROLS (MIDDLE RIGHT SIDE POSITION) --- */
         .counter-box {
             display: flex;
             flex-direction: column;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0,0,0,0.18);
             border-radius: 8px;
             overflow: hidden;
             z-index: 12;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
             flex-shrink: 0;
+            align-self: center; /* Forces vertical centering inside the flex row wrapper */
         }
 
         .counter-btn {
@@ -694,7 +690,7 @@
             transition: background 0.2s;
         }
         .counter-btn:hover { background: rgba(0, 0, 0, 0.08); }
-        .counter-btn:first-child { border-bottom: 1px solid rgba(0,0,0,0.15); }
+        .counter-btn:first-child { border-bottom: 1px solid rgba(0,0,0,0.18); }
 
         .status-badge {
             font-size: 13px;
@@ -1243,7 +1239,6 @@
         });
     }
 
-    // Advanced color shift tool to compute darker/lighter variants for CSS background gradients
     function adjustColorBrightness(hex, percent) {
         hex = hex.replace('#', '');
         if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
@@ -1994,7 +1989,6 @@
         }
     }
 
-    // Initialize System Core Run-Loops
     renderInventory();
     renderAllergenChart();
     renderItemsInventory();
