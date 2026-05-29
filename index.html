@@ -5,19 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nutty Squirrel Gelato Inventory Tracker</title>
     <style>
-        /* --- 1. DESIGN SYSTEM VARIABLES (2026 DARK SaaS SHIFT) --- */
+        /* --- 1. DESIGN SYSTEM VARIABLES --- */
         :root {
-            --bg-main: #030303;
-            --bg-card: #0a0a0c;
+            --bg-main: #f9f6f0;
+            --bg-card: #ffffff;
             --primary: #d4a373;
-            --text-color: #f2f4f8;
-            --text-muted: #6e7681;
-            --border-color: #222225;
+            --text-color: #333333;
+            --border-color: #e6ccb2;
             --danger: #e63946;
-            --danger-dark: #3a0f12;
-            --danger-bg: #140507;
-            --safe: #1a1b20;
-            --vegan-color: #00f5d4;
+            --danger-bg: #ffe3e5;
+            --safe: #4a4e69;
+            --vegan-color: #2a9d8f;
             --radius: 12px;
             --sidebar-width-collapsed: 60px;
             --sidebar-width-expanded: 260px;
@@ -33,25 +31,15 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-main);
-            /* --- GEOMETRIC ICE CREAM CONES BACKGROUND ENGINE --- */
             background-image: 
-                /* Cone 1: Mint & Strawberry Triple Scoop Left */
-                radial-circle, radial-gradient(circle 8px at 40px 140px, #ff9f1c 99%, transparent),
-                radial-gradient(circle 12px at 30px 150px, #ff6b6b 99%, transparent),
-                radial-gradient(circle 12px at 50px 150px, #00f5d4 99%, transparent),
-                linear-gradient(125deg, transparent 35%, #5c4033 36%, #5c4033 44%, transparent 45%),
-                linear-gradient(55deg, transparent 35%, #5c4033 36%, #5c4033 44%, transparent 45%),
-                linear-gradient(180deg, transparent 160px, #402a20 160px, #402a20 190px, transparent 191px),
-                
-                /* Cone 2: Blueberry Double Scoop Right */
-                radial-gradient(circle 10px at calc(100% - 90px) 435px, #7209b7 99%, transparent),
-                radial-gradient(circle 14px at calc(100% - 100px) 450px, #4cc9f0 99%, transparent),
-                linear-gradient(125deg, transparent 35%, #5c4033 36%, #5c4033 44%, transparent 45%),
-                linear-gradient(55deg, transparent 35%, #5c4033 36%, #5c4033 44%, transparent 45%),
-                linear-gradient(180deg, transparent 460px, #402a20 460px, #402a20 485px, transparent 486px);
-            
-            background-size: 100% 100%;
-            background-attachment: fixed;
+                linear-gradient(30deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(150deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(30deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(150deg, #f5ede2 12%, transparent 12.5%, transparent 87%, #f5ede2 87.5%, #f5ede2),
+                linear-gradient(60deg, #f5ede2 25%, transparent 25.5%, transparent 75%, #f5ede2 75.5%, #f5ede2),
+                linear-gradient(60deg, #f5ede2 25%, transparent 25.5%, transparent 75%, #f5ede2 75.5%, #f5ede2);
+            background-size: 40px 70px;
+            background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
             color: var(--text-color);
             line-height: 1.6;
             display: flex;
@@ -65,14 +53,14 @@
             left: 0;
             height: 100vh;
             width: var(--sidebar-width-collapsed);
-            background-color: #08080a;
-            border-right: 1px solid var(--border-color);
+            background-color: #fffbf7;
+            border-right: 2px solid var(--border-color);
             overflow-x: hidden;
-            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: width 0.3s ease;
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.03);
         }
 
         .sidebar:hover {
@@ -83,7 +71,7 @@
             padding: 15px 10px;
             white-space: nowrap;
             border-bottom: 1px solid var(--border-color);
-            background: #111115;
+            background: var(--primary);
             color: white;
             font-weight: bold;
             font-size: 15px;
@@ -100,14 +88,13 @@
             object-fit: cover;
             flex-shrink: 0;
             background: white;
-            border: 1px solid var(--border-color);
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
         .sidebar-header-text {
             opacity: 0;
             transition: opacity 0.2s ease;
             white-space: nowrap;
-            color: var(--text-color);
         }
 
         .sidebar:hover .sidebar-header-text {
@@ -128,7 +115,7 @@
             border: none;
             font-size: 15px;
             font-weight: bold;
-            color: var(--text-muted);
+            color: #666;
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
@@ -148,14 +135,13 @@
         }
 
         .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(212, 163, 115, 0.1);
             color: var(--text-color);
         }
 
         .tab-btn.active {
-            background: rgba(212, 163, 115, 0.15);
-            color: var(--primary);
-            border-left: 3px solid var(--primary);
+            background: var(--primary);
+            color: white;
         }
 
         /* --- 4. VIEW CONTAINER OFFSET --- */
@@ -168,21 +154,19 @@
         }
 
         header {
-            background-color: #0e0f12;
+            background-color: var(--primary);
             color: white;
             padding: 25px;
             border-radius: var(--radius);
             text-align: center;
             margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         header h1 {
             font-size: 26px;
             font-weight: 700;
             letter-spacing: 0.5px;
-            color: var(--text-color);
         }
 
         /* --- GLOBAL ALERTS ENGINE LAYOUT --- */
@@ -192,14 +176,13 @@
             flex-direction: column;
             border-radius: var(--radius);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
         }
 
-        /* Red To Dark Red Horizontal Gradient (Left to Right) */
         .global-alert-banner {
-            background: linear-gradient(90deg, var(--danger) 0%, var(--danger-dark) 100%);
+            background-color: var(--danger);
             color: white;
-            padding: 14px 20px;
+            padding: 12px 20px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
@@ -207,16 +190,20 @@
             cursor: pointer;
             user-select: none;
             font-size: 15px;
-            border: 1px solid rgba(230, 57, 70, 0.3);
+            transition: background-color 0.2s;
+        }
+
+        .global-alert-banner:hover {
+            background-color: #d62839;
         }
 
         .global-alert-dropdown {
             background-color: var(--danger-bg);
-            border: 1px solid rgba(230, 57, 70, 0.2);
+            border: 2px solid var(--danger);
             border-top: none;
             padding: 15px 25px;
             display: none;
-            color: #ffccd0;
+            color: #5c0f15;
         }
 
         .global-alert-dropdown h4 {
@@ -226,7 +213,6 @@
             letter-spacing: 0.5px;
             border-bottom: 1px solid rgba(230, 57, 70, 0.2);
             padding-bottom: 4px;
-            color: var(--danger);
         }
 
         .out-of-stock-list {
@@ -241,12 +227,12 @@
         }
 
         .main-layout {
-            background: rgba(10, 10, 12, 0.85);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: var(--radius);
             padding: 25px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.4);
-            backdrop-filter: blur(20px);
+            border: 2px solid #f3e9dc;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            backdrop-filter: blur(10px);
         }
 
         .view-panel {
@@ -285,17 +271,17 @@
         }
 
         h3.section-heading {
-            margin: 25px 0 15px;
-            font-size: 14px;
-            color: var(--text-muted);
+            margin: 20px 0 15px;
+            font-size: 18px;
+            color: #555;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .page-break {
             margin: 40px 0;
             border: none;
-            border-top: 1px solid var(--border-color);
+            border-top: 3px dotted var(--border-color);
             height: 0;
             width: 100%;
         }
@@ -303,24 +289,24 @@
         .section-divider {
             margin: 40px 0 20px;
             border: none;
-            border-top: 1px dashed var(--border-color);
+            border-top: 2px dashed var(--border-color);
             text-align: center;
         }
 
         .section-divider span {
-            background: #0a0a0c;
+            background: var(--bg-card);
             padding: 0 15px;
-            color: var(--text-muted);
+            color: #888;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
             position: relative;
-            top: -10px;
+            top: -12px;
         }
 
         /* --- 5. INTERACTIVE CREATION & UTILITY TOOLBARS --- */
         .creation-bar {
-            background: #0e0f12;
-            border: 1px solid var(--border-color);
+            background: #fffbf7;
+            border: 2px solid var(--border-color);
             border-radius: var(--radius);
             padding: 15px 20px;
             margin-bottom: 30px;
@@ -331,8 +317,8 @@
         }
 
         .filter-control-bar {
-            background: #070709;
-            border: 1px solid var(--border-color);
+            background: #fdfaf6;
+            border: 1px dashed var(--border-color);
             border-radius: 8px;
             padding: 12px 18px;
             margin-bottom: 25px;
@@ -357,8 +343,6 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            background: #111115;
-            color: var(--text-color);
         }
 
         .filter-group select {
@@ -366,13 +350,12 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            background: #111115;
-            color: var(--text-color);
+            background: white;
             cursor: pointer;
         }
 
         .creation-bar h3 {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--text-color);
         }
 
@@ -388,7 +371,7 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            background: #111115;
+            background: white;
             color: var(--text-color);
         }
 
@@ -419,7 +402,7 @@
 
         .btn-add {
             background-color: var(--primary);
-            color: #030303;
+            color: white;
             border: none;
             padding: 8px 18px;
             font-size: 14px;
@@ -432,19 +415,17 @@
         /* --- UI BUTTON MODIFIERS --- */
         .btn-action-toggle {
             background-color: var(--safe);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
+            color: white;
+            border: none;
             padding: 8px 16px;
             font-size: 14px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s;
         }
         .btn-action-toggle.active {
             background-color: var(--danger);
-            color: white;
-            border-color: var(--danger);
         }
 
         /* --- 6. UNIFIED INVENTORY GRID & CARD STYLES --- */
@@ -457,32 +438,32 @@
         }
 
         .inventory-item {
-            padding: 35px 15px 20px 36px;
+            padding: 35px 15px 20px 36px; /* Increased top padding to yield space for corner triggers */
             border: 1px solid var(--border-color);
             border-radius: 8px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             gap: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             position: relative;
             background-color: var(--bg-card);
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
         }
 
+        /* Flavor Card 3D Hover Effect */
         body:not(.bulk-select-active) .inventory-item:not(.out-of-season):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            border-color: #444;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
         }
 
         .inventory-item.out-of-season {
-            background: #111115 !important;
-            color: var(--text-muted);
-            border-color: #222;
+            background-color: #e0e0e0 !important;
+            background-image: none !important;
+            color: #888;
+            border-color: #ccc;
             cursor: default;
-            opacity: 0.6;
         }
 
         .inventory-item.out-of-season .flavor-title {
@@ -492,7 +473,7 @@
         .flavor-card-content {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center; /* Center-aligns layout content vertically */
             gap: 10px;
             width: 100%;
         }
@@ -507,7 +488,9 @@
             font-size: 16px;
             word-break: break-word;
             position: relative;
-            color: var(--text-color);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-style: dotted;
         }
 
         .new-tag {
@@ -522,14 +505,16 @@
             margin-left: 6px;
             display: inline-block;
             vertical-align: middle;
+            text-decoration: none !important;
         }
 
+        /* TIMESTAMPS OVERLAY BLOCK */
         .restock-timestamp {
             font-size: 11px;
             font-style: italic;
-            color: var(--text-muted);
+            color: #666;
             margin-top: 4px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.5);
             padding: 2px 6px;
             border-radius: 4px;
             display: inline-block;
@@ -547,19 +532,19 @@
             color: white;
             border: none;
             font-size: 14px;
-            line-weight: 1;
+            line-height: 1;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.7;
-            transition: all 0.2s;
+            opacity: 0.8;
+            transition: transform 0.2s, opacity 0.2s;
             z-index: 10;
         }
         .card-remove-btn:hover {
             opacity: 1;
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
 
         .edit-trigger {
@@ -568,7 +553,7 @@
             right: 36px;
             cursor: pointer;
             font-size: 14px;
-            opacity: 0.5;
+            opacity: 0.6;
             background: none;
             border: none;
             z-index: 10;
@@ -587,13 +572,14 @@
             border: none;
             z-index: 10;
             padding: 2px;
-            transition: all 0.2s;
+            transition: opacity 0.2s, transform 0.2s;
         }
         .pin-trigger:hover, .pin-trigger.pinned {
             opacity: 1;
             transform: scale(1.1);
         }
 
+        /* --- BULK SELECTOR ENGINE PLATFORM --- */
         .bulk-select-checkbox-container {
             position: absolute;
             top: 10px;
@@ -607,21 +593,26 @@
             cursor: pointer;
         }
         
-        .bulk-select-active .bulk-select-checkbox-container { display: block; }
+        /* Bulk System Overlay Flag Overrides */
+        .bulk-select-active .bulk-select-checkbox-container {
+            display: block;
+        }
         .bulk-select-active .card-remove-btn,
         .bulk-select-active .edit-trigger,
-        .bulk-select-active .pin-trigger { display: none !important; }
+        .bulk-select-active .pin-trigger {
+            display: none !important;
+        }
 
         .bulk-action-dock {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #0a0a0c;
-            border: 1px solid var(--primary);
+            background: white;
+            border: 2px solid var(--primary);
             padding: 15px 30px;
             border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             z-index: 1500;
             display: none;
             gap: 15px;
@@ -635,14 +626,14 @@
             cursor: pointer;
             color: white;
         }
-        .btn-bulk-archive { background-color: #222227; border: 1px solid #444; }
+        .btn-bulk-archive { background-color: var(--safe); }
         .btn-bulk-delete { background-color: var(--danger); }
 
         .edit-mode-panel {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: #111115;
+            background: rgba(255, 255, 255, 0.95);
             padding: 5px;
             border-radius: 6px;
             width: 100%;
@@ -651,9 +642,7 @@
         .edit-mode-panel select {
             padding: 6px;
             font-size: 13px;
-            border: 1px solid var(--border-color);
-            background: #030303;
-            color: var(--text-color);
+            border: 1px solid #ccc;
             border-radius: 4px;
             width: 100%;
         }
@@ -670,20 +659,20 @@
             cursor: pointer;
             font-weight: bold;
         }
-        .btn-save { background-color: var(--vegan-color); color: #030303; }
+        .btn-save { background-color: var(--vegan-color); color: white; }
 
-        /* --- 7. COUNTER CONTROLS --- */
+        /* --- 7. COUNTER CONTROLS (MIDDLE RIGHT SIDE POSITION) --- */
         .counter-box {
             display: flex;
             flex-direction: column;
-            background: #111115;
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0,0,0,0.18);
             border-radius: 8px;
             overflow: hidden;
             z-index: 12;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
             flex-shrink: 0;
-            align-self: center;
+            align-self: center; /* Forces vertical centering inside the flex row wrapper */
         }
 
         .counter-btn {
@@ -691,7 +680,7 @@
             border: none;
             width: 44px;
             height: 38px;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -700,8 +689,8 @@
             font-weight: bold;
             transition: background 0.2s;
         }
-        .counter-btn:hover { background: rgba(255, 255, 255, 0.05); }
-        .counter-btn:first-child { border-bottom: 1px solid var(--border-color); }
+        .counter-btn:hover { background: rgba(0, 0, 0, 0.08); }
+        .counter-btn:first-child { border-bottom: 1px solid rgba(0,0,0,0.18); }
 
         .status-badge {
             font-size: 13px;
@@ -711,7 +700,7 @@
             display: inline-block;
         }
         .status-badge.oos { background-color: var(--danger); color: white; }
-        .status-badge.instock { background-color: #16161a; color: var(--text-color); border: 1px solid var(--border-color); }
+        .status-badge.instock { background-color: rgba(255,255,255,0.85); color: #222; border: 1px solid rgba(0,0,0,0.08); }
 
         .vegan-disclaimer {
             font-size: 12px;
@@ -722,12 +711,13 @@
             margin-top: 5px;
         }
 
+        /* --- 8. STRUCTURAL UTILITIES --- */
         .case-controls-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
             padding-top: 12px;
-            border-top: 1px dashed var(--border-color);
+            border-top: 1px dashed rgba(0,0,0,0.15);
             z-index: 12;
             width: 100%;
         }
@@ -738,13 +728,12 @@
             gap: 10px;
             font-size: 14px;
             cursor: pointer;
-            color: var(--text-muted);
         }
         .case-checkbox-label input { width: 16px; height: 16px; }
 
         .season-toggle-link {
             font-size: 12px;
-            color: var(--text-muted);
+            color: #555;
             text-decoration: underline;
             cursor: pointer;
             align-self: flex-start;
@@ -756,10 +745,9 @@
         .spreadsheet-container {
             width: 100%;
             overflow-x: auto;
-            border: 1px solid var(--border-color);
-            background: #0a0a0c;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-            border-radius: var(--radius);
+            border: 1px solid #c0c0c0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .excel-table {
@@ -770,27 +758,25 @@
         }
 
         .excel-table th {
-            background: #111115;
-            color: var(--text-color);
+            background: #e6e6e6;
+            color: #333;
             font-weight: bold;
-            padding: 12px 10px;
-            border: 1px solid var(--border-color);
+            padding: 10px;
+            border: 1px solid #c0c0c0;
         }
 
         .excel-table td {
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
+            padding: 8px 10px;
+            border: 1px solid #e0e0e0;
         }
 
-        .excel-table tr:nth-child(even) { background: #070709; }
-        .excel-table tr:hover { background: rgba(255,255,255,0.02); }
+        .excel-table tr:nth-child(even) { background: #fdfdfd; }
+        .excel-table tr:hover { background: #f2f7fa; }
 
         .excel-flavor-cell {
             font-weight: 600;
-            background: #0d0d11;
-            color: var(--text-color) !important;
-            border-right: 2px solid var(--border-color) !important;
+            background: #fcfcfc;
+            border-right: 2px solid #c0c0c0 !important;
             width: 250px;
         }
 
@@ -801,6 +787,10 @@
             display: block;
             margin: 0 auto;
         }
+        .allergen-checkbox:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
 
         /* --- 10. FLAVOR DETAILS OVERLAY MODAL SYSTEM --- */
         .modal-overlay {
@@ -809,29 +799,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(2px);
         }
 
         .modal-card {
-            background: #0a0a0c;
-            border: 1px solid var(--border-color);
+            background: white;
             border-radius: var(--radius);
             width: 500px;
             max-width: 90%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 0.2s ease-out;
+            animation: fadeIn 0.25s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
+            from { opacity: 0; transform: translateY(-15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -864,13 +853,13 @@
         }
 
         .modal-section-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
-            color: var(--text-muted);
+            color: #666;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 8px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #eee;
             padding-bottom: 4px;
         }
 
@@ -885,10 +874,16 @@
             align-items: center;
             gap: 8px;
             font-size: 14px;
-            color: var(--text-color);
+            font-weight: 500;
             cursor: pointer;
         }
-        .modal-allergen-label input { width: 16px; height: 16px; }
+        .modal-allergen-label input {
+            width: 16px;
+            height: 16px;
+        }
+        .modal-allergen-label input:disabled {
+            cursor: not-allowed;
+        }
 
         .modal-notes-area {
             width: 100%;
@@ -896,17 +891,16 @@
             padding: 10px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            background: #111115;
-            color: var(--text-color);
             font-family: inherit;
             font-size: 14px;
             resize: vertical;
+            color: var(--text-color);
         }
 
         .modal-footer {
             padding: 15px 25px;
-            background: #070709;
-            border-top: 1px solid var(--border-color);
+            background: #fdfaf6;
+            border-top: 1px solid #f3e9dc;
             display: flex;
             justify-content: flex-end;
             gap: 12px;
@@ -920,14 +914,13 @@
             cursor: pointer;
             border: none;
         }
-        .btn-modal-cancel { background: #222227; color: var(--text-color); }
-        .btn-modal-save { background: var(--vegan-color); color: #030303; }
-
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 13px;
+        .btn-modal-cancel {
+            background: #e0e0e0;
+            color: #444;
+        }
+        .btn-modal-save {
+            background: var(--vegan-color);
+            color: white;
         }
     </style>
 </head>
@@ -969,7 +962,7 @@
                     <input type="text" id="newFlavorName" placeholder="Flavor Name (e.g., Blood Orange)">
                 </div>
                 <div class="color-picker-wrapper">
-                    <label for="newFlavorColor">Card Base Glow Color:</label>
+                    <label for="newFlavorColor">Card Base Color:</label>
                     <input type="color" id="newFlavorColor" value="#d4a373">
                 </div>
                 <label class="creation-vegan-label">
@@ -1009,7 +1002,7 @@
 
             <div class="page-break"></div>
 
-            <h3 class="section-heading" style="color: var(--primary)">🥛 Standard Dairy Flavors</h3>
+            <h3 class="section-heading" style="color: #4e3d30">🥛 Standard Dairy Flavors</h3>
             <ul class="inventory-list" id="activeDairyList"></ul>
 
             <div class="section-divider" id="archiveDivider">
@@ -1264,10 +1257,13 @@
         return `#${rr}${gg}${bb}`;
     }
 
-    function generateGradientStyle(baseHex) {
+    function generateGradientStyle(baseHex, isDarkFlavor) {
         if (!baseHex || baseHex.indexOf('#') !== 0) baseHex = '#ffffff';
-        const translucentBase = convertHexToRgba(baseHex, 0.08);
-        return `linear-gradient(180deg, ${translucentBase} 0%, rgba(10,10,12,0.95) 100%)`;
+        
+        const topColor = adjustColorBrightness(baseHex, isDarkFlavor ? -0.15 : -0.10);
+        const bottomColor = adjustColorBrightness(baseHex, isDarkFlavor ? 0.20 : 0.15);
+        
+        return `linear-gradient(180deg, ${convertHexToRgba(topColor, isDarkFlavor ? 0.35 : 0.5)} 0%, ${convertHexToRgba(bottomColor, isDarkFlavor ? 0.15 : 0.25)} 100%)`;
     }
 
     function convertHexToRgba(hex, opacity) {
@@ -1284,7 +1280,7 @@
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        return `hsla(${Math.abs(hash % 360)}, 65%, 45%, 0.15)`;
+        return `hsla(${Math.abs(hash % 360)}, 75%, 85%, 0.5)`;
     }
 
     /* --- INITIAL SYSTEM REGISTRY STATE --- */
@@ -1476,7 +1472,7 @@
         const data = inventory[flavorKey];
         if (!data) return;
 
-        document.getElementById('modalHeaderEl').style.background = `linear-gradient(90deg, #111115 0%, ${data.color} 100%)`;
+        document.getElementById('modalHeaderEl').style.background = generateGradientStyle(data.color, false);
         document.getElementById('modalTitleText').innerText = `${flavorKey} — Profile Info`;
         document.getElementById('modalNotesTextarea').value = data.notes || "";
 
@@ -1693,8 +1689,8 @@
             const escapedFlavor = escapeJSString(flavor);
             li.setAttribute('onclick', `handleCardSelectionToggle('${escapedFlavor}', event)`);
             
-            li.style.background = generateGradientStyle(data.color);
-            li.style.borderLeft = `3px solid ${data.color}`;
+            const isDark = ["#7b3f00", "#4b3621", "#3d2314"].includes(data.color.toLowerCase());
+            li.style.background = generateGradientStyle(data.color, isDark);
             
             const isEditing = (activeEditFlavor === flavor);
             const safeId = flavor.replace(/\s+/g, '_');
@@ -1712,7 +1708,7 @@
                 html += `
                     <div class="edit-mode-panel" onclick="event.stopPropagation()">
                         <input type="text" id="editName-${safeId}" value="${flavor}">
-                        <div class="color-picker-wrapper"><label>Glow Color:</label><input type="color" id="editColor-${safeId}" value="${data.color}"></div>
+                        <div class="color-picker-wrapper"><label>Color:</label><input type="color" id="editColor-${safeId}" value="${data.color}"></div>
                         <label class="creation-vegan-label"><input type="checkbox" id="editVegan-${safeId}" ${data.isVegan ? 'checked' : ''}> Vegan</label>
                         <div class="edit-actions">
                             <button class="btn-mini btn-save" onclick="saveFlavorEdits('${escapedFlavor}')">Save</button>
@@ -1859,7 +1855,7 @@
                     <div style="width: 100%;">
                         <div class="flavor-card-content">
                             <div class="flavor-text-block">
-                                <span class="flavor-title" style="cursor:default; color:inherit;">${name}</span>
+                                <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
                                 <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
                             </div>
                             <div class="counter-box">
@@ -1936,7 +1932,7 @@
             const li = document.createElement('li'); li.className = 'inventory-item';
             
             const basePastel = generatePastelColor(name);
-            li.style.background = `linear-gradient(180deg, ${basePastel} 0%, rgba(10,10,12,0.95) 100%)`;
+            li.style.background = `linear-gradient(180deg, ${basePastel} 0%, rgba(255,255,255,0.4) 100%)`;
             
             const isEditing = (activeEditConsumable === name);
             const safeId = name.replace(/\s+/g, '_');
@@ -1968,7 +1964,7 @@
                     <div style="width: 100%;">
                         <div class="flavor-card-content">
                             <div class="flavor-text-block">
-                                <span class="flavor-title" style="cursor:default; color:inherit;">${name}</span>
+                                <span class="flavor-title" style="text-decoration:none; cursor:default; color:inherit;">${name}</span>
                                 <div style="margin-top:12px;"><span class="status-badge instock">${data.qty} ${data.unit}</span></div>
                             </div>
                             <div class="counter-box">
